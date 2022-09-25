@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_vector_iterator.hpp                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dkim2 <dkim2@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: dkim2 <dkim2@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/07 01:08:38 by dkim2             #+#    #+#             */
-/*   Updated: 2022/09/24 09:33:50 by dkim2            ###   ########.fr       */
+/*   Updated: 2022/09/25 22:58:47 by dkim2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ namespace ft
 		typedef typename iterator_type::iterator_category	iterator_category;
 	private:
 		pointer _base;
+		// getter
 	public:
 		// constructors and destructor
 		vectorIterator(pointer ptr = NULL) : _base(ptr) { }
@@ -50,10 +51,9 @@ namespace ft
 
 		operator vectorIterator<const T> () const
 		{
-			return ( vectorIterator<const T>(this->_base));
+			return ( vectorIterator<const T>(this->_base) );
 		}
 
-		// getter
 		const pointer & getBase() const { return this->_base; }
 		
 		reference operator*() const { return (*(this->_base)); }
@@ -74,7 +74,8 @@ namespace ft
 		}
 		vectorIterator operator+(int n) const { return (vectorIterator(_base + n)); }
 		vectorIterator operator-(int n) const { return ( *this + (-n)); }
-		difference_type operator-(const vectorIterator & rhs ) const
+		template <class Iter>
+		difference_type operator-(const vectorIterator<Iter> & rhs ) const
 		{
 			return (this->_base - rhs.getBase());
 		}
@@ -83,20 +84,26 @@ namespace ft
 		reference operator[](difference_type n) { return (*(_base + n)); }
 		const reference operator[](difference_type n) const { return (*(_base + n)); }
 
-		friend vectorIterator<T> operator+(difference_type n, const vectorIterator<T> & rhs)
+		friend vectorIterator operator+(difference_type n, const vectorIterator & rhs)
 		{ return (rhs + n); }
-		// 비교 연산자들을 friend함수로 만들어 놨지만, 그냥 멤버함수로 오버로딩 해도 될 것 같다.
-		friend bool operator==(const vectorIterator<T> & lhs, const vectorIterator<T> & rhs)
+
+		template <class Iter>
+		friend bool operator==(const vectorIterator<T> & lhs, const vectorIterator<Iter> & rhs)
 		{ return(lhs.getBase() == rhs.getBase()); }
-		friend bool operator!=(const vectorIterator<T> & lhs, const vectorIterator<T> & rhs)
+		template <class Iter>
+		friend bool operator!=(const vectorIterator<T> & lhs, const vectorIterator<Iter> & rhs)
 		{ return(lhs.getBase() != rhs.getBase()); }
-		friend bool operator>=(const vectorIterator<T> & lhs, const vectorIterator<T> & rhs)
+		template <class Iter>
+		friend bool operator>=(const vectorIterator<T> & lhs, const vectorIterator<Iter> & rhs)
 		{ return(lhs.getBase() >= rhs.getBase()); }
-		friend bool operator>(const vectorIterator<T> & lhs, const vectorIterator<T> & rhs)
+		template <class Iter>
+		friend bool operator>(const vectorIterator<T> & lhs, const vectorIterator<Iter> & rhs)
 		{ return(lhs.getBase() > rhs.getBase()); }
-		friend bool operator<=(const vectorIterator<T> & lhs, const vectorIterator<T> & rhs)
+		template <class Iter>
+		friend bool operator<=(const vectorIterator<T> & lhs, const vectorIterator<Iter> & rhs)
 		{ return(lhs.getBase() <= rhs.getBase()); }
-		friend bool operator<(const vectorIterator<T> & lhs, const vectorIterator<T> & rhs)
+		template <class Iter>
+		friend bool operator<(const vectorIterator<T> & lhs, const vectorIterator<Iter> & rhs)
 		{ return(lhs.getBase() < rhs.getBase()); }
 	}; // class vectorIterator
 } // namespace ft

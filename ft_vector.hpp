@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_vector.hpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dkim2 <dkim2@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: dkim2 <dkim2@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/06 16:16:00 by dkim2             #+#    #+#             */
-/*   Updated: 2022/09/24 09:53:32 by dkim2            ###   ########.fr       */
+/*   Updated: 2022/09/25 23:33:17 by dkim2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,25 @@ namespace ft
 		pointer			_end;
 		size_type		_size;
 		size_type		_capacity;
-	
+		size_type		_doubleCapacity( size_type new_capacity )
+		{
+			if (new_capacity < this->_capacity)
+			{
+				return (this->_capacity);
+			}
+			if (this->_capacity * 2 < new_capacity)
+			{
+				return (new_capacity);
+			}
+			if (this->max_size() < this->_capacity * 2)
+			{
+				return (this->max_size());
+			}
+			else
+			{
+				return (this->_capacity * 2);
+			}
+		}
 	public :
 		// B. Member Functions
 		// default constructor
@@ -212,7 +230,7 @@ namespace ft
 			}
 			if (n > this->_capacity)
 			{
-				this->reserve(n);
+				this->reserve(_doubleCapacity(n));
 			}
 			pointer new_end =  this->_start + n;
 			if (n < this->_size)
@@ -225,6 +243,7 @@ namespace ft
 				while ( new_end != this->_end )
 					this->_allocator_object.construct(this->_end++, val);
 			}
+			this->_size = n;
 		}
 
 		size_type capacity() const
@@ -247,7 +266,6 @@ namespace ft
 				throw(std::length_error("[ERROR] ft::vector::reserve() : length error"));
 			if (new_capacity <= this->_capacity)
 				return ;
-			
 			pointer		prev_start = this->_start;
 			pointer		prev_end = this->_end;
 			size_type	prev_capacity = this->_capacity;
@@ -344,7 +362,7 @@ namespace ft
 		void push_back(const value_type & val)
 		{
 			if ( this->_size == this->_capacity )
-				this->reserve(this->_capacity + 1);
+				this->reserve(_doubleCapacity(this->_capacity + 1));
 			this->_allocator_object.construct(this->_end++, val);
 			this->_size++;
 		}
@@ -354,6 +372,7 @@ namespace ft
 			if ( this->_size == 0)
 				return ;
 			this->_allocator_object.destroy(--this->_end);
+			this->_size--;
 		}
 		
 
@@ -361,41 +380,41 @@ namespace ft
 		{
 			difference_type	offset = ft::distance(this->begin(), position);
 			if ( this->_size + 1 > this->_capacity )
-				this->reserve(this->_size + 1);
+				this->reserve(_doubleCapacity(this->_size + 1));
 
 			pointer target_ptr = this->_end;
 			position = this->begin() + offset;
 
-			while (target_ptr != &(*position))
+			while (target_ptr > &(*position))
 			{
 				this->_allocator_object.construct(target_ptr, *(target_ptr - 1));
 				this->_allocator_object.destroy(--target_ptr);
 			}
-			this->_allocator_object.construct(target_ptr, val);
 
+			this->_allocator_object.construct(target_ptr, val);
 			this->_end++;
+			this->_size += 1;
 			return (position);
 		}
 
 		void insert(iterator position, size_type n, const value_type & val)
 		{
-			
-			difference_type	offset = ft::distance(this->begin(), position);
+			const difference_type offset = ft::distance(this->begin(), position);
 			
 			if ( this->_size + n > this->_capacity )
-				this->reserve(this->_size + n);
+				this->reserve(_doubleCapacity(this->_size + n));
 			pointer construct_ptr = this->_end + n;
 			pointer destroy_ptr = this->_end;
-
 			position = this->begin() + offset;
-			while ( destroy_ptr != &*position )
+			while ( destroy_ptr > &(*position) )
 			{
 				this->_allocator_object.construct(--construct_ptr, *(--destroy_ptr));
 				this->_allocator_object.destroy(destroy_ptr);
 			}
-			construct_ptr = this->_end;
-			while ( construct_ptr != &*position )
+			while ( construct_ptr > &(*position) )
+			{
 				this->_allocator_object.construct(--construct_ptr, val);
+			}
 			this->_size += n;
 			this->_end += n;
 		}
@@ -409,21 +428,23 @@ namespace ft
 			InputIterator last
 		)
 		{
-			difference_type	offset = ft::distance(this->begin(), position);
+			const difference_type offset = ft::distance(this->begin(), position);
 			const difference_type n = ft::distance(first, last);
 			if ( this->_size + n > this->_capacity )
-				this->reserve(this->_size + n);
+				this->reserve(_doubleCapacity(this->_size + n));
+			std::cout << "1" << std::endl;
 			pointer construct_ptr = this->_end + n;
 			pointer destroy_ptr = this->_end;
-
 			position = this->begin() + offset;
 			while ( destroy_ptr != &*position )
 			{
 				this->_allocator_object.construct(--construct_ptr, *(--destroy_ptr));
 				this->_allocator_object.destroy(destroy_ptr);
 			}
+			std::cout << "2" << std::endl;
 			while ( construct_ptr != &*position )
 				this->_allocator_object.construct(--construct_ptr, *(--last));
+			std::cout << "3" << std::endl;
 			this->_size += n;
 			this->_end += n;
 		}
@@ -518,7 +539,9 @@ namespace ft
 		}
 		friend bool operator<=(const ft::vector<T, Alloc> & lhs, const ft::vector<T, Alloc> & rhs)
 		{
-			return ( !(rhs < lhs) );
+			// return ( !(rhs < lhs) );
+			bool res = ( ( lhs < rhs ) || ( lhs == rhs ) );
+			return res;
 		}
 		friend bool operator>(const ft::vector<T, Alloc> & lhs, const ft::vector<T, Alloc> & rhs)
 		{
@@ -526,7 +549,9 @@ namespace ft
 		}
 		friend bool operator>=(const ft::vector<T, Alloc> & lhs, const ft::vector<T, Alloc> & rhs)
 		{
-			return ( !(lhs < rhs) );
+			// return ( !(lhs < rhs) );
+			bool res = ( ( lhs > rhs ) || ( lhs == rhs ) );
+			return res;
 		}
 		friend void swap(const ft::vector<T, Alloc> & x, const ft::vector<T, Alloc> & y)
 		{

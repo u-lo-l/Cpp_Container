@@ -1,0 +1,193 @@
+size: 5
+capacity: OK
+max_size: 2305843009213693951
+
+Content is:
+- 1
+- 2
+- 3
+- 4
+- 5
+###############################################
+true
+		ft_eq_ope:
+===============regular1
+-----------------eq
+first : 0x7f898ec057b8 | second : 0x7f898ec057b8
+false
+true
+false
+true
+-----------------eq
+first : 0x7f898ec057b8 | second : 0x7f898ec057b8
+false
+true
+false
+true
+-------------------
+-------------------
+===============regular2
+-----------------eq
+first : 0x7f898ec057d0 | second : 0x7f898ec057a8
+false
+false
+true
+true
+-----------------eq
+first : 0x7f898ec057a8 | second : 0x7f898ec057d0
+true
+true
+false
+false
+-------------------
+-------------------
+===============regular3
+-----------------eq
+first : 0x7f898ec057c0 | second : 0x7f898ec057b8
+false
+false
+true
+true
+-----------------eq
+first : 0x7f898ec057b8 | second : 0x7f898ec057c0
+true
+true
+false
+false
+-------------------
+-------------------
+===============const1
+-----------------eq
+first : 0x7f898ec057b8 | second : 0x7f898ec057b8
+false
+true
+false
+true
+-----------------eq
+first : 0x7f898ec057b8 | second : 0x7f898ec057b8
+false
+true
+false
+true
+-------------------
+-------------------
+===============const2
+-----------------eq
+first : 0x7f898ec057d0 | second : 0x7f898ec057a8
+false
+false
+true
+true
+-----------------eq
+first : 0x7f898ec057a8 | second : 0x7f898ec057d0
+true
+true
+false
+false
+-------------------
+-------------------
+===============const3
+-----------------eq
+first : 0x7f898ec057c0 | second : 0x7f898ec057b8
+false
+false
+true
+true
+-----------------eq
+first : 0x7f898ec057b8 | second : 0x7f898ec057c0
+true
+true
+false
+false
+-------------------
+-------------------
+===============both1
+-----------------eq
+first : 0x7f898ec057b8 | second : 0x7f898ec057b8
+false
+true
+false
+true
+-----------------eq
+first : 0x7f898ec057b8 | second : 0x7f898ec057b8
+false
+true
+false
+true
+-------------------
+-------------------
+===============both2
+-----------------eq
+first : 0x7f898ec057b8 | second : 0x7f898ec057b8
+false
+true
+false
+true
+-----------------eq
+first : 0x7f898ec057b8 | second : 0x7f898ec057b8
+false
+true
+false
+true
+-------------------
+-------------------
+===============both3
+-----------------eq
+first : 0x7f898ec057d0 | second : 0x7f898ec057a8
+false
+false
+true
+true
+-----------------eq
+first : 0x7f898ec057a8 | second : 0x7f898ec057d0
+true
+true
+false
+false
+-------------------
+-------------------
+===============both4
+-----------------eq
+first : 0x7f898ec057a8 | second : 0x7f898ec057d0
+true
+true
+false
+false
+-----------------eq
+first : 0x7f898ec057d0 | second : 0x7f898ec057a8
+false
+false
+true
+true
+-------------------
+-------------------
+===============both4
+-----------------eq
+first : 0x7f898ec057c0 | second : 0x7f898ec057b8
+false
+false
+true
+true
+-----------------eq
+first : 0x7f898ec057b8 | second : 0x7f898ec057c0
+true
+true
+false
+false
+-------------------
+-------------------
+===============both5
+-----------------eq
+first : 0x7f898ec057b8 | second : 0x7f898ec057c0
+true
+true
+false
+false
+-----------------eq
+first : 0x7f898ec057c0 | second : 0x7f898ec057b8
+false
+false
+true
+true
+-------------------
+-------------------

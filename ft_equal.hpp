@@ -6,7 +6,7 @@
 /*   By: dkim2 <dkim2@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/18 17:40:30 by dkim2             #+#    #+#             */
-/*   Updated: 2022/09/18 17:41:23 by dkim2            ###   ########.fr       */
+/*   Updated: 2022/09/25 14:52:09 by dkim2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,9 @@ namespace ft
 		for (; first1 != last1; ++first1, ++first2)
 		{
 			if (!p(*first1, *first2))
-				return false;
+				return (false);
 		}
-		return true;
+		return (true);
 	}
 };
 
