@@ -6,7 +6,7 @@
 /*   By: dkim2 <dkim2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/02 16:42:46 by dkim2             #+#    #+#             */
-/*   Updated: 2022/09/23 19:55:21 by dkim2            ###   ########.fr       */
+/*   Updated: 2022/09/24 11:25:57 by dkim2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,10 +117,16 @@ namespace ft
 		iterator_type current;
 	public :
 		// Member functions
-		reverse_iterator() : current() {}
-		explicit reverse_iterator(iterator_type it) : current(it) {}
+		reverse_iterator()
+		: current()
+		{}
+		explicit reverse_iterator(iterator_type it)
+		: current(it)
+		{}
 		template <class Iter>
-		reverse_iterator (const reverse_iterator<Iter> & rev_it) : current(rev_it.base()) {}
+		reverse_iterator (const reverse_iterator<Iter> & rev_it)
+		: current(rev_it.base())
+		{}
 		/*
 			base :
 				Returns a copy of the 'base iterator'.
@@ -131,6 +137,7 @@ namespace ft
 		{
 			return (this->current);
 		}
+
 		/* 
 			operator* :
 				returns a reference to the pointed by iterator.
@@ -210,65 +217,48 @@ namespace ft
 			return (base()[-n - 1]);
 		}
 
+
+		// non-member function
+		friend bool operator== (const reverse_iterator & lhs, const reverse_iterator & rhs)
+		{
+			return (lhs.base() == rhs.base());
+		}
+
+		friend bool operator!= (const reverse_iterator & lhs, const reverse_iterator & rhs)
+		{
+			return (lhs.base() != rhs.base());
+		}
+
+		friend bool operator<  (const reverse_iterator & lhs, const reverse_iterator & rhs)
+		{
+			return (lhs.base() < rhs.base());
+		}
+
+		friend bool operator<= (const reverse_iterator & lhs, const reverse_iterator & rhs)
+		{
+			return (lhs.base() <= rhs.base());
+		}
+
+		friend bool operator>  (const reverse_iterator & lhs, const reverse_iterator & rhs)
+		{
+			return (lhs.base() > rhs.base());
+		}
+
+		friend bool operator>= (const reverse_iterator & lhs, const reverse_iterator & rhs)
+		{
+			return (lhs.base() >= rhs.base());
+		}
+
+		friend reverse_iterator operator+ ( difference_type n,	const reverse_iterator& rev_it)
+		{
+			return (rev_it + n);
+		}
+
+		friend difference_type operator- ( const reverse_iterator & lhs, const reverse_iterator & rhs)
+		{
+			return (lhs.base() - rhs.base());
+		}
 	};
-	// 3. reverse_iterator non-member functions overloads
-	template <class Iterator>
-	bool operator== (const reverse_iterator<Iterator>& lhs,
-					const reverse_iterator<Iterator>& rhs)
-	{
-		return (lhs.base() == rhs.base());
-	}
-
-	template <class Iterator>
-	bool operator!= (const reverse_iterator<Iterator>& lhs,
-					const reverse_iterator<Iterator>& rhs)
-	{
-		return (lhs.base() != rhs.base());
-	}
-
-	template <class Iterator>
-	bool operator<  (const reverse_iterator<Iterator>& lhs,
-					const reverse_iterator<Iterator>& rhs)
-	{
-		return (lhs.base() < rhs.base());
-	}
-
-	template <class Iterator>
-	bool operator<= (const reverse_iterator<Iterator>& lhs,
-					const reverse_iterator<Iterator>& rhs)
-	{
-		return (lhs.base() <= rhs.base());
-	}
-
-	template <class Iterator>
-	bool operator>  (const reverse_iterator<Iterator>& lhs,
-					const reverse_iterator<Iterator>& rhs)
-	{
-		return (lhs.base() > rhs.base());
-	}
-
-	template <class Iterator>
-	bool operator>= (const reverse_iterator<Iterator>& lhs,
-					const reverse_iterator<Iterator>& rhs)
-	{
-		return (lhs.base() >= rhs.base());
-	}
-
-	template <class Iterator>
-	reverse_iterator<Iterator> operator+ (
-		typename reverse_iterator<Iterator>::difference_type n,
-		const reverse_iterator<Iterator>& rev_it)
-	{
-		return (rev_it + n);
-	}
-
-	template <class Iterator>
-	typename reverse_iterator<Iterator>::difference_type operator- (
-		const reverse_iterator<Iterator>& lhs,
-		const reverse_iterator<Iterator>& rhs)
-	{
-		return (lhs.base() - rhs.base());
-	}
 	
 	// // 5. Iterator operations
 	template <class InputIterator, class Distance>

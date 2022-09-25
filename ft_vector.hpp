@@ -6,7 +6,7 @@
 /*   By: dkim2 <dkim2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/06 16:16:00 by dkim2             #+#    #+#             */
-/*   Updated: 2022/09/23 23:06:22 by dkim2            ###   ########.fr       */
+/*   Updated: 2022/09/24 09:53:32 by dkim2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,8 @@ namespace ft
 		typedef typename allocator_type::const_pointer		const_pointer;
 		typedef ft::vectorIterator<T> 				iterator;
 		typedef ft::vectorIterator<const T>			const_iterator;
+		// typedef ft::vectorIterator<pointer> 				iterator;
+		// typedef ft::vectorIterator<const_pointer>			const_iterator;
 		typedef typename allocator_type::size_type			size_type;
 		typedef typename allocator_type::difference_type	difference_type;
 		typedef ft::reverse_iterator<iterator> 				reverse_iterator;
@@ -500,33 +502,33 @@ namespace ft
 
 		// C. Non-member Functions
 
-		friend bool operator==(ft::vector<T, Alloc> & lhs, ft::vector<T, Alloc> & rhs)
+		friend bool operator==(const ft::vector<T, Alloc> & lhs, const ft::vector<T, Alloc> & rhs)
 		{
 			if (lhs.size() != rhs.size())
 				return (false);
 			return (ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
 		}
-		friend bool operator!=(ft::vector<T, Alloc> & lhs, ft::vector<T, Alloc> & rhs)
+		friend bool operator!=(const ft::vector<T, Alloc> & lhs, const ft::vector<T, Alloc> & rhs)
 		{
 			return ( !(lhs == rhs) );
 		}
-		friend bool operator<(ft::vector<T, Alloc> & lhs, ft::vector<T, Alloc> & rhs)
+		friend bool operator<(const ft::vector<T, Alloc> & lhs, const ft::vector<T, Alloc> & rhs)
 		{
 			return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
 		}
-		friend bool operator<=(ft::vector<T, Alloc> & lhs, ft::vector<T, Alloc> & rhs)
+		friend bool operator<=(const ft::vector<T, Alloc> & lhs, const ft::vector<T, Alloc> & rhs)
 		{
 			return ( !(rhs < lhs) );
 		}
-		friend bool operator>(ft::vector<T, Alloc> & lhs, ft::vector<T, Alloc> & rhs)
+		friend bool operator>(const ft::vector<T, Alloc> & lhs, const ft::vector<T, Alloc> & rhs)
 		{
 			return ( rhs < lhs );
 		}
-		friend bool operator>=(ft::vector<T, Alloc> & lhs, ft::vector<T, Alloc> & rhs)
+		friend bool operator>=(const ft::vector<T, Alloc> & lhs, const ft::vector<T, Alloc> & rhs)
 		{
 			return ( !(lhs < rhs) );
 		}
-		friend void swap(ft::vector<T, Alloc> & x, ft::vector<T, Alloc> & y)
+		friend void swap(const ft::vector<T, Alloc> & x, const ft::vector<T, Alloc> & y)
 		{
 			x.swap(y);
 		}
