@@ -1,3 +1,5 @@
+#include <ostream>
+
 namespace ft
 {
 	enum Color {RED = 0, BLACK = 1};
@@ -29,29 +31,24 @@ namespace ft
 		}
 		~RBtreeNode() {};
 
-		const T & getData() const
-		{
-			return (this->_data);
-		}
+		const T & getData() const { return (this->_data); }
 
-		enum Color getColor() const
-		{
-			return (_color);
-		}
+		enum Color getColor() const { return (_color); }
 
-		void setColor(enum Color color)
-		{
-			this->_color = color;
-		}
+		void setColor(enum Color color) { this->_color = color; }
 
-		bool operator== (const RBtreeNode & other) const
-		{
-			return (this->_data == other._data);
-		}
+		bool operator== (const RBtreeNode & other) const { return (this->_data == other._data); }
 
-		bool operator!= (const RBtreeNode & other) const
+		bool operator!= (const RBtreeNode & other) const { return (this->_data != other._data); }
+
+		friend ostream & operator<< ( ostream & os, const RBtreeNode & node)
 		{
-			return (this->_data != other._data);
+			if (node.getColor() == RED)
+				os << "\033[1;107;91m"
+			else
+				os << "\033[1;107;30m"
+			os << node.data << "\033[0m";
+			return (os);
 		}
 	};
 }

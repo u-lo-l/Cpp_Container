@@ -6,7 +6,7 @@
 /*   By: dkim2 <dkim2@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/06 16:16:00 by dkim2             #+#    #+#             */
-/*   Updated: 2022/09/25 23:33:17 by dkim2            ###   ########.fr       */
+/*   Updated: 2022/09/26 15:16:51 by dkim2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -419,6 +419,7 @@ namespace ft
 			this->_end += n;
 		}
 		
+		// 현재 insert의 문제 : 새로운 데이터 공간을 만드는 도중에 실패가 발생하면 망한다.
 		template <class InputIterator>
 		void
 		insert
@@ -432,7 +433,6 @@ namespace ft
 			const difference_type n = ft::distance(first, last);
 			if ( this->_size + n > this->_capacity )
 				this->reserve(_doubleCapacity(this->_size + n));
-			std::cout << "1" << std::endl;
 			pointer construct_ptr = this->_end + n;
 			pointer destroy_ptr = this->_end;
 			position = this->begin() + offset;
@@ -441,10 +441,8 @@ namespace ft
 				this->_allocator_object.construct(--construct_ptr, *(--destroy_ptr));
 				this->_allocator_object.destroy(destroy_ptr);
 			}
-			std::cout << "2" << std::endl;
 			while ( construct_ptr != &*position )
 				this->_allocator_object.construct(--construct_ptr, *(--last));
-			std::cout << "3" << std::endl;
 			this->_size += n;
 			this->_end += n;
 		}

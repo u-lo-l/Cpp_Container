@@ -38,7 +38,7 @@ public:
 template<class T>
 void Res( const std::string & name , const std::vector<T> & v)
 {
-    std::cout << name << " RES" << std::endl;
+    std::cout << "\n" << name << " RES" << std::endl;
     std::cout << "  size   : " << v.size() << std::endl;
     std::cout << "capacity : " << v.capacity() << std::endl;
     for (int i = 0 ; i < v.size(); i++)
@@ -59,19 +59,19 @@ std::vector<int> insert_test_3(std::vector<T> vector) {
     v.push_back(vector[3]);
     v.push_back(vector.size());
     v.push_back(vector.capacity());
-    Res("std_v", v);
+    Res("\033[1;35mstd_v\033[0m", v);
 
     std::unique_ptr<B> k2(new B(3));
     std::unique_ptr<B> k3(new B(4));
     std::unique_ptr<B> k4(new B(-1));
     std::vector<A> vv;
-    Res("std_vv", vv);
+    Res("\033[1;35mstd_vv\033[0m", vv);
     std::vector<B*> v1;
 
     v1.push_back(&(*k2));
     v1.push_back(&(*k3));
     v1.push_back(&(*k4));
-    Res("std_v1", v1);
+    Res("\033[1;35mstd_v1\033[0m", v1);
     try
     {
         vv.insert(vv.begin(), v1.begin(), v1.end());
@@ -88,15 +88,16 @@ std::vector<int> insert_test_3(std::vector<T> vector) {
         v.push_back(vv.size());
         v.push_back(vv.capacity());
     }
-    Res("std_vv", vv);
-    Res("std_v", v);
+    Res("\033[1;35mstd_vv\033[0m", vv);
+    Res("\033[1;35mstd_v\033[0m", v);
+    std::cout << std::endl << std::endl << std::endl;
     return v;
 }
 
 template<class T>
 void Res( const std::string & name , const ft::vector<T> & v)
 {
-    std::cout << name << " RES" << std::endl;
+    std::cout << "\n" << name << " RES" << std::endl;
     std::cout << "  size   : " << v.size() << std::endl;
     std::cout << "capacity : " << v.capacity() << std::endl;
     for (int i = 0 ; i < v.size(); i++)
@@ -116,19 +117,19 @@ std::vector<int> insert_test_3(_vector<T> vector) {
     v.push_back(vector[3]);
     v.push_back(vector.size());
     v.push_back(vector.capacity());
-    Res("ft_v", v);
+    Res("\033[1;35mstd_v\033[0m", v);
 
     std::unique_ptr<B> k2(new B(3));
     std::unique_ptr<B> k3(new B(4));
     std::unique_ptr<B> k4(new B(-1));
     _vector<A> vv;
-    Res("ft_vv", vv);
+    Res("\033[1;35mft_vv\033[0m", vv);
     _vector<B*> v1;
 
     v1.push_back(&(*k2));
     v1.push_back(&(*k3));
     v1.push_back(&(*k4));
-    Res("ft_v1", v1);
+    Res("\033[1;35mft_v1\033[0m", v1);
     try 
     {
         vv.insert(vv.begin(), v1.begin(), v1.end());
@@ -145,8 +146,8 @@ std::vector<int> insert_test_3(_vector<T> vector) {
         v.push_back(vv.size());
         v.push_back(vv.capacity());
     }
-    Res("ft_vv", vv);
-    Res("ft_v", v);
+    Res("\033[1;35mft_vv\033[0m", vv);
+    Res("\033[1;35mstd_v\033[0m", v);
     return v;
 }
 
