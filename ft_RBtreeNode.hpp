@@ -1,5 +1,9 @@
 #include <ostream>
 
+
+/*
+	
+*/
 namespace ft
 {
 	enum Color {RED = 0, BLACK = 1};
@@ -12,13 +16,13 @@ namespace ft
 		typedef	struct RBtreeNode	node_type;
 		enum Color					_color;
 		T							_data;
-		RBtreeNode	*_pleftChild;
+		RBtreeNode	*_pLeftChild;
 		RBtreeNode	*_pRightChild;
 		RBtreeNode	*_pParent;
 	public :
 		friend template<class U> class RBtree;
-		RBtreeNode ( T data )
-		: _data(data), _color(RED), _pleftChild(NULL), _pRightChild(NULL), _pParent(NULL)
+		RBtreeNode ( T data , RBtreeNode * pParent = NULL)
+		: _data(data), _color(RED), _pleftChild(NULL), _pRightChild(NULL), _pParent(pParent)
 		{}
 		RBtreeNode ( const RBtreeNode & other)
 		: _data(other.data), _color(other.RED), _pleftChild(other._pleftChild), _pRightChild(other._pRightChild), _pParent(other._pParent)
