@@ -362,10 +362,7 @@ namespace ft
 			else
 				targetNode->_pParent->_pRightChild = this->_nilnode;
 			delete targetNode;
-			// while (target_color == BLACK)
-			// {
-
-			// }
+			_deleteRestructor()
 		}
 	}
 
