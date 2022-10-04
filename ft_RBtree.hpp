@@ -1,7 +1,9 @@
 #include <memory>
 #include <exception>
 
+#include <vector>
 #include "ft_RBtreeNode.hpp"
+
 namespace ft
 {
 	template <class T>
@@ -12,8 +14,9 @@ namespace ft
 	{
 	private :
 		/* private members */
-		typedef RBtreeNode * NodePtr;
-		const static NodePtr _nilnode = NULL;
+		typedef RBtreeNode<T> Nodetype;
+		typedef RBtreeNode<T>* NodePtr;
+		NodePtr _nilnode;
 		NodePtr	_pRoot;
 		
 		/* private method */
@@ -23,6 +26,7 @@ namespace ft
 		bool	_isLeafNode(NodePtr pNode) {return (_isNilNode(pNode->_pLeftChild) && _isNilNode(pNode->_pRightChild));} //done
 		void	_inOrderHelper(NodePtr pNode);
 		void	_inOrderTraversal(void) { _inOrderHelper(this->_pRoot); }
+		// void	_preOrderHelper(NodePtr pNode);
 		// rotation
 		void	_rotateLeft(NodePtr pPivotNode); //done
 		void	_rotateRight(NodePtr pPivotNode); //done
@@ -39,20 +43,31 @@ namespace ft
 		void _deleteRestructor(NodePtr pPivot);
 	public :
 		//(constructor)
-		RBtree( void ) :_pRoot(NULL) {}
+		RBtree( void ) :_pRoot(NULL), _nilnode(NULL) {}
 		RBtree( const RBtree & other );
 		RBtree & operator=( const RBtree & other );
 		//(destructor)
-		~RBtree();
+		~RBtree() {};
 
 		//member functions
-		NodePtr searach(const T & key) { return (_searchHelper(this->_pRoot, key)); } //done
+		const Nodetype & getRoot( void ) { return (*_pRoot); } const 
+		NodePtr search(const T & key) { return (_searchHelper(this->_pRoot, key)); } //done
 		void insertNode(T key); //done
 		void deleteNode(T key);
 
 		/*non_member function*/
-		friend ostream & operator<<( ostream & os, const RBtree & tree );
+		friend std::ostream & operator<<( std::ostream & os, const RBtree & tree );
 	}; // class RBtree
+
+	// template< class T >
+	// void RBtree<T>::_preOrderHelper(typename RBtree<T>::NodePtr pNode)
+	// {
+	// 	if (pNode == NULL ||_isNilNode(pNode) == true)
+	// 		return ;
+	// 	std::cout << *pNode << " ";
+	// 	_inOrderHelper(pNode->_pLeftChild);
+	// 	_inOrderHelper(pNode->_pLeftChild);
+	// }
 
 	template< class T >
 	void RBtree<T>::_inOrderHelper(typename RBtree<T>::NodePtr pNode)
@@ -60,7 +75,7 @@ namespace ft
 		if (pNode == NULL ||_isNilNode(pNode) == true)
 			return ;
 		_inOrderHelper(pNode->_pLeftChild);
-		std::cout << *pNode << " "
+		std::cout << *pNode << " ";
 		_inOrderHelper(pNode->_pLeftChild);
 	}
 
@@ -85,6 +100,8 @@ namespace ft
 			5. set x to y's left child
 			6. set x's parent to y
 		*/
+		// std::cout << "[rotate  Left], nodeptr : " << pPivotNode << std::endl;
+		// std::cout << *pPivotNode << std::endl;
 		NodePtr x = pPivotNode;
 		NodePtr	y = x->_pRightChild;
 		
@@ -103,13 +120,15 @@ namespace ft
 			x->_pParent->_pRightChild = y;
 		
 		y->_pLeftChild = x;
-		
 		x->_pParent = y;
+		// std::cout << "[rotate  Left], Done : " << std::endl;
 	}
 
 	template< class T >
 	void RBtree<T>::_rotateRight( typename RBtree<T>::NodePtr pPivotNode )
 	{
+		// std::cout << "[rotate Right], nodeptr : " << pPivotNode << std::endl;
+		// std::cout << *pPivotNode << std::endl;
 		NodePtr x = pPivotNode;
 		NodePtr y = x->_pLeftChild;
 
@@ -125,27 +144,36 @@ namespace ft
 			x->_pParent->_pRightChild = y;
 		y->_pRightChild = x;
 		x->_pParent = y;
+		// std::cout << "[rotate Right], Done : " << std::endl;
 	}
 
 	template< class T >
 	void RBtree<T>::insertNode(T key)
 	{
 		if (this->_pRoot == NULL)
+		{
+			std::cout << "[insert 0] : " << key << std::endl;
 			_pRoot = new RBtreeNode<T>(key);
+		}
 		else
+		{
+			std::cout << "[insert] : " << key << std::endl;
 			_BStreeInsert(this->_pRoot, key);
+		}
 		this->_pRoot->setColor(BLACK);
 	}
 
 	template< class T >
 	void RBtree<T>::_BStreeInsert( typename RBtree<T>::NodePtr pNode, T key )
 	{
-		if (key == pNode.getData())
+		if (key == pNode->getData())
 			throw std::exception();
-		else if (key < pNode.getData())
+		else if (key < pNode->getData())
 		{
+			std::cout << "[insert]	go left" << std::endl;
 			if (this->_isNilNode(pNode->_pLeftChild) == true)
 			{
+				std::cout << "[insert]	make new node at left" << std::endl;
 				pNode->_pLeftChild = new RBtreeNode<T>(key, pNode);
 				_insertRestructor(pNode->_pLeftChild);
 			}
@@ -154,8 +182,10 @@ namespace ft
 		}
 		else
 		{
+			std::cout << "[insert]	go right" << std::endl;
 			if (this->_isNilNode(pNode->_pRightChild) == true)
 			{
+				std::cout << "[insert]	make new node at right" << std::endl;
 				pNode->_pRightChild = new RBtreeNode<T>(key, pNode);
 				_insertRestructor(pNode->_pRightChild);
 			}
@@ -165,7 +195,7 @@ namespace ft
 	}
 
 	template< class T >
-	void RBtree<T>::_insertRestructor( typename RBtree<T>::NodePtr pKeyNode )
+	void RBtree<T>::_insertRestructor( typename RBtree<T>::NodePtr KeyNode )
 	{
 		/*
 		 *  K : target_node. P : parent_node. U : uncle_node.(sibling of P) G : grand_parenent_node. S : sibling
@@ -179,19 +209,21 @@ namespace ft
 		 *			3.2.3: P is leftchild of G and K is left child of P => mirror of case 3.2.1 : RightRotate->recolor
 		 *			3.2.4: P is leftchild of G and K is left child of P => mirror of case 3.2.2 : leftRotate -> 3.2.3
 		*/
-		NodePtr K = pKeyNode;
+		NodePtr K = KeyNode;
 		NodePtr P = K->_pParent;
 		if (_isNilNode(P) || P->getColor() == BLACK)
 			return ;
 		NodePtr	G = P->_pParent;
 		NodePtr U;
+		std::cout << "[insert]	Restruct : ";
 		while (P->getColor() == RED)
 		{
 			if (P == G->_pRightChild)
 			{
-				U = G->_pRightChild;
-				if (U->getColor() == RED) // 3.1
+				U = G->_pLeftChild;
+				if (!_isNilNode(U) && U->getColor() == RED) // 3.1
 				{
+					std::cout << "R case 3.1 ";
 					P->setColor(BLACK);
 					U->setColor(BLACK);
 					G->setColor(RED);
@@ -199,9 +231,13 @@ namespace ft
 				}
 				else
 				{
-					if (K = P->_pRightChild)
-						_rotateLeft(P); // 3.2.2 K becomes P's Parent
-					_rotateRight(G)	// 3.2.1
+					if (K == P->_pLeftChild)
+					{
+						std::cout << "R case 3.2.2 ";
+						_rotateRight(P); // 3.2.2 K becomes P's Parent
+					}
+					std::cout << "R case 3.2.1 ";
+					_rotateLeft(G);	// 3.2.1
 					G->setColor(RED);
 					P->setColor(BLACK);
 					K = P; // update target Node for next iteration
@@ -209,9 +245,10 @@ namespace ft
 			}
 			else
 			{
-				U = G->_pLeftChild;
-				if (U->getColor() == RED) // 3.1
+				U = G->_pRightChild;
+				if (!_isNilNode(U) && U->getColor() == RED) // 3.1
 				{
+					std::cout << "L case 3.1 ";
 					P->setColor(BLACK);
 					U->setColor(BLACK);
 					G->setColor(RED);
@@ -219,15 +256,20 @@ namespace ft
 				}
 				else
 				{
-					if (K = P->_pLeftChild)
-						_rotateRight(P); // 3.2.4 K becomes P's Parent
-					_rotateLeft(G)	// 3.2.3
+					if (K == P->_pRightChild)
+					{
+						std::cout << "L case 3.2.4 ";
+						_rotateLeft(P); // 3.2.4 K becomes P's Parent
+					}
+					std::cout << "L case 3.2.3 ";
+					_rotateRight(G);	// 3.2.3
 					G->setColor(RED);
 					P->setColor(BLACK);
 					K = P; // update target Node for next iteration
 				}
 			}
 		}
+		std::cout << std::endl;
 	}
 
 	template< class T >
@@ -235,7 +277,7 @@ namespace ft
 	{
 		NodePtr successor;
 
-		if (_isNilNode(pNode->_pleftChild) == true) // pNode is leafnode or just have rightchild
+		if (_isNilNode(pNode->_pLeftChild) == true) // pNode is leafnode or just have rightchild
 			successor = pNode->_pRightChild;
 		else if (_isNilNode(pNode->_pRightChild) == true) // pNode just have leftChild
 			successor = pNode->_pLeftChild;
@@ -253,13 +295,12 @@ namespace ft
 	{
 		if (_isRootNode(pNode) == true)
 			this->_pRoot = pSuccessor;
-		else if (pNode == pNode->_pParent->_pleftChild)
-			pNode->_pParent->_pleftChild = pSuccessor;
+		else if (pNode == pNode->_pParent->_pLeftChild)
+			pNode->_pParent->_pLeftChild = pSuccessor;
 		else
 			pNode->_pParent->_pRightChild = pSuccessor;
 		pSuccessor->_pParent = pNode->_pParent;
 	}
-
 
 	/*
 		process : firstly follow the ordinary BST deletion.
@@ -268,6 +309,7 @@ namespace ft
 	template< class T >
 	void RBtree<T>::_BStreeDelete( typename RBtree<T>::NodePtr pNode , T key )
 	{
+		std::cout << "[bsDELETE]" << std::endl;
 		NodePtr targetNode = RBtree<T>::_nilnode;
 		NodePtr K = pNode;
 		while (!_isNilNode(K))
@@ -285,31 +327,60 @@ namespace ft
 		// 전달 받은 키에 해당하는 노드가 없는 경우
 		if (_isNilNode(targetNode))
 		{
-			std::cerr<<"Couldn't find key in the tree"<<std::endl;
+			std::cerr << "Can not find key in the tree" << std::endl;
 			throw (std::exception());
 		}
 		// 삭제할 노드가 leafnode가 아닌 경우, 이 노드와 successor노드와 교체해준다. successor는 항상 leaf이다.
 		// 그럼 삭제할 노드가 leafnode로 변경된다.
-		ft::Color	target_colr = targetNode->getColor();
+		ft::Color target_color = targetNode->getColor();
 		if (_isLeafNode(targetNode) == false)
 		{
-			NodePtr successor = _getSuccessor(targetNode)->getData();
+			NodePtr successor = _getSuccessor(targetNode);
+			std::cout << "[Before Transplamt] " << std::endl;
+			std::cout << "\t  target  : " << targetNode << std::endl;
+			std::cout << "\tsuccessor : " << successor << std::endl;
 			_transplant(targetNode, successor);
+			std::cout << "[After  Transplant] " << std::endl;
+			std::cout << "\t  target  : " << targetNode << std::endl;
+			std::cout << "\tsuccessor : " << successor << std::endl;
 			targetNode = successor;
 		}
 		// 여기서 본격적인 삭제가 수행되는 부분이다.
 		// 삭제할 노드가 루트노드인 경우, 예외처리 해준다.
+		// 삭제할 노드가 루트노드이면, 그냥 노드를 삭제하고 this->_pRoot를 Null로 초기화 해주고 끝낸다.
 		if (_isRootNode(targetNode) == true)
 		{
-			delete taregetNode;
+			delete targetNode;
 			this->_pRoot = NULL;
 			return ;
 		}
+		// 삭제할 노드가 루트노드가 아닌 경우이다. 현재 targetNode는 항상 LeafNode이다.
 		else
 		{
-			
+			if (targetNode == targetNode->_pParent->_pLeftChild)
+				targetNode->_pParent->_pLeftChild = this->_nilnode;
+			else
+				targetNode->_pParent->_pRightChild = this->_nilnode;
+			delete targetNode;
+			// while (target_color == BLACK)
+			// {
+
+			// }
 		}
 	}
+
+	template <class T>
+	void RBtree<T>::_deleteRestructor(typename RBtree<T>::NodePtr pPivot)
+	{
+		
+	}
+
+	template <class T>
+	void RBtree<T>::deleteNode(T key)
+	{
+		_BStreeDelete(this->_pRoot, key);
+	}
+
 } // namespace ft
 
 
