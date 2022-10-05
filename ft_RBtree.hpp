@@ -38,19 +38,39 @@ namespace ft
 		// delete_helpers
 		NodePtr _getSuccessor(NodePtr pNode); //done
 		// Transplant : change targetnode and successor for delete targetnode 
-		void _transplant(NodePtr pNode, NodePtr pSuccessor); //done
+		void _transplant(NodePtr refNode, NodePtr refSuccessor);
 		void _BStreeDelete(NodePtr pNode, T key);
 		void _deleteRestructor(NodePtr pPivot);
 	public :
 		//(constructor)
-		RBtree( void ) :_pRoot(NULL), _nilnode(NULL) {}
-		RBtree( const RBtree & other );
-		RBtree & operator=( const RBtree & other );
+		RBtree( void )
+		{
+			_nilnode = new Nodetype(T(), NULL, NULL, NULL, BLACK);
+			_pRoot = _nilnode;
+		}
+		RBtree( const RBtree & other )
+		{
+			_nilnode = new Nodetype(T(), NULL, NULL, NULL, BLACK);
+			_pRoot = _nilnode;
+			// ... deep copy all nodes
+		}
+		RBtree & operator=( const RBtree & other )
+		{
+			if (this == &other)
+				return (*this);
+			// ... clear all nodes
+			// ... copy all nodes
+		}
 		//(destructor)
-		~RBtree() {};
+		~RBtree()
+		{
+			// ... clear all nodes
+			delete _nilnode;
+		}
 
 		//member functions
-		const Nodetype & getRoot( void ) { return (*_pRoot); } const 
+		const NodePtr	getNilPtr( void ) { return (_nilnode); } const
+		Nodetype & getRoot( void ) { return (*_pRoot); } const 
 		NodePtr search(const T & key) { return (_searchHelper(this->_pRoot, key)); } //done
 		void insertNode(T key); //done
 		void deleteNode(T key);
@@ -59,6 +79,9 @@ namespace ft
 		template<class U>
 		friend std::ostream & operator<<( std::ostream & os, const RBtree<U> & tree );
 	}; // class RBtree
+
+	// template <class T>
+	// typename RBtree<T>::Nodetype NULLNODE = RBtree<T>(T(), NULL, BLACK);
 
 	// template< class T >
 	// void RBtree<T>::_preOrderHelper(typename RBtree<T>::NodePtr pNode)
@@ -151,14 +174,13 @@ namespace ft
 	template< class T >
 	void RBtree<T>::insertNode(T key)
 	{
-		if (this->_pRoot == NULL)
+		std::cout << "insert : " << key << std::endl;
+		if (_isNilNode(this->_pRoot) == true)
 		{
-			std::cout << "[insert 0] : " << key << std::endl;
-			_pRoot = new RBtreeNode<T>(key);
+			_pRoot = new RBtreeNode<T>(key, _nilnode, _nilnode, _nilnode, BLACK);
 		}
 		else
 		{
-			std::cout << "[insert] : " << key << std::endl;
 			_BStreeInsert(this->_pRoot, key);
 		}
 		this->_pRoot->setColor(BLACK);
@@ -169,13 +191,12 @@ namespace ft
 	{
 		if (key == pNode->getData())
 			throw std::exception();
-		else if (key < pNode->getData())
+		if (key < pNode->getData())
 		{
-			std::cout << "[insert]	go left" << std::endl;
-			if (this->_isNilNode(pNode->_pLeftChild) == true)
+			std::cout << "smal" << std::endl;
+			if (_isNilNode(pNode->_pLeftChild) == true)
 			{
-				std::cout << "[insert]	make new node at left" << std::endl;
-				pNode->_pLeftChild = new RBtreeNode<T>(key, pNode);
+				pNode->_pLeftChild = new RBtreeNode<T>(key, _nilnode, _nilnode, pNode);
 				_insertRestructor(pNode->_pLeftChild);
 			}
 			else
@@ -183,11 +204,10 @@ namespace ft
 		}
 		else
 		{
-			std::cout << "[insert]	go right" << std::endl;
-			if (this->_isNilNode(pNode->_pRightChild) == true)
+			std::cout << "big" << std::endl;
+			if (_isNilNode(pNode->_pRightChild) == true)
 			{
-				std::cout << "[insert]	make new node at right" << std::endl;
-				pNode->_pRightChild = new RBtreeNode<T>(key, pNode);
+				pNode->_pRightChild = new RBtreeNode<T>(key, _nilnode, _nilnode, pNode);
 				_insertRestructor(pNode->_pRightChild);
 			}
 			else
@@ -212,11 +232,10 @@ namespace ft
 		*/
 		NodePtr K = KeyNode;
 		NodePtr P = K->_pParent;
-		if (_isNilNode(P) || P->getColor() == BLACK)
+		if (P->getColor() == BLACK)
 			return ;
 		NodePtr	G = P->_pParent;
 		NodePtr U;
-		std::cout << "[insert]	Restruct : ";
 		while (P->getColor() == RED)
 		{
 			if (P == G->_pRightChild)
@@ -224,7 +243,7 @@ namespace ft
 				U = G->_pLeftChild;
 				if (!_isNilNode(U) && U->getColor() == RED) // 3.1
 				{
-					std::cout << "R case 3.1 ";
+					std::cout << "case 3.1 : P is r" << std::endl;
 					P->setColor(BLACK);
 					U->setColor(BLACK);
 					G->setColor(RED);
@@ -234,10 +253,13 @@ namespace ft
 				{
 					if (K == P->_pLeftChild)
 					{
-						std::cout << "R case 3.2.2 ";
+						std::cout << "case 3.2.2" << std::endl;
 						_rotateRight(P); // 3.2.2 K becomes P's Parent
 					}
-					std::cout << "R case 3.2.1 ";
+					std::cout << "case 3.2.1" << std::endl;
+					std::cout << "[ha...debug]" << std::endl;
+					std::cout << "\t G :" << G << ", " << *G << std::endl;
+					std::cout << "\t P :" << P << ", " << *P << std::endl;
 					_rotateLeft(G);	// 3.2.1
 					G->setColor(RED);
 					P->setColor(BLACK);
@@ -249,7 +271,7 @@ namespace ft
 				U = G->_pRightChild;
 				if (!_isNilNode(U) && U->getColor() == RED) // 3.1
 				{
-					std::cout << "L case 3.1 ";
+					std::cout << "case 3.1 : P is l" << std::endl;
 					P->setColor(BLACK);
 					U->setColor(BLACK);
 					G->setColor(RED);
@@ -259,10 +281,10 @@ namespace ft
 				{
 					if (K == P->_pRightChild)
 					{
-						std::cout << "L case 3.2.4 ";
+						std::cout << "case 3.2.4" << std::endl;
 						_rotateLeft(P); // 3.2.4 K becomes P's Parent
 					}
-					std::cout << "L case 3.2.3 ";
+					std::cout << "case 3.2.3" << std::endl;
 					_rotateRight(G);	// 3.2.3
 					G->setColor(RED);
 					P->setColor(BLACK);
@@ -294,25 +316,24 @@ namespace ft
 	template< class T >
 	void RBtree<T>::_transplant(typename RBtree<T>::NodePtr pNode, typename RBtree<T>::NodePtr pSuccessor)
 	{
-		std::cout << "[TRANSPLANT]";
-		std::cout << pNode << " and " << pSuccessor << std::endl;
-		std::cout << "pNode : " << *pNode << std::endl;
-		std::cout << "pSuccessor : " << *pSuccessor << std::endl;
+		// ft::swap(refNode, refSuccessor);
+		// NodePtr temp;
 		// if (_isRootNode(pNode) == true)
-		// 	this->_pRoot = pSuccessor;
-		// else if (pNode == pNode->_pParent->_pLeftChild)
-		// 	pNode->_pParent->_pLeftChild = pSuccessor;
+		// {
+			
+		// }
 		// else
-		// 	pNode->_pParent->_pRightChild = pSuccessor;
-		// pSuccessor->_pParent = pNode->_pParent;
-		// ft::swap(*pNode, *pSuccessor);
-		pNode->swap((*pSuccessor));
-		(*pNode)._data = 8;
-		std::cout << "[TRANSPLANT RESULT]";
-		std::cout << pNode << " and " << pSuccessor << std::endl;
-		std::cout << "pNode : " << *pNode << std::endl;
-		std::cout << "pSuccessor : " << *pSuccessor << std::endl;
-		std::exit(1);
+		// {
+		// 	if (pNode = pNode->_pParent->_pLeftChild)
+		// 	{
+		// 		pNode->_pParent->_pLeftChild = pSuccessor;
+
+		// 	}
+		// 	else
+		// 	{
+
+		// 	}
+		// }
 	}
 
 	/*
@@ -323,13 +344,13 @@ namespace ft
 	void RBtree<T>::_BStreeDelete( typename RBtree<T>::NodePtr pNode , T key )
 	{
 		std::cout << "[bsDELETE]" << std::endl;
-		NodePtr targetNode = RBtree<T>::_nilnode;
+		NodePtr pTargetNode = RBtree<T>::_nilnode;
 		NodePtr K = pNode;
 		while (!_isNilNode(K))
 		{
 			if (K->getData() == key) 
 			{
-				targetNode = K;
+				pTargetNode = K;
 				break;
 			}
 			if (K->getData() <= key)
@@ -338,43 +359,51 @@ namespace ft
 				K = K->_pLeftChild;
 		}
 		// 전달 받은 키에 해당하는 노드가 없는 경우
-		if (_isNilNode(targetNode))
+		if (_isNilNode(pTargetNode))
 		{
 			std::cerr << "Can not find key in the tree" << std::endl;
 			throw (std::exception());
 		}
 		// 삭제할 노드가 leafnode가 아닌 경우, 이 노드와 successor노드와 교체해준다. successor는 항상 leaf이다.
 		// 그럼 삭제할 노드가 leafnode로 변경된다.
-		ft::Color target_color = targetNode->getColor();
-		if (_isLeafNode(targetNode) == false)
+		std::cout << "\tTARGET : " << *pTargetNode << "\t\t" << pTargetNode << std::endl;
+		ft::Color target_color = pTargetNode->getColor();
+		std::cout << "Target COLOR : " << ((target_color == RED) ? "RED" : "BLACK") << std::endl;
+		if (_isLeafNode(pTargetNode) == false)
 		{
-			NodePtr successor = _getSuccessor(targetNode);
+			NodePtr pSuccessor = _getSuccessor(pTargetNode);
 			std::cout << "[Before Transplamt] " << std::endl;
-			std::cout << "\t  target  : " << targetNode << std::endl;
-			std::cout << "\tsuccessor : " << successor << std::endl;
-			_transplant(targetNode, successor);
+			std::cout << "\t  target  : " << pTargetNode << " : " << *pTargetNode << std::endl;
+			std::cout << "\tpSuccessor : " << pSuccessor << " : " << *pSuccessor << std::endl;
+			_transplant(pTargetNode, pSuccessor);
+			// NodePtr temp = pTargetNode;
+			// pTargetNode = pSuccessor;
+			// pSuccessor = temp;
+			std::exit(1);
 			std::cout << "[After  Transplant] " << std::endl;
-			std::cout << "\t  target  : " << targetNode << std::endl;
-			std::cout << "\tsuccessor : " << successor << std::endl;
-			targetNode = successor;
+			std::cout << "\t  target  : " << pTargetNode << " : " << *pTargetNode << std::endl;
+			std::cout << "\tpSuccessor : " << pSuccessor << " : " << *pSuccessor << std::endl;
 		}
 		// 여기서 본격적인 삭제가 수행되는 부분이다.
 		// 삭제할 노드가 루트노드인 경우, 예외처리 해준다.
 		// 삭제할 노드가 루트노드이면, 그냥 노드를 삭제하고 this->_pRoot를 Null로 초기화 해주고 끝낸다.
-		if (_isRootNode(targetNode) == true)
+		std::cout << "\t  REAL target  : " << pTargetNode << " : " << *pTargetNode << std::endl;
+		if (_isRootNode(pTargetNode) == true)
 		{
-			delete targetNode;
+			std::cout << "hi" << std::endl;
+			delete pTargetNode;
 			this->_pRoot = NULL;
 			return ;
 		}
-		// 삭제할 노드가 루트노드가 아닌 경우이다. 현재 targetNode는 항상 LeafNode이다.
+		// 삭제할 노드가 루트노드가 아닌 경우이다. 현재 pTargetNode는 항상 LeafNode이다.
 		else
 		{
-			if (targetNode == targetNode->_pParent->_pLeftChild)
-				targetNode->_pParent->_pLeftChild = this->_nilnode;
+			std::cout << "h2" << std::endl;
+			if (pTargetNode == pTargetNode->_pParent->_pLeftChild)
+				pTargetNode->_pParent->_pLeftChild = this->_nilnode;
 			else
-				targetNode->_pParent->_pRightChild = this->_nilnode;
-			delete targetNode;
+				pTargetNode->_pParent->_pRightChild = this->_nilnode;
+			delete pTargetNode;
 			// _deleteRestructor();
 		}
 	}

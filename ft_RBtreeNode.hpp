@@ -21,23 +21,27 @@ namespace ft
 		RBtreeNode	*_pParent;
 	public :
 		template<class U> friend class RBtree;
-		RBtreeNode ( T data , RBtreeNode * pParent = NULL)
-		: _data(data), _color(RED), _pLeftChild(NULL), _pRightChild(NULL), _pParent(pParent)
+		RBtreeNode ( 
+			T data , 
+			RBtreeNode * pleft = NULL,
+			RBtreeNode * pright = NULL,
+			RBtreeNode * pparent = NULL,
+			Color color = RED)
+		: _data(data), _color(color), _pLeftChild(pleft), _pRightChild(pright), _pParent(pparent)
 		{}
 		RBtreeNode ( const RBtreeNode & other)
 		: _data(other._data), _color(other._color), _pLeftChild(other._pLeftChild), _pRightChild(other._pRightChild), _pParent(other._pParent)
 		{}
-		RBtreeNode operator= (const RBtreeNode & other)
+		RBtreeNode & operator= (const RBtreeNode & other)
 		{
 			if (this == &other)
-			{
-				std::cout << "same" << std::endl;
 				return (*this);
-			}
-			std::cout << "diff" << std::endl;
-			RBtreeNode temp = RBtreeNode(other);
-			std::cout << "[=]" << temp << std::endl;
-			return (temp);
+			this->_data = other._data;
+			this->_color = other._color;
+			this->_pLeftChild = other._pLeftChild;
+			this->_pRightChild = other._pRightChild;
+			this->_pParent = other._pParent;
+			return (*this);
 		}
 		~RBtreeNode() {}
 
@@ -46,15 +50,6 @@ namespace ft
 		enum Color getColor() const { return (_color); }
 
 		void setColor(enum Color color) { this->_color = color; }
-
-		void swap(RBtreeNode & other)
-		{
-			RBtreeNode temp = other;
-			std::cout << temp << std::endl;
-			other = *this;
-			std::cout << other << std::endl;
-			*this = temp;
-		}
 
 		bool operator== (const RBtreeNode & other) const { return (this->_data == other._data); }
 
@@ -73,12 +68,21 @@ namespace ft
 			return (os);
 		}
 
-		// friend void swap( RBtreeNode & lhs, RBtreeNode & rhs)
-		// {
-		// 	RBtreeNode<U> temp;
-		// 	temp = lhs;
-		// 	lhs = rhs;
-		// 	rhs = temp;
-		// }
+		
 	}; // class RBtreeNode
+	template <class T>
+	void swap( ft::RBtreeNode<T> & node1, ft::RBtreeNode<T> & node2)
+	{
+		ft::RBtreeNode<T> temp = node1;
+		node1 = node2;
+		node2 = temp;
+	}
+
+	template <class T>
+	void swap( ft::RBtreeNode<T> * pnode1, ft::RBtreeNode<T> * pnode2)
+	{
+		ft::RBtreeNode<T> * temp = pnode1;
+		pnode1 = pnode2;
+		pnode2 = temp;
+	}
 } // namespace ft
