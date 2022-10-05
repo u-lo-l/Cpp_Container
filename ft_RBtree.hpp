@@ -56,7 +56,8 @@ namespace ft
 		void deleteNode(T key);
 
 		/*non_member function*/
-		friend std::ostream & operator<<( std::ostream & os, const RBtree & tree );
+		template<class U>
+		friend std::ostream & operator<<( std::ostream & os, const RBtree<U> & tree );
 	}; // class RBtree
 
 	// template< class T >
@@ -293,13 +294,25 @@ namespace ft
 	template< class T >
 	void RBtree<T>::_transplant(typename RBtree<T>::NodePtr pNode, typename RBtree<T>::NodePtr pSuccessor)
 	{
-		if (_isRootNode(pNode) == true)
-			this->_pRoot = pSuccessor;
-		else if (pNode == pNode->_pParent->_pLeftChild)
-			pNode->_pParent->_pLeftChild = pSuccessor;
-		else
-			pNode->_pParent->_pRightChild = pSuccessor;
-		pSuccessor->_pParent = pNode->_pParent;
+		std::cout << "[TRANSPLANT]";
+		std::cout << pNode << " and " << pSuccessor << std::endl;
+		std::cout << "pNode : " << *pNode << std::endl;
+		std::cout << "pSuccessor : " << *pSuccessor << std::endl;
+		// if (_isRootNode(pNode) == true)
+		// 	this->_pRoot = pSuccessor;
+		// else if (pNode == pNode->_pParent->_pLeftChild)
+		// 	pNode->_pParent->_pLeftChild = pSuccessor;
+		// else
+		// 	pNode->_pParent->_pRightChild = pSuccessor;
+		// pSuccessor->_pParent = pNode->_pParent;
+		// ft::swap(*pNode, *pSuccessor);
+		pNode->swap((*pSuccessor));
+		(*pNode)._data = 8;
+		std::cout << "[TRANSPLANT RESULT]";
+		std::cout << pNode << " and " << pSuccessor << std::endl;
+		std::cout << "pNode : " << *pNode << std::endl;
+		std::cout << "pSuccessor : " << *pSuccessor << std::endl;
+		std::exit(1);
 	}
 
 	/*
@@ -362,7 +375,7 @@ namespace ft
 			else
 				targetNode->_pParent->_pRightChild = this->_nilnode;
 			delete targetNode;
-			_deleteRestructor()
+			// _deleteRestructor();
 		}
 	}
 

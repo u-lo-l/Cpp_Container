@@ -25,13 +25,19 @@ namespace ft
 		: _data(data), _color(RED), _pLeftChild(NULL), _pRightChild(NULL), _pParent(pParent)
 		{}
 		RBtreeNode ( const RBtreeNode & other)
-		: _data(other.data), _color(other.RED), _pLeftChild(other._pLeftChild), _pRightChild(other._pRightChild), _pParent(other._pParent)
+		: _data(other._data), _color(other._color), _pLeftChild(other._pLeftChild), _pRightChild(other._pRightChild), _pParent(other._pParent)
 		{}
 		RBtreeNode operator= (const RBtreeNode & other)
 		{
 			if (this == &other)
+			{
+				std::cout << "same" << std::endl;
 				return (*this);
-			return (RBtreeNode(other));
+			}
+			std::cout << "diff" << std::endl;
+			RBtreeNode temp = RBtreeNode(other);
+			std::cout << "[=]" << temp << std::endl;
+			return (temp);
 		}
 		~RBtreeNode() {}
 
@@ -40,6 +46,15 @@ namespace ft
 		enum Color getColor() const { return (_color); }
 
 		void setColor(enum Color color) { this->_color = color; }
+
+		void swap(RBtreeNode & other)
+		{
+			RBtreeNode temp = other;
+			std::cout << temp << std::endl;
+			other = *this;
+			std::cout << other << std::endl;
+			*this = temp;
+		}
 
 		bool operator== (const RBtreeNode & other) const { return (this->_data == other._data); }
 
@@ -57,5 +72,13 @@ namespace ft
 			os << "\t right  : " << (node._pRightChild) << std::endl;
 			return (os);
 		}
+
+		// friend void swap( RBtreeNode & lhs, RBtreeNode & rhs)
+		// {
+		// 	RBtreeNode<U> temp;
+		// 	temp = lhs;
+		// 	lhs = rhs;
+		// 	rhs = temp;
+		// }
 	}; // class RBtreeNode
 } // namespace ft

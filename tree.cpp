@@ -72,9 +72,9 @@ int main()
 			std::cout << *node << std::endl;
 		}
 
-		// tree.deleteNode(6);
-		// ft::RBtreeNode<int> * node = tree.search(6);
-		// std::cout << node << std::endl;
+		tree.deleteNode(6);
+		ft::RBtreeNode<int> * node = tree.search(6);
+		std::cout << node << std::endl;
 
 		std::cout << "after delete" << std::endl;
 		{
