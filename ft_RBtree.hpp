@@ -21,9 +21,9 @@ namespace ft
 		
 		/* private method */
 		// utils
-		bool	_isNilNode(NodePtr pNode) {return (pNode == _nilnode);} //done
-		bool	_isRootNode(NodePtr pNode) {return (pNode->_pParent == NULL);} //done
-		bool	_isLeafNode(NodePtr pNode) {return (_isNilNode(pNode->_pLeftChild) && _isNilNode(pNode->_pRightChild));} //done
+		bool	_isNilNode(NodePtr pNode) const {return (pNode == _nilnode);} //done
+		bool	_isRootNode(NodePtr pNode) const {return (_isNilNode(pNode->_pParent));} //done
+		bool	_isLeafNode(NodePtr pNode) const {return (_isNilNode(pNode->_pLeftChild) && _isNilNode(pNode->_pRightChild));} //done
 		void	_inOrderHelper(NodePtr pNode);
 		void	_inOrderTraversal(void) { _inOrderHelper(this->_pRoot); }
 		// void	_preOrderHelper(NodePtr pNode);
@@ -31,12 +31,12 @@ namespace ft
 		void	_rotateLeft(NodePtr pPivotNode); //done
 		void	_rotateRight(NodePtr pPivotNode); //done
 		// search_helpers
-		NodePtr _searchHelper(NodePtr pNode, T key); //done
+		NodePtr _searchHelper(NodePtr pNode, T key) const; //done
 		// insert_helpers
 		void _BStreeInsert(NodePtr pNode, T key); //done
 		void _insertRestructor(NodePtr pPivot); //done
 		// delete_helpers
-		NodePtr _getSuccessor(NodePtr pNode); //done
+		NodePtr _getSuccessor(NodePtr pNode) const;//done
 		// Transplant : change targetnode and successor for delete targetnode 
 		void _transplant(NodePtr refNode, NodePtr refSuccessor);
 		void _BStreeDelete(NodePtr pNode, T key);
@@ -69,9 +69,9 @@ namespace ft
 		}
 
 		//member functions
-		const NodePtr	getNilPtr( void ) { return (_nilnode); } const
-		Nodetype & getRoot( void ) { return (*_pRoot); } const 
-		NodePtr search(const T & key) { return (_searchHelper(this->_pRoot, key)); } //done
+		const NodePtr	getNilPtr( void ) const { return (_nilnode); }
+		const Nodetype & getRoot( void ) const { return (*_pRoot); } 
+		NodePtr search(const T & key) const { return (_searchHelper(this->_pRoot, key)); } //done
 		void insertNode(T key); //done
 		void deleteNode(T key);
 
@@ -104,7 +104,7 @@ namespace ft
 	}
 
 	template< class T >
-	typename RBtree<T>::NodePtr RBtree<T>::_searchHelper(typename RBtree<T>::NodePtr node, T key)
+	typename RBtree<T>::NodePtr RBtree<T>::_searchHelper(typename RBtree<T>::NodePtr node, T key) const
 	{
 		if (_isNilNode(node) || node->getData() == key)
 			return (node);
@@ -236,7 +236,7 @@ namespace ft
 			return ;
 		NodePtr	G = P->_pParent;
 		NodePtr U;
-		while (P->getColor() == RED)
+		while (K->getColor() == RED && P->getColor() == RED)
 		{
 			if (P == G->_pRightChild)
 			{
@@ -260,9 +260,9 @@ namespace ft
 					std::cout << "[ha...debug]" << std::endl;
 					std::cout << "\t G :" << G << ", " << *G << std::endl;
 					std::cout << "\t P :" << P << ", " << *P << std::endl;
-					_rotateLeft(G);	// 3.2.1
 					G->setColor(RED);
 					P->setColor(BLACK);
+					_rotateLeft(G);	// 3.2.1
 					K = P; // update target Node for next iteration
 				}
 			}
@@ -285,9 +285,9 @@ namespace ft
 						_rotateLeft(P); // 3.2.4 K becomes P's Parent
 					}
 					std::cout << "case 3.2.3" << std::endl;
-					_rotateRight(G);	// 3.2.3
 					G->setColor(RED);
 					P->setColor(BLACK);
+					_rotateRight(G);	// 3.2.3
 					K = P; // update target Node for next iteration
 				}
 			}
@@ -296,7 +296,7 @@ namespace ft
 	}
 
 	template< class T >
-	typename RBtree<T>::NodePtr	RBtree<T>::_getSuccessor( typename RBtree<T>::NodePtr pNode )
+	typename RBtree<T>::NodePtr	RBtree<T>::_getSuccessor( typename RBtree<T>::NodePtr pNode ) const
 	{
 		NodePtr successor;
 
@@ -313,32 +313,46 @@ namespace ft
 		return (successor);
 	}
 
+	// 트리에서 특정 노드를 빼내고, 트리는 이진트리 규칙을 유지하는 기능이다.
 	template< class T >
 	void RBtree<T>::_transplant(typename RBtree<T>::NodePtr pNode, typename RBtree<T>::NodePtr pSuccessor)
 	{
-		// ft::swap(refNode, refSuccessor);
-		// NodePtr temp;
-		// if (_isRootNode(pNode) == true)
-		// {
-			
-		// }
-		// else
-		// {
-		// 	if (pNode = pNode->_pParent->_pLeftChild)
-		// 	{
-		// 		pNode->_pParent->_pLeftChild = pSuccessor;
-
-		// 	}
-		// 	else
-		// 	{
-
-		// 	}
-		// }
+		if (_isRootNode(pNode) == true)
+			this->_pRoot = pSuccessor;
+		else if (pNode == pNode->_pParent->_pLeftChild)
+			pNode->_pParent->_pLeftChild = pSuccessor;
+		else
+			pNode->_pParent->_pRightChild = pSuccessor;
+		if (_isNilNode(pSuccessor) == false)
+			pSuccessor->_pParent = pNode->_pParent;
 	}
 
 	/*
 		process : firstly follow the ordinary BST deletion.
-		이진 탐색트리에서의 삭제는 
+		
+		1. find node to delete (= x)
+		2. if there is no matching node, throw exception or do nothing
+		3. delete node by 3 cases
+			3.1 : node has no left child 
+				==> transplant(x, x->right)
+			3.2 : node has only left child
+				==> transplant(x, x->left)
+			3.3 : node has both left and right child
+				find successor or decessor node (substitute node : y) -> y = x->successor()
+				z = y->right
+				3.3.1 : y == x->rightchild (x->rightchild has no leftchild) (사실상 예외처리)
+					==> transplant(x, y),
+					==> y->left = x->left
+				3.3.2 : x->rightchild has left subtree (일반적인 케이스)
+					==> y->left = x->left
+					==> y->right = x->right
+					==> y->parent = x->parent
+					==> if x is rootnode
+					==> 	rootnode = y
+					==> elif x is leftchild
+					==> 	x->parent->left = y
+					==> else
+					==> 	x->parent->right = y;
 	*/
 	template< class T >
 	void RBtree<T>::_BStreeDelete( typename RBtree<T>::NodePtr pNode , T key )
@@ -346,6 +360,7 @@ namespace ft
 		std::cout << "[bsDELETE]" << std::endl;
 		NodePtr pTargetNode = RBtree<T>::_nilnode;
 		NodePtr K = pNode;
+		// 1. find node to delete
 		while (!_isNilNode(K))
 		{
 			if (K->getData() == key) 
@@ -358,60 +373,54 @@ namespace ft
 			else
 				K = K->_pLeftChild;
 		}
-		// 전달 받은 키에 해당하는 노드가 없는 경우
+		// 2. exception
 		if (_isNilNode(pTargetNode))
 		{
 			std::cerr << "Can not find key in the tree" << std::endl;
 			throw (std::exception());
 		}
-		// 삭제할 노드가 leafnode가 아닌 경우, 이 노드와 successor노드와 교체해준다. successor는 항상 leaf이다.
-		// 그럼 삭제할 노드가 leafnode로 변경된다.
-		std::cout << "\tTARGET : " << *pTargetNode << "\t\t" << pTargetNode << std::endl;
-		ft::Color target_color = pTargetNode->getColor();
-		std::cout << "Target COLOR : " << ((target_color == RED) ? "RED" : "BLACK") << std::endl;
-		if (_isLeafNode(pTargetNode) == false)
+		// 3.
+		Color nodecolor = pTargetNode->getColor();
+		NodePtr pSuccessor = this->_getSuccessor(pTargetNode);
+		if (_isLeafNode(pTargetNode) == true) // 3.1
+			this->_transplant(pTargetNode, pSuccessor);
+		else if (_isNilNode(pTargetNode->_pRightChild) == true) // 3.2
+			this->_transplant(pTargetNode, pSuccessor);
+		else if (_isNilNode(pTargetNode->_pRightChild->_pLeftChild) == true) // 3.3.1
 		{
-			NodePtr pSuccessor = _getSuccessor(pTargetNode);
-			std::cout << "[Before Transplamt] " << std::endl;
-			std::cout << "\t  target  : " << pTargetNode << " : " << *pTargetNode << std::endl;
-			std::cout << "\tpSuccessor : " << pSuccessor << " : " << *pSuccessor << std::endl;
-			_transplant(pTargetNode, pSuccessor);
-			// NodePtr temp = pTargetNode;
-			// pTargetNode = pSuccessor;
-			// pSuccessor = temp;
-			std::exit(1);
-			std::cout << "[After  Transplant] " << std::endl;
-			std::cout << "\t  target  : " << pTargetNode << " : " << *pTargetNode << std::endl;
-			std::cout << "\tpSuccessor : " << pSuccessor << " : " << *pSuccessor << std::endl;
+			this->_transplant(pTargetNode,pSuccessor);
+			pTargetNode->_pRightChild->_pLeftChild = pTargetNode->_pLeftChild;
 		}
-		// 여기서 본격적인 삭제가 수행되는 부분이다.
-		// 삭제할 노드가 루트노드인 경우, 예외처리 해준다.
-		// 삭제할 노드가 루트노드이면, 그냥 노드를 삭제하고 this->_pRoot를 Null로 초기화 해주고 끝낸다.
-		std::cout << "\t  REAL target  : " << pTargetNode << " : " << *pTargetNode << std::endl;
-		if (_isRootNode(pTargetNode) == true)
+		else // 3.3.2
 		{
-			std::cout << "hi" << std::endl;
-			delete pTargetNode;
-			this->_pRoot = NULL;
-			return ;
-		}
-		// 삭제할 노드가 루트노드가 아닌 경우이다. 현재 pTargetNode는 항상 LeafNode이다.
-		else
-		{
-			std::cout << "h2" << std::endl;
-			if (pTargetNode == pTargetNode->_pParent->_pLeftChild)
-				pTargetNode->_pParent->_pLeftChild = this->_nilnode;
+			this->_transplant(pSuccessor, pSuccessor->_pRightChild);
+			pSuccessor->_pLeftChild = pTargetNode->_pLeftChild;
+			pSuccessor->_pRightChild = pTargetNode->_pRightChild;
+			pSuccessor->_pParent = pTargetNode->_pParent;
+			if ( _isRootNode(pTargetNode) == true )
+				this->_pRoot = pSuccessor;
+			else if ( pTargetNode->_pParent->_pLeftChild  == pTargetNode )
+				pTargetNode->_pParent->_pLeftChild = pSuccessor;
 			else
-				pTargetNode->_pParent->_pRightChild = this->_nilnode;
-			delete pTargetNode;
-			// _deleteRestructor();
+				pTargetNode->_pParent->_pRightChild = pSuccessor;
 		}
+		delete pTargetNode;
+		if (nodecolor == ft::Color::BLACK)
+			_deleteRestructor(pSuccessor);
 	}
 
 	template <class T>
-	void RBtree<T>::_deleteRestructor(typename RBtree<T>::NodePtr pPivot)
+	void RBtree<T>::_deleteRestructor(typename RBtree<T>::NodePtr pNode)
 	{
-		
+		if (pNode->getColor() == ft::Color::RED)
+		{
+			pNode->setColor(ft::Color::BLACK);	
+			return ;
+		}
+		else
+		{
+			
+		}
 	}
 
 	template <class T>
