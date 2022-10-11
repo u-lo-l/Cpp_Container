@@ -106,7 +106,12 @@ namespace ft
 	template< class T >
 	typename RBtree<T>::NodePtr RBtree<T>::_searchHelper(typename RBtree<T>::NodePtr node, T key) const
 	{
-		if (_isNilNode(node) || node->getData() == key)
+		if (_isNilNode(node) == true)
+		{
+			std::cerr << "Can not find key in the tree" << std::endl;
+			throw(std::exception());
+		}
+		else if (node->getData() == key)
 			return (node);
 		if (key < node->getData())
 			return (_searchHelper(node->_pLeftChild, key));
@@ -257,7 +262,6 @@ namespace ft
 						_rotateRight(P); // 3.2.2 K becomes P's Parent
 					}
 					std::cout << "case 3.2.1" << std::endl;
-					std::cout << "[ha...debug]" << std::endl;
 					std::cout << "\t G :" << G << ", " << *G << std::endl;
 					std::cout << "\t P :" << P << ", " << *P << std::endl;
 					G->setColor(RED);
@@ -327,33 +331,6 @@ namespace ft
 			pSuccessor->_pParent = pNode->_pParent;
 	}
 
-	/*
-		process : firstly follow the ordinary BST deletion.
-		
-		1. find node to delete (= x)
-		2. if there is no matching node, throw exception or do nothing
-		3. delete node by 3 cases
-			3.1 : node has no left child 
-				==> transplant(x, x->right)
-			3.2 : node has only left child
-				==> transplant(x, x->left)
-			3.3 : node has both left and right child
-				find successor or decessor node (substitute node : y) -> y = x->successor()
-				z = y->right
-				3.3.1 : y == x->rightchild (x->rightchild has no leftchild) (사실상 예외처리)
-					==> transplant(x, y),
-					==> y->left = x->left
-				3.3.2 : x->rightchild has left subtree (일반적인 케이스)
-					==> y->left = x->left
-					==> y->right = x->right
-					==> y->parent = x->parent
-					==> if x is rootnode
-					==> 	rootnode = y
-					==> elif x is leftchild
-					==> 	x->parent->left = y
-					==> else
-					==> 	x->parent->right = y;
-	*/
 	template< class T >
 	void RBtree<T>::_BStreeDelete( typename RBtree<T>::NodePtr pNode , T key )
 	{
@@ -373,53 +350,106 @@ namespace ft
 			else
 				K = K->_pLeftChild;
 		}
+		// pTargetNode = this->search(key);
 		// 2. exception
 		if (_isNilNode(pTargetNode))
 		{
 			std::cerr << "Can not find key in the tree" << std::endl;
 			throw (std::exception());
 		}
-		// 3.
-		Color nodecolor = pTargetNode->getColor();
-		NodePtr pSuccessor = this->_getSuccessor(pTargetNode);
-		if (_isLeafNode(pTargetNode) == true) // 3.1
-			this->_transplant(pTargetNode, pSuccessor);
-		else if (_isNilNode(pTargetNode->_pRightChild) == true) // 3.2
-			this->_transplant(pTargetNode, pSuccessor);
-		else if (_isNilNode(pTargetNode->_pRightChild->_pLeftChild) == true) // 3.3.1
+
+		Color deleting_color;
+		NodePtr occupyingNode;
+		if (_isLeafNode(pTargetNode) == true) // no child
 		{
-			this->_transplant(pTargetNode,pSuccessor);
-			pTargetNode->_pRightChild->_pLeftChild = pTargetNode->_pLeftChild;
+			occupyingNode = this->_nilnode;
+			color = pTargetNode->getColor();
+			_transplant(pTargetNode, occupyingNode);
 		}
-		else // 3.3.2
+		else if (_isNilNode(pTargetNode->_pLeftChild) == true) // just rightchild
 		{
-			this->_transplant(pSuccessor, pSuccessor->_pRightChild);
-			pSuccessor->_pLeftChild = pTargetNode->_pLeftChild;
-			pSuccessor->_pRightChild = pTargetNode->_pRightChild;
-			pSuccessor->_pParent = pTargetNode->_pParent;
-			if ( _isRootNode(pTargetNode) == true )
-				this->_pRoot = pSuccessor;
-			else if ( pTargetNode->_pParent->_pLeftChild  == pTargetNode )
-				pTargetNode->_pParent->_pLeftChild = pSuccessor;
+			occupyingNode = pTargetNode->_pRightChild;
+			color = pTargetNode->getColor();
+			_transplant(pTargetNode, occupyingNode);
+		}
+		else if (_isNilNode(pTargetNode->_pRightChild) == true) // just leftchild
+		{
+			occupyingNode = pTargetNode->_pLeftChild;
+			color = pTargetNode->getColor();
+			_transplant(pTargetNode, occupyingNode);
+		}
+		else // both child
+		{
+			NodePtr successorNode = this->_getSuccessor(pTargetNode);
+			deleting_color = successorNode->getColor();
+			occupyingNode = successorNode->_pRightChild;
+
+			if (pTargetNode == successorNode->_pParent)
+			{
+				occupyingNode->_pParent = successorNode; // actually do nothing
+			}
 			else
-				pTargetNode->_pParent->_pRightChild = pSuccessor;
+			{
+				_transplant(successorNode, occupyingNode);
+				successorNode->_pRightChild = pTargetNode->_pRightChild;
+				successorNode->_pRightChild->_pParent = successorNode;
+			}
+			_transplant(pTargetNode, successorNode);
+			successorNode->_pLeftChild = pTargetNode->_pLeftChild;
+			successorNode->_pLeftChild->_pParent = successorNode;
+			successorNode->_color = pTargetNode->getColor();
 		}
-		delete pTargetNode;
-		if (nodecolor == ft::Color::BLACK)
-			_deleteRestructor(pSuccessor);
+		delete (pTargetNode);
+		if (deleting_color == ft::BLACK)
+			_deleteRestructor(occupyingNode);
 	}
 
+
+	/*
+		Nephew node : child nodes of Sibling Node
+		-> LN : left child of Sibling
+		-> RN : right child of Sibling
+	*/
 	template <class T>
 	void RBtree<T>::_deleteRestructor(typename RBtree<T>::NodePtr pNode)
 	{
-		if (pNode->getColor() == ft::Color::RED)
+		NodePtr N = pNode;
+		NodePtr S; // siblingNode
+		NodePtr LN; // left nephew
+		NodePtr RN; // right nephew
+		while (N->getColor() == ft::BLACK)
 		{
-			pNode->setColor(ft::Color::BLACK);	
-			return ;
-		}
-		else
-		{
-			
+			NodePtr P = N->_pParent; // parentNode;
+			if (N == P->_pLeftChild)
+			{
+				S = P->_pRightChild;
+				LN = S->_pLeftChild;
+				RN = S->_pRightChild;
+				if (S->getColor() == ft::RED)
+				{
+					P->setColor(ft::RED);
+					S->setColor(ft::BLACK);
+					_rotateLeft(P);
+				}
+				else if (RN->getColor() == ft::RED)
+				{
+
+				}
+				else if (LN->getColor() == ft::RED)
+				{
+
+				}
+				else
+				{
+
+				}
+			}
+			else
+			{
+				S = P->_pLeftChild;
+				LN = S->_pLeftChild;
+				RN = S->_pRightChild;
+			}
 		}
 	}
 
@@ -427,6 +457,7 @@ namespace ft
 	void RBtree<T>::deleteNode(T key)
 	{
 		_BStreeDelete(this->_pRoot, key);
+		this->_pRoot->setColor(ft::BLACK);
 	}
 
 } // namespace ft

@@ -9,23 +9,32 @@ int main()
 		std::cout << "nil ptr : " << tree.getNilPtr() << std::endl;
 		std::cout << "nil color : " << tree.getNilPtr()->getColor() << std::endl;
 		std::cout << "Root :" << tree.getRoot() << std::endl;
-		ft::RBtreeNode<int> * node = tree.search(1);
-		tree.insertNode(1);
-		node = tree.search(1);
-		std::cout << "Root :" << tree.getRoot() << std::endl;
-		std::cout << *node << "\t" << node << std::endl;
-		tree.insertNode(2);
-		tree.insertNode(3);
-		node = tree.search(3);
-		std::cout << "Root :" << tree.getRoot() << std::endl;
-		std::cout << *node << "\t" << node << std::endl;
-		// std::exit(1);
-		tree.insertNode(4);
-		tree.insertNode(5);
-		tree.insertNode(6);
-		tree.insertNode(7);
+		ft::RBtreeNode<int> * node;
+		// node = tree.search(1);
+		// tree.insertNode(1);
+		// node = tree.search(1);
+		// std::cout << "Root :" << tree.getRoot() << std::endl;
+		// std::cout << *node << "\t" << node << std::endl;
+		// tree.insertNode(2);
+		// tree.insertNode(3);
+		// node = tree.search(3);
+		// std::cout << "Root :" << tree.getRoot() << std::endl;
+		// std::cout << *node << "\t" << node << std::endl;
+		// // std::exit(1);
+		// tree.insertNode(4);
+		// tree.insertNode(5);
+		// tree.insertNode(6);
+		// tree.insertNode(7);
+
 		std::cout << "step1. insert" << std::endl;
 		{
+			tree.insertNode(1);
+			tree.insertNode(2);
+			tree.insertNode(3);
+			tree.insertNode(4);
+			tree.insertNode(5);
+			tree.insertNode(6);
+			tree.insertNode(7);
 			std::cout << "Root :" << tree.getRoot() << std::endl;
 			ft::RBtreeNode<int> * node = tree.search(1);
 			std::cout << *node << "\t" << node << std::endl;
@@ -45,7 +54,7 @@ int main()
 
 		tree.deleteNode(6);
 		node = tree.search(6);
-		std::cout << node << std::endl;
+		std::cout << "6 : " << node << std::endl;
 
 		std::cout << "after delete" << std::endl;
 		{
@@ -62,8 +71,8 @@ int main()
 			std::cout << *node << "\t" << node << std::endl;
 			node = tree.search(5);
 			std::cout << *node << "\t" << node << std::endl;
-			// node = tree.search(6);
-			// std::cout << *node << "\t" << node << std::endl;
+			node = tree.search(6);
+			std::cout << "NULL" << "\t" << node << std::endl;
 		}
 	}
 	catch (const std::exception & e)
