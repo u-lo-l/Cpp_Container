@@ -1,7 +1,7 @@
 #include <memory>
+#include <allocator>
 #include <exception>
 
-#include <queue>
 #include "ft_RBtreeNode.hpp"
 
 namespace ft
@@ -9,7 +9,7 @@ namespace ft
 	template <class T>
 	bool lessthan(const T & a, const T & b) { return (a < b); }
 
-	template < class T >
+	template < class T , class Alloc = std::allocator>
 	class RBtree
 	{
 	private :
@@ -45,12 +45,12 @@ namespace ft
 		//(constructor)
 		RBtree( void )
 		{
-			_nilnode = new Nodetype(T(), NULL, NULL, NULL, BLACK);
+			_nilnode = new Nodetype();
 			_pRoot = _nilnode;
 		}
 		RBtree( const RBtree & other )
 		{
-			_nilnode = new Nodetype(T(), NULL, NULL, NULL, BLACK);
+			_nilnode = new Nodetype();
 			_pRoot = _nilnode;
 			// ... deep copy all nodes
 		}

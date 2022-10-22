@@ -19,6 +19,9 @@ namespace ft
 		RBtreeNode	*_pLeftChild;
 		RBtreeNode	*_pRightChild;
 		RBtreeNode	*_pParent;
+		RBtreeNode()
+		: _color(ft::BLACK), _pLeftChild(NULL), _pRightChild(NULL), _pParent(NULL)
+		{}
 	public :
 		template<class U> friend class RBtree;
 		RBtreeNode ( 
