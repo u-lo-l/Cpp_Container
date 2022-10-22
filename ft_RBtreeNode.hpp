@@ -23,7 +23,7 @@ namespace ft
 		: _color(ft::BLACK), _pLeftChild(NULL), _pRightChild(NULL), _pParent(NULL)
 		{}
 	public :
-		template<class U> friend class RBtree;
+		template<class U, class Alloc> friend class RBtree;
 		RBtreeNode ( 
 			T data , 
 			RBtreeNode * pleft = NULL,
@@ -73,6 +73,7 @@ namespace ft
 
 		
 	}; // class RBtreeNode
+
 	template <class T>
 	void swap( ft::RBtreeNode<T> & node1, ft::RBtreeNode<T> & node2)
 	{

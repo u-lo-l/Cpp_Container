@@ -13,6 +13,7 @@ int main()
 			if (i == 0)
 			{
 				tree.printTree();
+				break;
 			}
 			else if (i < 0)
 			{

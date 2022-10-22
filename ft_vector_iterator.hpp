@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_vector_iterator.hpp                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dkim2 <dkim2@student.42.fr>                +#+  +:+       +#+        */
+/*   By: dkim2 <dkim2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/07 01:08:38 by dkim2             #+#    #+#             */
-/*   Updated: 2022/09/25 22:58:47 by dkim2            ###   ########.fr       */
+/*   Updated: 2022/10/22 16:27:37 by dkim2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,7 @@ namespace ft
 	class vectorIterator : public ft::iterator<ft::random_access_iterator_tag, T>
 	{
 	private:
-		template <class U, class Alloc>
-		friend class vector;
+		// template <class U, class Alloc> friend class vector;
 		typedef typename ft::iterator<ft::random_access_iterator_tag, T> iterator_type;
 	public :
 		typedef typename iterator_type::difference_type		difference_type;

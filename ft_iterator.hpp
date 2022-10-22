@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_iterator.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dkim2 <dkim2@student.42.fr>                +#+  +:+       +#+        */
+/*   By: dkim2 <dkim2@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/02 16:42:46 by dkim2             #+#    #+#             */
-/*   Updated: 2022/09/25 22:50:50 by dkim2            ###   ########.fr       */
+/*   Updated: 2022/10/22 18:10:15 by dkim2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -239,7 +239,7 @@ namespace ft
 		template <class Iter1, class Iter2>
 		friend bool operator<= (const reverse_iterator<Iter1> & lhs, const reverse_iterator<Iter2> & rhs)
 		{ return (lhs.base() >= rhs.base()); }
-
+    
 		template <class Iter1, class Iter2>
 		friend bool operator>  (const reverse_iterator<Iter1> & lhs, const reverse_iterator<Iter2> & rhs)
 		{ return (lhs.base() < rhs.base()); }
