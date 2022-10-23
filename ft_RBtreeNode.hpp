@@ -22,7 +22,6 @@ namespace ft
 		RBtreeNode()
 		: _color(ft::BLACK), _pLeftChild(NULL), _pRightChild(NULL), _pParent(NULL)
 		{}
-	public :
 		template<class U, class Alloc> friend class RBtree;
 		RBtreeNode ( 
 			T data , 
@@ -46,8 +45,15 @@ namespace ft
 			this->_pParent = other._pParent;
 			return (*this);
 		}
-		~RBtreeNode() {}
 
+		bool _isNilNode()
+		{
+			if (this->_color == ft::BLACK && this->_pLeftChild == NULL \
+				&& this->_pRightChild == NULL && this->_pParent == NULL)
+				return (true);
+			return (false);
+		}
+		
 		const T & getData() const { return (this->_data); }
 
 		enum Color getColor() const { return (_color); }
@@ -58,6 +64,8 @@ namespace ft
 
 		bool operator!= (const RBtreeNode & other) const { return (this->_data != other._data); }
 
+	public :
+			~RBtreeNode() {}
 		friend std::ostream & operator<< ( std::ostream & os, const RBtreeNode & node)
 		{
 			if (node.getColor() == RED)
@@ -70,8 +78,6 @@ namespace ft
 			os << "\t right  : " << (node._pRightChild) << std::endl;
 			return (os);
 		}
-
-		
 	}; // class RBtreeNode
 
 	template <class T>

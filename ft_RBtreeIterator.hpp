@@ -11,6 +11,9 @@ namespace ft
 	{
 	private :
 		typedef typename ft::iterator<ft::bidirectional_iterator_tag, ft::RBtreeNode<T> > iterator_type;
+		typedef ft::RBtreeNode<T>	node_type;
+		typedef ft::RBtreeNode<T> *	node_pointer;
+
 	public :
 		typedef typename iterator_type::difference_type		difference_type;
 		typedef typename iterator_type::value_type			value_type;
@@ -22,7 +25,7 @@ namespace ft
 	public :
 		treeIterator(pointer ptr = NULL) : _base(ptr) {}
 		treeIterator(const treeIterator & other) : _base(other._base) {}
-		treeIterator & opeartor=( const vectorIterator & other) : _base(other.getBase())
+		treeIterator & opeartor=(const treeIterator & other) : _base(other.getBase())
 		{
 			if (this != &other)
 				this->_base = other.getBase();
