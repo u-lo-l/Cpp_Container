@@ -81,6 +81,14 @@ namespace ft
 	}; // class RBtreeNode
 
 	template <class T>
+	Color getColor(typename ft::RBtreeNode<T>::node_type * pNode)
+	{
+		if(!pNode)
+			return (ft::BLACK);
+		return (pNode->getColor());
+	}
+
+	template <class T>
 	void swap( ft::RBtreeNode<T> & node1, ft::RBtreeNode<T> & node2)
 	{
 		ft::RBtreeNode<T> temp = node1;

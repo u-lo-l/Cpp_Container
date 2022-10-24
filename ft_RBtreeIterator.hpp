@@ -63,10 +63,29 @@ namespace ft
 		{ return(lhs.getBase() != rhs.getBase()); }
 	}; // class RBtreeIterator
 
+	/*
+		++
+		오른 쪽 자식이 있으면 오른쪽 서브트리에서 가장 작은 값으로 넘어간다.
+		오른 쪽 자식이 없으면 부모 노드로 올라간다.
+		만약 현재 노드가 부모 노드의 왼쪽 자식이라면, 부모 노드의 오른쪽 서브트리는 항상 부모노드보다 크기 때문에,
+		부모 노드에서 멈춘다.
+		만약 현재 노드가 부모 노드의 오른쪽 자식인 경우, 부모노드의 상태를 이용해서 판단할 수 있다.
+		
+	*/
 	template <class T>
 	treeIterator<T> & treeIterator<T>::operator++()
 	{
-		if ()
+		node_pointer * temp = NULL;
+
+	}
+
+	template <class T>
+	treeIterator<T> & treeIterator<T>::operator++(int)
+	{
+		treeIterator temp = *this;
+
+		++(*this);
+		return (temp);
 	}
 } // namespace ft
 
