@@ -53,11 +53,11 @@ namespace ft
 				return (true);
 			return (false);
 		}
-		
+
 		const T & getData() const { return (this->_data); }
 
 		enum Color getColor() const { return (_color); }
-
+		
 		void setColor(enum Color color) { this->_color = color; }
 
 		bool operator== (const RBtreeNode & other) const { return (this->_data == other._data); }
@@ -65,7 +65,7 @@ namespace ft
 		bool operator!= (const RBtreeNode & other) const { return (this->_data != other._data); }
 
 	public :
-			~RBtreeNode() {}
+		~RBtreeNode() {}
 		friend std::ostream & operator<< ( std::ostream & os, const RBtreeNode & node)
 		{
 			if (node.getColor() == RED)

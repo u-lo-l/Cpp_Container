@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_vector_iterator.hpp                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dkim2 <dkim2@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: dkim2 <dkim2@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/07 01:08:38 by dkim2             #+#    #+#             */
-/*   Updated: 2022/10/22 16:27:37 by dkim2            ###   ########.fr       */
+/*   Updated: 2022/10/25 12:40:58 by dkim2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ namespace ft
 	class vector;
 
 	template<class T>
-	class vectorIterator : public ft::iterator<ft::random_access_iterator_tag, T>
+	class vectorIterator
 	{
 	private:
 		// template <class U, class Alloc> friend class vector;
@@ -34,9 +34,7 @@ namespace ft
 		typedef typename iterator_type::iterator_category	iterator_category;
 	private:
 		pointer _base;
-		// getter
 	public:
-		// constructors and destructor
 		vectorIterator(pointer ptr = NULL) : _base(ptr) { }
 		vectorIterator(const vectorIterator & other) : _base(other.getBase()) {}
 		vectorIterator & operator=(const vectorIterator & other)
@@ -83,6 +81,7 @@ namespace ft
 		reference operator[](difference_type n) { return (*(_base + n)); }
 		const reference operator[](difference_type n) const { return (*(_base + n)); }
 
+		// friend functions
 		friend vectorIterator operator+(difference_type n, const vectorIterator & rhs)
 		{ return (rhs + n); }
 

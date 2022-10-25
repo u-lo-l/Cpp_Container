@@ -1,4 +1,5 @@
 #include <map>
+#include <vector>
 #include <iostream>
 int main()
 {
@@ -7,21 +8,45 @@ int main()
 	try
 	{
 		testmap.insert(std::make_pair(1, "string1"));
-		// testmap.insert(std::make_pair(1, "string2"));
-		std::cout << testmap.size() << std::endl;
-		std::map<int, std::string>::iterator it = testmap.end() ;
-		it--;
-		std::cout << (it)->first << std::endl;
-		std::cout << (it)->second << std::endl;
-		std::cout << &(*it) << std::endl;
-		// it--;
-		// std::cout << (it)->first << std::endl;
-		// std::cout << (it)->second << std::endl;
-		// std::cout << &(*it) << std::endl;
-		// it--;
-		// std::cout << (it)->first << std::endl;
-		// std::cout << (it)->second << std::endl;
-		// std::cout << &(*it) << std::endl;
+		testmap.insert(std::make_pair(2, "string2"));
+		testmap.insert(std::make_pair(3, "string3"));
+
+		std::map<int, std::string>::iterator it = testmap.begin();
+		std::cout << "============================" << std::endl;
+		std::cout << "addr : " << &*it << std::endl;
+		std::cout << "val : " << it->first << std::endl;
+		std::cout << "val : " << it->second << std::endl;
+
+		it++;
+		std::cout << "============================" << std::endl;
+		std::cout << "addr : " << &*it << std::endl;
+		std::cout << "val : " << it->first << std::endl;
+		std::cout << "val : " << it->second << std::endl;
+
+		it++;
+		std::cout << "============================" << std::endl;
+		std::cout << "addr : " << &*it << std::endl;
+		std::cout << "val : " << it->first << std::endl;
+		std::cout << "val : " << it->second << std::endl;
+
+		it++;
+		std::cout << "============================" << std::endl;
+		std::cout << "addr : " << &*it << std::endl;
+		std::cout << "val : " << it->first << std::endl;
+		std::cout << "val : " << it->second << std::endl;
+
+		it = testmap.end();
+		std::cout << "============================" << std::endl;
+		std::cout << "addr : " << &*it << std::endl;
+		std::cout << "val : " << it->first << std::endl;
+		std::cout << "val : " << it->second << std::endl;
+
+		it++;
+		// std::cout << "============================" << std::endl;
+		// std::cout << "addr : " << &*it << std::endl;
+		// std::cout << "val : " << it->first << std::endl;
+		// std::cout << "val : " << it->second << std::end
+
 	}
 	catch (...)
 	{
