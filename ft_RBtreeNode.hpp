@@ -1,9 +1,5 @@
 #include <iostream>
 
-
-/*
-	
-*/
 namespace ft
 {
 	enum Color {RED = 0, BLACK = 1};
@@ -14,26 +10,16 @@ namespace ft
 	private:
 		typedef	T					value_type;
 		typedef	struct RBtreeNode	node_type;
-		enum Color					_color;
-		T							_data;
+
+		enum Color	_color;
+		value_type	_data;
 		RBtreeNode	*_pLeftChild;
 		RBtreeNode	*_pRightChild;
 		RBtreeNode	*_pParent;
 		RBtreeNode()
 		: _color(ft::BLACK), _pLeftChild(NULL), _pRightChild(NULL), _pParent(NULL)
 		{}
-		template<class U, class Alloc> friend class RBtree;
-		RBtreeNode ( 
-			T data , 
-			RBtreeNode * pleft = NULL,
-			RBtreeNode * pright = NULL,
-			RBtreeNode * pparent = NULL,
-			Color color = RED)
-		: _data(data), _color(color), _pLeftChild(pleft), _pRightChild(pright), _pParent(pparent)
-		{}
-		RBtreeNode ( const RBtreeNode & other)
-		: _data(other._data), _color(other._color), _pLeftChild(other._pLeftChild), _pRightChild(other._pRightChild), _pParent(other._pParent)
-		{}
+
 		RBtreeNode & operator= (const RBtreeNode & other)
 		{
 			if (this == &other)
@@ -65,7 +51,20 @@ namespace ft
 		bool operator!= (const RBtreeNode & other) const { return (this->_data != other._data); }
 
 	public :
+		template<class U, class Alloc, class Comp> friend class RBtree;
+		RBtreeNode ( 
+			T data , 
+			RBtreeNode * pleft = NULL,
+			RBtreeNode * pright = NULL,
+			RBtreeNode * pparent = NULL,
+			Color color = RED)
+		: _data(data), _color(color), _pLeftChild(pleft), _pRightChild(pright), _pParent(pparent)
+		{}
+		RBtreeNode ( const RBtreeNode & other)
+		: _data(other._data), _color(other._color), _pLeftChild(other._pLeftChild), _pRightChild(other._pRightChild), _pParent(other._pParent)
+		{}
 		~RBtreeNode() {}
+
 		friend std::ostream & operator<< ( std::ostream & os, const RBtreeNode & node)
 		{
 			if (node.getColor() == RED)

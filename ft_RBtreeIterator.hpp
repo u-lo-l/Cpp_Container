@@ -95,17 +95,33 @@ namespace ft
 			_pNode = _pNode->_pParent;
 		else
 		{
-			while (_pNode == _pNode->_pParent->_pRightChild)
+			while (_pNode == _pNode->_pParent->_pRightChild && _pNode != _pNode->_pParent->_pLeftChild )
 				_pNode = _pNode->_pParent;
-
+			// if (_pNode == _pNode->_pParent->_pLeftChild)
+			_pNode = _pNode->_pParent;
 		}
-		
 	}
 
 	template<class T>
 	void tree_iterator<T>::_decrement()
 	{
-		
+		/*
+			nilnode 일 때 예외 처리 필요함.
+		*/
+		if (_pNode->_pLeftChild->_isNilNode() == false)
+		{
+			_pNode = _pNode->_pLeftChild;
+			while (_pNode->_pRightChild->_isNilNode() == false)
+				_pNode = _pNode->_pParent;
+		}
+		else if (_pNode == _pNode->_pParent->_pLeftChild)
+			_pNode = _pNode->_pParent;
+		else
+		{
+			while (_pNode == _pNode->_pParent->_pLeftChild && _pNode != _pNode->_pParent->_pRightChild)
+				_pNode = _pNode->_pParent;
+			_pNode = _pNode->_pParent;
+		}
 	}
 } // namespace ft
 

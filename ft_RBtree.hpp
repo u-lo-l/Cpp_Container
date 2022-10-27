@@ -1,7 +1,10 @@
+#ifndef FT_RBTREE_HPP
+# define FT_RBTREE_HPP
 #include <memory>
 #include <exception>
 
 #include "ft_RBtreeNode.hpp"
+#include "ft_iterator.hpp"
 #include "ft_less.hpp"
 namespace ft
 {
@@ -15,10 +18,13 @@ namespace ft
 		typedef RBtreeNode<T>	node_type;
 		typedef RBtreeNode<T>*	node_pointer;
 		typedef Alloc			allocator_type;
-		
+		typedef Comp			key_comp_type;
+
 		allocator_type	_allocator_object;
+		key_comp_type	_key_compare;
 		node_pointer	_nilnode;
 		node_pointer	_pRoot;
+		
 		
 		/* private method */
 		// utils
@@ -48,7 +54,7 @@ namespace ft
 		node_pointer _minimum(node_pointer pNode);
 	public :
 		//(constructor)
-		RBtree( void ) : _allocator_object(allocator_type())
+		RBtree( void ) : _allocator_object(allocator_type()), _key_compare(Comp())
 		{
 			_nilnode = _allocator_object.allocate(1);
 			_allocator_object.construct(_nilnode, node_type());
@@ -84,6 +90,7 @@ namespace ft
 		}
 	}; // class RBtree
 
+
 	template<class T, class Alloc, class Comp>
 	void RBtree<T, Alloc, Comp>::_deleteTreeHelper(node_pointer pNode)
 	{
@@ -102,7 +109,7 @@ namespace ft
 			return ;
 		_printTreeHelper(pNode->_pLeftChild);
 		std::cout << *pNode << " ";
-		_printTreeHelper(pNode->_pLeftChild);
+		_printTreeHelper(pNode->_pRightChild);
 	}
 
 	template<class T, class Alloc, class Comp>
@@ -195,7 +202,8 @@ namespace ft
 	{
 		if (key == pNode->getData())
 			throw std::exception();
-		if (key < pNode->getData())
+		if (this->_key_compare(key, pNode->getData()))
+		// if (key < pNode->getData())
 		{
 			if (_isNilNode(pNode->_pLeftChild) == true)
 			{
@@ -332,12 +340,13 @@ namespace ft
 		// 1. find node to delete
 		while (!_isNilNode(K))
 		{
-			if (K->getData() == key) 
+			if (key == K->getData()) 
 			{
 				pTargetNode = K;
 				break;
 			}
-			if (K->getData() <= key)
+			if (_key_compare(key, K->getData()))
+			// if (K->getData() <= key)
 				K = K->_pRightChild;
 			else
 				K = K->_pLeftChild;
@@ -516,3 +525,4 @@ namespace ft
 	}
 
 } // namespace ft
+#endif
