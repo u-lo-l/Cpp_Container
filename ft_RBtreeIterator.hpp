@@ -11,24 +11,26 @@ namespace ft
 	class tree_iterator
 	{
 	private :
-		friend class RBtreeNode<T>;
-		typedef typename ft::iterator<ft::bidirectional_iterator_tag, RBtreeNode<T>> iterator_type;
+		typedef typename ft::iterator< ft::bidirectional_iterator_tag, RBtreeNode<T> > iterator_type;
 
 		typedef typename iterator_type::difference_type		difference_type;
-		typedef typename iterator_type::value_type			node_type;
-		typedef typename iterator_type::pointer				node_pointer;
-		typedef typename iterator_type::reference			node_reference;
 		typedef typename iterator_type::iterator_category	iterator_category;
+		typedef typename RBtreeNode<T>::value_type			value_type;
+		typedef typename RBtreeNode<T>::node_pointer		node_pointer;
+		
+		typedef value_type*				pointer;
+		typedef value_type&				reference;
+
 	private :
-		// node_pointer _pNode;
-		RBtreeNode<T> * _pNode;
+		node_pointer _pNode;
 
 		void _increment();
 		void _decrement();
-	public :
+
 		tree_iterator() {}
-		tree_iterator(node_pointer pNode) : _pNode(pNode) {}
-		tree_iterator(const tree_iterator & it) : _pNode(it->_pNode) {}
+	public :
+		explicit tree_iterator(node_pointer pNode) : _pNode(pNode) {}
+		tree_iterator(const tree_iterator & it) : _pNode(it._pNode) {}
 		tree_iterator & operator=(const tree_iterator & other)
 		{
 			if (this != &other)
@@ -41,39 +43,48 @@ namespace ft
 			return ( tree_iterator<const T>(this->_pNode) );
 		}
 
-		node_reference operator*() { return (*(this->_pNode)); }
-		node_pointer operator->() { return (this->_pNode); }
+		const node_pointer base() const {return _pNode;}
 
-		tree_iterator & operator++()
+		reference operator*()
+		{
+			return (this->_pNode->_data);
+		}
+
+		pointer operator->()
+		{
+			return (&(this->_pNode->_data));
+		}
+
+		tree_iterator<T> & operator++()
 		{
 			this->_increment();
 			return (*this);
 		}
-		tree_iterator operator++(int)
+		tree_iterator<T> operator++(int)
 		{
-			tree_iterator temp = *this;
+			tree_iterator<T> temp(*this);
 			this->_increment();
 			return (temp);
 		}
-		tree_iterator & operator--()
+		tree_iterator<T> & operator--()
 		{
 			this->_decrement();
 			return (*this);
 		}
-		tree_iterator operator--(int)
+		tree_iterator<T> operator--(int)
 		{
-			tree_iterator temp = *this;
+			tree_iterator<T> temp(*this);
 			this->_decrement();
-			return (*this);
+			return (temp);
 		}
 
 		template <class Iter>
 		friend bool operator==(const tree_iterator<T> & lhs, const tree_iterator<Iter> & rhs)
-		{ return (lhs._pNode == rhs._pNode)}
+		{ return (lhs._pNode == rhs._pNode);}
 
 		template <class Iter>
 		friend bool operator!=(const tree_iterator<T> & lhs, const tree_iterator<Iter> & rhs)
-		{ return (lhs._pNode != rhs._pNode)}
+		{ return (lhs._pNode != rhs._pNode);}
 	};
 
 	/*
@@ -85,19 +96,26 @@ namespace ft
 	template<class T>
 	void tree_iterator<T>::_increment()
 	{
-		if (_pNode->_pRightChild->_isNilNode() == false)
+		if (_pNode->_isNilNode())
+			return ;
+		else if (_pNode->_pRightChild->_isNilNode() == false)
 		{
-			_pNode = _pNode->_pRightChild;
-			while (_pNode->_pLeftChild->_isNilNode() == false)
-				_pNode = _pNode->_pLeftChild;
+			std::cout << "cas1" << std::endl;
+			_pNode = _pNode->_pRightChild->_minimum();
 		}
 		else if (_pNode == _pNode->_pParent->_pLeftChild)
+		{
+			std::cout << "cas2" << std::endl;
 			_pNode = _pNode->_pParent;
+		}
 		else
 		{
-			while (_pNode == _pNode->_pParent->_pRightChild && _pNode != _pNode->_pParent->_pLeftChild )
+			std::cout << "cas3" << std::endl;
+			while (_pNode == _pNode->_pParent->_pRightChild)
+			{
+				std::cout << "cas3" << std::endl;
 				_pNode = _pNode->_pParent;
-			// if (_pNode == _pNode->_pParent->_pLeftChild)
+			}
 			_pNode = _pNode->_pParent;
 		}
 	}
@@ -105,21 +123,20 @@ namespace ft
 	template<class T>
 	void tree_iterator<T>::_decrement()
 	{
-		/*
-			nilnode 일 때 예외 처리 필요함.
-		*/
-		if (_pNode->_pLeftChild->_isNilNode() == false)
+		if (_pNode->_isNilNode())
+			_pNode = _pNode->_pRightChild;
+		else if (_pNode->_pLeftChild->_isNilNode() == false)
 		{
-			_pNode = _pNode->_pLeftChild;
-			while (_pNode->_pRightChild->_isNilNode() == false)
-				_pNode = _pNode->_pParent;
+			_pNode = _pNode->_pLeftChild->_maximum();
 		}
-		else if (_pNode == _pNode->_pParent->_pLeftChild)
+		else if (_pNode == _pNode->_pParent->_pRightChild)
 			_pNode = _pNode->_pParent;
 		else
 		{
-			while (_pNode == _pNode->_pParent->_pLeftChild && _pNode != _pNode->_pParent->_pRightChild)
+			while (_pNode == _pNode->_pParent->_pLeftChild)
 				_pNode = _pNode->_pParent;
+			if (_pNode == _pNode->_pParent->_pParent)
+				_pNode = NULL;
 			_pNode = _pNode->_pParent;
 		}
 	}

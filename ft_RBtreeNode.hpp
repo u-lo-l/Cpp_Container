@@ -1,4 +1,6 @@
-#include <iostream>
+#ifndef FT_RBTREENODE_HPP
+# define FT_RBTREENODE_HPP
+# include <iostream>
 
 namespace ft
 {
@@ -8,19 +10,26 @@ namespace ft
 	class RBtreeNode
 	{
 	private:
-		typedef	T					value_type;
-		typedef	struct RBtreeNode	node_type;
+		typedef	T				value_type;
+		typedef	RBtreeNode<T>	node_type;
+		typedef	RBtreeNode<T> *	node_pointer;
 
-		enum Color	_color;
-		value_type	_data;
-		RBtreeNode	*_pLeftChild;
-		RBtreeNode	*_pRightChild;
-		RBtreeNode	*_pParent;
+		template<class U, class Alloc, class Comp>
+		friend class RBtree;
+		template<class U>
+		friend class tree_iterator;
+
+		bool			_isnil;
+		enum Color		_color;
+		value_type		_data;
+		node_pointer	_pLeftChild;
+		node_pointer	_pRightChild;
+		node_pointer	_pParent;
 		RBtreeNode()
-		: _color(ft::BLACK), _pLeftChild(NULL), _pRightChild(NULL), _pParent(NULL)
+		: _isnil(true), _color(ft::BLACK), _pLeftChild(NULL), _pRightChild(NULL), _pParent(NULL)
 		{}
 
-		RBtreeNode & operator= (const RBtreeNode & other)
+		RBtreeNode<T> & operator= (const RBtreeNode<T> & other)
 		{
 			if (this == &other)
 				return (*this);
@@ -32,36 +41,65 @@ namespace ft
 			return (*this);
 		}
 
-		bool _isNilNode()
+		bool _isNilNode() const
 		{
-			if (this->_color == ft::BLACK && this->_pLeftChild == NULL \
-				&& this->_pRightChild == NULL && this->_pParent == NULL)
+			if (_isnil == true)
 				return (true);
 			return (false);
 		}
 
-		const T & getData() const { return (this->_data); }
-
 		enum Color getColor() const { return (_color); }
 		
 		void setColor(enum Color color) { this->_color = color; }
-
+		
 		bool operator== (const RBtreeNode & other) const { return (this->_data == other._data); }
 
 		bool operator!= (const RBtreeNode & other) const { return (this->_data != other._data); }
 
+
 	public :
-		template<class U, class Alloc, class Comp> friend class RBtree;
+		
+		const T & getData() const { return (this->_data); }
+
+		node_pointer _maximum()
+		{
+			node_pointer pResult = this;
+			if (pResult->_isNilNode() == true)
+				return (pResult);
+			while (pResult->_pRightChild->_isNilNode() == false)
+				pResult = pResult->_pRightChild;
+			return (pResult);
+		}	
+		node_pointer _minimum()
+		{
+			node_pointer pResult = this;
+			if (pResult->_isNilNode() == true)
+				return (pResult);
+			while (pResult->_pLeftChild->_isNilNode() == false)
+				pResult = pResult->_pLeftChild;
+			return (pResult);
+		}
+		
 		RBtreeNode ( 
 			T data , 
 			RBtreeNode * pleft = NULL,
 			RBtreeNode * pright = NULL,
 			RBtreeNode * pparent = NULL,
 			Color color = RED)
-		: _data(data), _color(color), _pLeftChild(pleft), _pRightChild(pright), _pParent(pparent)
+		: 	_isnil(false),
+			_color(color),
+			_data(data),
+			_pLeftChild(pleft),
+			_pRightChild(pright),
+			_pParent(pparent)
 		{}
-		RBtreeNode ( const RBtreeNode & other)
-		: _data(other._data), _color(other._color), _pLeftChild(other._pLeftChild), _pRightChild(other._pRightChild), _pParent(other._pParent)
+		RBtreeNode ( const RBtreeNode & other )
+		:	_isnil(other._isnil),
+			_color(other._color),
+			_data(other._data),
+			_pLeftChild(other._pLeftChild),
+			_pRightChild(other._pRightChild),
+			_pParent(other._pParent)
 		{}
 		~RBtreeNode() {}
 
@@ -71,7 +109,9 @@ namespace ft
 				os << "\033[1;107;91m";
 			else
 				os << "\033[1;107;30m";
-			os << "\t data   : " << node.getData() << "\033[0m" << std::endl;
+			if (node._isNilNode() == true)
+				os << "\t 'nil_node'" << std::endl;
+			os << "\t data   : " << node.getData().first << "\033[0m" << std::endl;
 			os << "\t parent : " << (node._pParent) << std::endl;
 			os << "\t left   : " << (node._pLeftChild) << std::endl;
 			os << "\t right  : " << (node._pRightChild) << std::endl;
@@ -103,3 +143,4 @@ namespace ft
 		pnode2 = temp;
 	}
 } // namespace ft
+#endif

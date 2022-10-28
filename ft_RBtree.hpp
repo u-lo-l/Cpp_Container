@@ -9,7 +9,7 @@
 namespace ft
 {
 	template <	class T,
-				class Alloc = std::allocator<RBtreeNode<T>>,
+				class Alloc = std::allocator< RBtreeNode<T> >,
 				class Comp = ft::less<T> >
 	class RBtree
 	{
@@ -24,15 +24,13 @@ namespace ft
 		key_comp_type	_key_compare;
 		node_pointer	_nilnode;
 		node_pointer	_pRoot;
-		
-		
+
 		/* private method */
 		// utils
 		bool	_isNilNode(node_pointer pNode) const {return (pNode == _nilnode);} //done
 		bool	_isRootNode(node_pointer pNode) const {return (_isNilNode(pNode->_pParent));} //done
 		bool	_isLeafNode(node_pointer pNode) const {return (_isNilNode(pNode->_pLeftChild) && _isNilNode(pNode->_pRightChild));} //done
-		void	_printTreeHelper(node_pointer pNode);
-		void	_printTree(void) { _printTreeHelper(this->_pRoot); }
+		void	_printTreeHelper(node_pointer pNode) const ;
 		void	_deleteTreeHelper(node_pointer pNode);
 		// void	_preOrderHelper(node_pointer pNode);
 		// rotation
@@ -50,14 +48,14 @@ namespace ft
 		void	_BStreeDelete(node_pointer pNode, T key); //done
 		void	_deleteRestructor(node_pointer pPivot); //done
 
-		node_pointer _maximum(node_pointer pNode);
-		node_pointer _minimum(node_pointer pNode);
 	public :
 		//(constructor)
 		RBtree( void ) : _allocator_object(allocator_type()), _key_compare(Comp())
 		{
 			_nilnode = _allocator_object.allocate(1);
 			_allocator_object.construct(_nilnode, node_type());
+			_nilnode->_pParent = _pRoot;
+			_nilnode->_pRightChild = _nilnode;
 			_pRoot = _nilnode;
 		}
 		~RBtree()
@@ -70,18 +68,19 @@ namespace ft
 
 		//member functions
 		const node_pointer	getNilPtr( void ) const { return (_nilnode); }
-		const node_type & getRoot( void ) const { return (*_pRoot); } 
+		const node_pointer getRoot( void ) const { return (_pRoot); } 
 		node_pointer search(const T & key) const { return (_searchHelper(this->_pRoot, key)); } //done
 		void insertNode(T key);
 		void deleteNode(T key);
 
-		void printTree()
+		void printTree() const
 		{
 			if (_isNilNode(this->_pRoot))
 				std::cout << "Tree is empty" << std::endl;
 			else
 			{
 				std::cout << "Nilptr  is " << _nilnode << std::endl;
+				std::cout << *_nilnode << std::endl;
 				std::cout << "Root is " << std::endl;
 				std::cout << "\t" << _pRoot << std::endl;
 				std::cout << *_pRoot << std::endl;
@@ -103,12 +102,13 @@ namespace ft
 	}
 
 	template<class T, class Alloc, class Comp>
-	void RBtree<T, Alloc, Comp>::_printTreeHelper(typename RBtree<T, Alloc, Comp>::node_pointer pNode)
+	void RBtree<T, Alloc, Comp>::_printTreeHelper(typename RBtree<T, Alloc, Comp>::node_pointer pNode) const
 	{
 		if (pNode == NULL ||_isNilNode(pNode) == true)
 			return ;
 		_printTreeHelper(pNode->_pLeftChild);
-		std::cout << *pNode << " ";
+		std::cout << "ptr  " << pNode << std::endl;
+		std::cout << "data " << *pNode << " ";
 		_printTreeHelper(pNode->_pRightChild);
 	}
 
@@ -140,7 +140,7 @@ namespace ft
 		*/
 		// std::cout << "[rotate  Left], node_pointer : " << pPivotNode << std::endl;
 		// std::cout << *pPivotNode << std::endl;
-		node_pointer x = pPivotNode;
+		node_pointer 	x = pPivotNode;
 		node_pointer	y = x->_pRightChild;
 		
 		x->_pRightChild = y->_pLeftChild;
@@ -182,48 +182,50 @@ namespace ft
 	}
 
 	template<class T, class Alloc, class Comp>
-	void RBtree<T, Alloc, Comp>::insertNode(T key)
+	void RBtree<T, Alloc, Comp>::insertNode(T data)
 	{
-		std::cout << "insert : " << key << std::endl;
+		// std::cout << " : " << data << std::endl;
 		if (_isNilNode(this->_pRoot) == true)
 		{
 			_pRoot = this->_allocator_object.allocate(1);
-			this->_allocator_object.construct(_pRoot, node_type(key, _nilnode, _nilnode, _nilnode, BLACK));
+			this->_allocator_object.construct(_pRoot, node_type(data, _nilnode, _nilnode, _nilnode, BLACK));
 		}
 		else
 		{
-			_BStreeInsert(this->_pRoot, key);
+			_BStreeInsert(this->_pRoot, data);
 		}
 		this->_pRoot->setColor(BLACK);
+		this->_nilnode->_pRightChild = this->_pRoot->_maximum();
+		this->_nilnode->_pLeftChild = NULL;
+		this->_nilnode->_pParent = this->_pRoot;
 	}
 
 	template<class T, class Alloc, class Comp>
-	void RBtree<T, Alloc, Comp>::_BStreeInsert( typename RBtree<T, Alloc, Comp>::node_pointer pNode, T key )
+	void RBtree<T, Alloc, Comp>::_BStreeInsert( typename RBtree<T, Alloc, Comp>::node_pointer pNode, T data )
 	{
-		if (key == pNode->getData())
+		if (data == pNode->getData())
 			throw std::exception();
-		if (this->_key_compare(key, pNode->getData()))
-		// if (key < pNode->getData())
+		if (this->_key_compare(data, pNode->getData()))
 		{
 			if (_isNilNode(pNode->_pLeftChild) == true)
 			{
 				pNode->_pLeftChild = this->_allocator_object.allocate(1);
-				this->_allocator_object.construct(pNode->_pLeftChild, node_type(key, _nilnode, _nilnode, pNode));
+				this->_allocator_object.construct(pNode->_pLeftChild, node_type(data, _nilnode, _nilnode, pNode));
 				_insertRestructor(pNode->_pLeftChild);
 			}
 			else
-				_BStreeInsert(pNode->_pLeftChild, key);
+				_BStreeInsert(pNode->_pLeftChild, data);
 		}
 		else
 		{
 			if (_isNilNode(pNode->_pRightChild) == true)
 			{
 				pNode->_pRightChild = this->_allocator_object.allocate(1);
-				this->_allocator_object.construct(pNode->_pRightChild, node_type(key, _nilnode, _nilnode, pNode));
+				this->_allocator_object.construct(pNode->_pRightChild, node_type(data, _nilnode, _nilnode, pNode));
 				_insertRestructor(pNode->_pRightChild);
 			}
 			else
-				_BStreeInsert(pNode->_pRightChild, key);
+				_BStreeInsert(pNode->_pRightChild, data);
 		}
 	}
 
@@ -242,12 +244,12 @@ namespace ft
 		 *			3.2.3: P is leftchild of G and K is left child of P => mirror of case 3.2.1 : RightRotate->recolor
 		 *			3.2.4: P is leftchild of G and K is left child of P => mirror of case 3.2.2 : leftRotate -> 3.2.3
 		*/
-		node_pointer K = KeyNode;
-		node_pointer P = K->_pParent;
+		node_pointer	K = KeyNode;
+		node_pointer	P = K->_pParent;
 		if (P->getColor() == BLACK)
 			return ;
 		node_pointer	G = P->_pParent;
-		node_pointer U;
+		node_pointer	U;
 		while (K->getColor() == RED && P->getColor() == RED)
 		{
 			if (P == G->_pRightChild)
@@ -297,7 +299,6 @@ namespace ft
 			P = K->_pParent;
 			G = P->_pParent;
 		}
-		std::cout << std::endl;
 	}
 
 	template<class T, class Alloc, class Comp>
@@ -496,32 +497,13 @@ namespace ft
 	}
 
 	template<class T, class Alloc, class Comp>
-	typename RBtree<T, Alloc, Comp>::node_pointer RBtree<T, Alloc, Comp>::_maximum(typename RBtree<T, Alloc, Comp>::node_pointer pNode)
-	{
-		node_pointer pResult = this->_pRoot;
-		if (this->_isNilNode(pResult) == true)
-			return (pResult);
-		while (this->_isNilNode(pResult->_pRightChild) == false)
-			pResult = pResult->_pRightChild;
-		return (pResult);
-	}
-
-	template<class T, class Alloc, class Comp>
-	typename RBtree<T, Alloc, Comp>::node_pointer RBtree<T, Alloc, Comp>::_minimum(typename RBtree<T, Alloc, Comp>::node_pointer pNode)
-	{
-		node_pointer pResult = this->_pRoot;
-		if (this->_isNilNode(pResult) == true)
-			return (pResult);
-		while (this->_isNilNode(pResult->_pLeftChild) == false)
-			pResult = pResult->_pLeftChild;
-		return (pResult);
-	}
-
-	template<class T, class Alloc, class Comp>
 	void RBtree<T, Alloc, Comp>::deleteNode(T key)
 	{
 		_BStreeDelete(this->_pRoot, key);
 		this->_pRoot->setColor(ft::BLACK);
+		this->_nilnode->_pRightChild = this->_pRoot->_maximum();
+		this->_nilnode->_pLeftChild = NULL;
+		this->_nilnode->_pParent = this->_pRoot;
 	}
 
 } // namespace ft
