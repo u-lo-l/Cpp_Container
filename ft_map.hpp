@@ -11,16 +11,16 @@
 namespace ft
 {
 	template <	class Key,
-				class Value,
+				class T,
 				class Compare = less<Key>,
-				class Alloc = std::allocator< ft::RBtreeNode< ft::pair<Key, Value> > >
+				class Alloc = std::allocator< ft::pair<const Key, T> >
 				>
 	class map
 	{
 	public :
 		// Member Types
 		typedef	Key												key_type;
-		typedef	Value											mapped_type;
+		typedef	T												mapped_type;
 		typedef	ft::pair<key_type, mapped_type>					value_type;
 		typedef	Compare											key_compare;
 
@@ -34,27 +34,12 @@ namespace ft
 		typedef typename allocator_type::difference_type		difference_type;
 		typedef typename allocator_type::size_type				size_type;
 
-		typedef ft::tree_iterator<value_type>					iterator;
-		typedef ft::tree_iterator<const value_type>				const_iterator;
+		typedef ft::RBTreeIterator<value_type>					iterator;
+		typedef ft::RBTreeIterator<const value_type>			const_iterator;
 		typedef ft::reverse_iterator<iterator>					reverse_iterator;
 		typedef ft::reverse_iterator<const_iterator>			const_reverse_iterator;
 
-		typedef ft::RBtree< value_type, allocator_type, key_compare > _treetype;
-
 	private :
-		// typedef ft::map<Key, Value, Compare, Alloc>	_Self;
-		
-		_treetype _tree;
-	public :
-		map() {}
-
-		ft::pair<iterator,bool> insert ( const value_type& val )
-		{
-			_tree.insertNode(val);
-			return (ft::make_pair(iterator(_tree.getNilPtr()), true));
-		}
-
-		const _treetype & getTree() const { return (_tree); }
 
 	}; //class map
 
@@ -71,7 +56,7 @@ namespace ft
 		friend class map;
 	protected :
 		Compare comp;
-		value_compare (Compare c) : comp(c) {}
+		value_compare (Compare C) : comp(c) {}
 	public :
 		bool operator() (const value_type& x, const value_type& y) const
 		{
