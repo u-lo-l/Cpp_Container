@@ -2,9 +2,9 @@
 
 int main()
 {
+	ft::RBtree<int> tree;
 	try
 	{
-		ft::RBtree<int> tree;
 		while (1)
 		{
 			std::cout << "enter number. positive to insert, negative to remove : ";
@@ -13,6 +13,9 @@ int main()
 			if (i == 0)
 			{
 				tree.printTree();
+				std::cout << "copy" << std::endl;
+				ft::RBtree<int> tree2 = tree;
+				tree2.printTree();
 				break;
 			}
 			else if (i < 0)
@@ -32,4 +35,5 @@ int main()
 	{
 		std::cerr << e.what() << std::endl;
 	}
+	// std::system("leaks a.out");
 }

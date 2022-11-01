@@ -100,20 +100,16 @@ namespace ft
 			return ;
 		else if (_pNode->_pRightChild->_isNilNode() == false)
 		{
-			std::cout << "cas1" << std::endl;
 			_pNode = _pNode->_pRightChild->_minimum();
 		}
 		else if (_pNode == _pNode->_pParent->_pLeftChild)
 		{
-			std::cout << "cas2" << std::endl;
 			_pNode = _pNode->_pParent;
 		}
 		else
 		{
-			std::cout << "cas3" << std::endl;
 			while (_pNode == _pNode->_pParent->_pRightChild)
 			{
-				std::cout << "cas3" << std::endl;
 				_pNode = _pNode->_pParent;
 			}
 			_pNode = _pNode->_pParent;
