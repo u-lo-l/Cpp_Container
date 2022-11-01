@@ -49,32 +49,17 @@ namespace ft
 		_tree_type		_rbtree;
 		size_type		_size;
 	public :
-		explicit map(const key_compare * comp = key_compare(),
-					const allocator_type & alloc = allocator_type())
-		: _compare_functor(comp), _allocator_object(alloc), _rbtree() {}
-
+		explicit map(const key_compare & comp = key_compare(),
+					const allocator_type & alloc = allocator_type());
 		template <class InputIterator>
 		map (InputIterator firsit, InputIterator last,
 			const key_compare * comp = key_compare(),
-			const allocator_type & aloc = allocator_type())
-		: _compare_functor(comp), _allocator_object(alloc), _rbtree()
-		{
-			for (InputIterator it = first ; it != last; it++)
-				this->_rbtree.insertNode(*it);
-		}
-		
-		map (const map & other)
-		: _compare_functor(other.comp), _allocator_object(other.alloc), _rbtree(other._rbtree)
-		{}
+			const allocator_type & aloc = allocator_type());
+		map (const map & other);
 
 		~map() {}
 
-		map& operator=(const map& other)
-		{
-			if (this != other)
-				this->_rbtree = other._rbtree;
-			return *this;
-		}
+		map & operator=(const map& other);
 
 		iterator 		begin();
 		iterator 		end();
@@ -142,69 +127,99 @@ namespace ft
 		{
 			return comp(x.first, y.first);
 		}
-	};
+	}; // class map::value_compare
+
+	template<class Key, class T, class Compare, class Alloc>
+	map<Key, T, Compare, Alloc>::map(const key_compare & comp, const allocator_type & alloc)
+	: _compare_functor(comp), _allocator_object(alloc), _rbtree()
+	{}
+
+	template<class Key, class T, class Compare, class Alloc>
+	template <class InputIterator>
+	map<Key, T, Compare, Alloc>::map(InputIterator firsit, InputIterator last,
+	 								const key_compare * comp = key_compare(),
+	 								const allocator_type & aloc = allocator_type())
+	: _compare_functor(comp), _allocator_object(alloc), _rbtree()
+	{
+		for (InputIterator it = first; it != last ; i++)
+			this->_rbtree.insertNode(*it);
+	}
+
+	template<class Key, class T, class Compare, class Alloc>
+	map<Key, T, Compare, Alloc>::map(const map & other)
+	: _compare_functor(other.comp), _allocator_object(other.alloc), _rbtree(other._rbtree)
+	{}
+
+	template<class Key, class T, class Compare, class Alloc>
+	map<Key, T, Compare, Alloc> &
+	map<Key, T, Compare, Alloc>::operator=(const map & other)
+	{
+		if (this != other)
+			this->_rbtree = other._rbtree;
+		return *this;
+	}
 
 	template<class Key, class T, class Compare, class Alloc>
 	typename map<Key, T, Compare, Alloc>::iterator
 	map<Key, T, Compare, Alloc>::begin()
 	{
-
+		return (iterator(this->_rbtree->getRoot->_minimum()));
 	}
 
 	template<class Key, class T, class Compare, class Alloc>
 	typename map<Key, T, Compare, Alloc>::iterator
 	map<Key, T, Compare, Alloc>::end()
 	{
-
+		return (iterator(this->_rbtree->getNilPtr()));
 	}
 
 	template<class Key, class T, class Compare, class Alloc>
 	typename map<Key, T, Compare, Alloc>::const_iterator
 	map<Key, T, Compare, Alloc>::begin() const
 	{
-
+		return (const_iterator(this->_rbtree->getRoot->_minimum()));
 	}
 
 	template<class Key, class T, class Compare, class Alloc>
 	typename map<Key, T, Compare, Alloc>::const_iterator
 	map<Key, T, Compare, Alloc>::end() const
 	{
-
+		return (const_iterator(this->_rbtree->getNilPtr()));
 	}
 
 	template<class Key, class T, class Compare, class Alloc>
 	typename map<Key, T, Compare, Alloc>::reverse_iterator
 	map<Key, T, Compare, Alloc>::rbegin()
 	{
-
+		return (reverse_iterator(this->_rbtree->getNilPtr()));
 	}
 
 	template<class Key, class T, class Compare, class Alloc>
 	typename map<Key, T, Compare, Alloc>::reverse_iterator
 	map<Key, T, Compare, Alloc>::rend()
 	{
-
+		return (reverse_iterator(this->_rbtree->getRoot->_minimum()));
 	}
 
 	template<class Key, class T, class Compare, class Alloc>
 	typename map<Key, T, Compare, Alloc>::const_reverse_iterator
 	map<Key, T, Compare, Alloc>::rbegin() const
 	{
-
+		return (const_reverse_iterator(this->_rbtree->getNilPtr()));
 	}
 
 	template<class Key, class T, class Compare, class Alloc>
 	typename map<Key, T, Compare, Alloc>::const_reverse_iterator
 	map<Key, T, Compare, Alloc>::rend() const
 	{
-
+		return (const_reverse_iterator(this->_rbtree->getRoot->_minimum()));
 	}
 
 	template<class Key, class T, class Compare, class Alloc>
 	bool
 	map<Key, T, Compare, Alloc>::empty() const
 	{
-
+		
 	}
 
 	template<class Key, class T, class Compare, class Alloc>
@@ -219,7 +234,7 @@ namespace ft
 	map<Key, T, Compare, Alloc>::max_size() const
 	{
 
-	} // ???
+	}
 
 	template<class Key, class T, class Compare, class Alloc>
 	typename map<Key, T, Compare, Alloc>::mapped_type &

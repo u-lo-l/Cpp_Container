@@ -27,27 +27,27 @@ namespace ft
 
 		/* private method */
 		// utils
-		bool	_isNilNode(node_pointer pNode) const {return (pNode == _nilnode);} //done
-		bool	_isRootNode(node_pointer pNode) const {return (_isNilNode(pNode->_pParent));} //done
-		bool	_isLeafNode(node_pointer pNode) const {return (_isNilNode(pNode->_pLeftChild) && _isNilNode(pNode->_pRightChild));} //done
+		bool	_isNilNode(node_pointer pNode) const {return (pNode == _nilnode);}
+		bool	_isRootNode(node_pointer pNode) const {return (_isNilNode(pNode->_pParent));}
+		bool	_isLeafNode(node_pointer pNode) const {return (_isNilNode(pNode->_pLeftChild) && _isNilNode(pNode->_pRightChild));}
 		void	_printTreeHelper(node_pointer pNode) const ;
 		void	_deleteTreeHelper(node_pointer pNode);
 		void	_copyTreeHelper(node_pointer pNode);
 		// void	_preOrderHelper(node_pointer pNode);
 		// rotation
-		void	_rotateLeft(node_pointer pPivotNode); //done
-		void	_rotateRight(node_pointer pPivotNode); //done
+		void	_rotateLeft(node_pointer pPivotNode);
+		void	_rotateRight(node_pointer pPivotNode);
 		// search_helpers
-		node_pointer _searchHelper(node_pointer pNode, T value) const; //done
+		node_pointer _searchHelper(node_pointer pNode, T value) const;
 		// insert_helpers
-		void	_BStreeInsert(node_pointer pNode, T value); //done
-		void	_insertRestructor(node_pointer pPivot); //done
+		void	_BStreeInsert(node_pointer pNode, T value);
+		void	_insertRestructor(node_pointer pPivot);
 		// delete_helpers
 		node_pointer _getSuccessor(node_pointer pNode) const;//done
 		// Transplant : change targetnode and successor for delete targetnode 
-		void	_transplant(node_pointer refNode, node_pointer refSuccessor); //done
-		void	_BStreeDelete(node_pointer pNode, T value); //done
-		void	_deleteRestructor(node_pointer pPivot); //done
+		void	_transplant(node_pointer refNode, node_pointer refSuccessor);
+		void	_BStreeDelete(node_pointer pNode, T value);
+		void	_deleteRestructor(node_pointer pPivot);
 
 	public :
 		//(constructor)
@@ -89,7 +89,7 @@ namespace ft
 		//member functions
 		const node_pointer	getNilPtr( void ) const { return (_nilnode); }
 		const node_pointer getRoot( void ) const { return (_pRoot); } 
-		node_pointer search(const T & value) const { return (_searchHelper(this->_pRoot, value)); } //done
+		node_pointer search(const T & value) const { return (_searchHelper(this->_pRoot, value)); }
 		void insertNode(T value);
 		void deleteNode(T value);
 
