@@ -1,11 +1,12 @@
-#ifndef FT_RBTREE_HPP
-# define FT_RBTREE_HPP
+#ifndef FT_TREE_HPP
+# define FT_TREE_HPP
 #include <memory>
 #include <exception>
 
 #include "ft_RBtreeNode.hpp"
 #include "ft_iterator.hpp"
 #include "ft_less.hpp"
+
 namespace ft
 {
 	template <	class T,
@@ -14,26 +15,24 @@ namespace ft
 	class RBtree
 	{
 	private :
-		/* private members */
-		typedef RBtreeNode<T>	node_type;
-		typedef RBtreeNode<T>*	node_pointer;
-		typedef Alloc			allocator_type;
-		typedef Comp			key_compare;
-
+		typedef RBtreeNode<T>						node_type;
+		typedef RBtreeNode<T>*						node_pointer;
+		typedef Alloc								allocator_type;
+		typedef Comp								key_compare;
+		typedef typename allocator_type::size_type	size_type;
+	private :
 		allocator_type	_allocator_object;
 		key_compare		_key_compare;
 		node_pointer	_nilnode;
 		node_pointer	_pRoot;
-
-		/* private method */
-		// utils
-		bool	_isNilNode(node_pointer pNode) const {return (pNode == _nilnode);}
-		bool	_isRootNode(node_pointer pNode) const {return (_isNilNode(pNode->_pParent));}
-		bool	_isLeafNode(node_pointer pNode) const {return (_isNilNode(pNode->_pLeftChild) && _isNilNode(pNode->_pRightChild));}
+		size_type		_size;
+	private :
+		bool	_isNilNode(node_pointer pNode) const;
+		bool	_isRootNode(node_pointer pNode) const;
+		bool	_isLeafNode(node_pointer pNode) const;
 		void	_printTreeHelper(node_pointer pNode) const ;
 		void	_deleteTreeHelper(node_pointer pNode);
 		void	_copyTreeHelper(node_pointer pNode);
-		// void	_preOrderHelper(node_pointer pNode);
 		// rotation
 		void	_rotateLeft(node_pointer pPivotNode);
 		void	_rotateRight(node_pointer pPivotNode);
@@ -43,81 +42,59 @@ namespace ft
 		void	_BStreeInsert(node_pointer pNode, T value);
 		void	_insertRestructor(node_pointer pPivot);
 		// delete_helpers
-		node_pointer _getSuccessor(node_pointer pNode) const;//done
+		node_pointer _getSuccessor(node_pointer pNode) const;
 		// Transplant : change targetnode and successor for delete targetnode 
 		void	_transplant(node_pointer refNode, node_pointer refSuccessor);
 		void	_BStreeDelete(node_pointer pNode, T value);
 		void	_deleteRestructor(node_pointer pPivot);
-
 	public :
-		//(constructor)
-		RBtree( void ) : _allocator_object(allocator_type()), _key_compare(Comp())
-		{
-			_nilnode = _allocator_object.allocate(1);
-			_allocator_object.construct(_nilnode, node_type());
-			_nilnode->_pParent = _pRoot;
-			_nilnode->_pRightChild = _nilnode;
-			_pRoot = _nilnode;
-		}
-		RBtree (const RBtree & other)
-		: _allocator_object(allocator_type()), _key_compare(Comp())
-		{
-			_nilnode = _allocator_object.allocate(1);
-			_allocator_object.construct(_nilnode, node_type());
-			_nilnode->_pParent = _pRoot;
-			_nilnode->_pRightChild = _nilnode;
-			_pRoot = _nilnode;
-			_copyTreeHelper(other._pRoot);
-			// this->insertNode(other._pRoot->getData());
-		}
-		~RBtree()
-		{
-			std::cout << "deleting tree" << _pRoot << std::endl;
-			this->clearTree();
-			_allocator_object.destroy(this->_nilnode);
-			_allocator_object.deallocate(this->_nilnode, 1);
-		}
-		RBtree & operator=( const RBtree & other )
-		{
-			std::cout << "operator =" << std::endl;
-			if (this == &other)
-				return (*this);
-			this->clearTree();
-			_copyTreeHelper(other._pRoot);
-			return (*this);
-		}
-		//member functions
-		const node_pointer	getNilPtr( void ) const { return (_nilnode); }
-		const node_pointer getRoot( void ) const { return (_pRoot); } 
-		node_pointer search(const T & value) const { return (_searchHelper(this->_pRoot, value)); }
+		RBtree( void );
+		RBtree( const RBtree & other );
+		~RBtree( void );
+		RBtree & operator=( const RBtree & other );
+
+		const node_pointer getNilPtr( void ) const;
+		const node_pointer getRootPtr( void ) const;
+
+		node_pointer search(const T & value) const;
+
 		void insertNode(T value);
 		void deleteNode(T value);
 
-		void clearTree()
-		{
-			_deleteTreeHelper(this->_pRoot);
-		}
+		void clearTree( void );
+		void printTree( void ) const;
 
-		void printTree() const
-		{
-			if (_isNilNode(this->_pRoot))
-				std::cout << "Tree is empty" << std::endl;
-			else
-			{
-				std::cout << "Nilptr  is " << _nilnode << std::endl;
-				std::cout << *_nilnode << std::endl;
-				std::cout << "Root is " << std::endl;
-				std::cout << "\t" << _pRoot << std::endl;
-				std::cout << *_pRoot << std::endl;
-				_printTreeHelper(_pRoot);
-			}
-		}
-	}; // class RBtree
+		bool isEmpty( void ) const;
+		node_pointer begin() const;
+		node_pointer end() const;
+	};
 
-	template<class T, class Alloc, class Comp>
-	void RBtree<T, Alloc, Comp>::_printTreeHelper(typename RBtree<T, Alloc, Comp>::node_pointer pNode) const
+	template< class T, class A, class C>
+	bool
+	RBtree<T, A, C>::_isNilNode( typename RBtree<T, A, C>::node_pointer pNode) const
 	{
-		if (pNode == NULL || pNode->_isNilNode() == true)
+ 		return (pNode->isNilNode());
+	}
+	
+	template< class T, class A, class C>
+	bool
+	RBtree<T, A, C>::_isRootNode( typename RBtree<T, A, C>::node_pointer pNode) const
+	{
+ 		return (_isNilNode(pNode->_pParent));
+	}
+
+	template< class T, class A, class C>
+	bool
+	RBtree<T, A, C>::_isLeafNode( typename RBtree<T, A, C>::node_pointer pNode) const
+	{
+ 		return (!(_isNilNode(pNode->_pLeftChild)) || !(_isNilNode(pNode->_pRightChild)));
+	}
+
+	template<class T, class A, class C>
+	void
+	RBtree<T, A, C>::_printTreeHelper(typename RBtree<T, A, C>::node_pointer pNode) const
+	{
+		if (pNode == NULL || _isNilNode(pNode) == true)
 			return ;
 		_printTreeHelper(pNode->_pLeftChild);
 		std::cout << "ptr  " << pNode << std::endl;
@@ -125,29 +102,33 @@ namespace ft
 		_printTreeHelper(pNode->_pRightChild);
 	}
 
-	template<class T, class Alloc, class Comp>
-	void RBtree<T, Alloc, Comp>::_deleteTreeHelper(node_pointer pNode)
+	template<class T, class A, class C>
+	void
+	RBtree<T, A, C>::_deleteTreeHelper(node_pointer pNode)
 	{
-		if (pNode->_isNilNode() == true)
+		if (pNode->isNilNode() == true)
 			return ;
 		_deleteTreeHelper(pNode->_pLeftChild);
 		_deleteTreeHelper(pNode->_pRightChild);
 		this->_allocator_object.destroy(pNode);
 		this->_allocator_object.deallocate(pNode, 1);
+		this->_size--;
 	}
 
-	template<class T, class Alloc, class Comp>
-	void RBtree<T, Alloc, Comp>::_copyTreeHelper(typename RBtree<T, Alloc, Comp>::node_pointer pNode)
+	template<class T, class A, class C>
+	void
+	RBtree<T, A, C>::_copyTreeHelper(typename RBtree<T, A, C>::node_pointer pNode)
 	{
-		if (pNode == NULL || pNode->_isNilNode() == true)
+		if (pNode == NULL || _isNilNode(pNode) == true)
 			return ;
 		_copyTreeHelper(pNode->_pLeftChild);
 		this->insertNode(pNode->getData());
 		_copyTreeHelper(pNode->_pRightChild);
 	}
 
-	template<class T, class Alloc, class Comp>
-	typename RBtree<T, Alloc, Comp>::node_pointer RBtree<T, Alloc, Comp>::_searchHelper(typename RBtree<T, Alloc, Comp>::node_pointer node, T value) const
+	template<class T, class A, class C>
+	typename RBtree<T, A, C>::node_pointer
+	RBtree<T, A, C>::_searchHelper(typename RBtree<T, A, C>::node_pointer node, T value) const
 	{
 		if (_isNilNode(node) == true)
 		{
@@ -161,8 +142,9 @@ namespace ft
 		return (_searchHelper(node->_pRightChild, value));
 	}
 
-	template<class T, class Alloc, class Comp>
-	void RBtree<T, Alloc, Comp>::_rotateLeft( typename RBtree<T, Alloc, Comp>::node_pointer pPivotNode )
+	template<class T, class A, class C>
+	void
+	RBtree<T, A, C>::_rotateLeft( typename RBtree<T, A, C>::node_pointer pPivotNode )
 	{
 		/*
 			1. move y's left_tree to x's right
@@ -172,8 +154,6 @@ namespace ft
 			5. set x to y's left child
 			6. set x's parent to y
 		*/
-		// std::cout << "[rotate  Left], node_pointer : " << pPivotNode << std::endl;
-		// std::cout << *pPivotNode << std::endl;
 		node_pointer 	x = pPivotNode;
 		node_pointer	y = x->_pRightChild;
 		
@@ -195,8 +175,9 @@ namespace ft
 		x->_pParent = y;
 	}
 
-	template<class T, class Alloc, class Comp>
-	void RBtree<T, Alloc, Comp>::_rotateRight( typename RBtree<T, Alloc, Comp>::node_pointer pPivotNode )
+	template<class T, class A, class C>
+	void
+	RBtree<T, A, C>::_rotateRight( typename RBtree<T, A, C>::node_pointer pPivotNode )
 	{
 		node_pointer x = pPivotNode;
 		node_pointer y = x->_pLeftChild;
@@ -215,35 +196,19 @@ namespace ft
 		x->_pParent = y;
 	}
 
-	template<class T, class Alloc, class Comp>
-	void RBtree<T, Alloc, Comp>::insertNode(T data)
-	{
-		if (_isNilNode(this->_pRoot) == true)
-		{
-			_pRoot = this->_allocator_object.allocate(1);
-			this->_allocator_object.construct(_pRoot, node_type(data, _nilnode, _nilnode, _nilnode, BLACK));
-		}
-		else
-		{
-			_BStreeInsert(this->_pRoot, data);
-		}
-		this->_pRoot->setColor(BLACK);
-		this->_nilnode->_pRightChild = this->_pRoot->_maximum();
-		this->_nilnode->_pLeftChild = NULL;
-		this->_nilnode->_pParent = this->_pRoot;
-	}
-
-	template<class T, class Alloc, class Comp>
-	void RBtree<T, Alloc, Comp>::_BStreeInsert( typename RBtree<T, Alloc, Comp>::node_pointer pNode, T data )
+	template<class T, class A, class C>
+	void
+	RBtree<T, A, C>::_BStreeInsert( typename RBtree<T, A, C>::node_pointer pNode, T data )
 	{
 		if (data == pNode->getData())
-			throw std::exception();
+			return ;
 		if (this->_key_compare(data, pNode->getData()))
 		{
 			if (_isNilNode(pNode->_pLeftChild) == true)
 			{
 				pNode->_pLeftChild = this->_allocator_object.allocate(1);
 				this->_allocator_object.construct(pNode->_pLeftChild, node_type(data, _nilnode, _nilnode, pNode));
+				this->_size++;
 				_insertRestructor(pNode->_pLeftChild);
 			}
 			else
@@ -255,6 +220,7 @@ namespace ft
 			{
 				pNode->_pRightChild = this->_allocator_object.allocate(1);
 				this->_allocator_object.construct(pNode->_pRightChild, node_type(data, _nilnode, _nilnode, pNode));
+				this->_size++;
 				_insertRestructor(pNode->_pRightChild);
 			}
 			else
@@ -262,8 +228,9 @@ namespace ft
 		}
 	}
 
-	template<class T, class Alloc, class Comp>
-	void RBtree<T, Alloc, Comp>::_insertRestructor( typename RBtree<T, Alloc, Comp>::node_pointer KeyNode )
+	template<class T, class A, class C>
+	void
+	RBtree<T, A, C>::_insertRestructor( typename RBtree<T, A, C>::node_pointer KeyNode )
 	{
 		/*
 		 *  K : target_node. P : parent_node. U : uncle_node.(sibling of P) G : grand_parenent_node. S : sibling
@@ -334,8 +301,9 @@ namespace ft
 		}
 	}
 
-	template<class T, class Alloc, class Comp>
-	typename RBtree<T, Alloc, Comp>::node_pointer	RBtree<T, Alloc, Comp>::_getSuccessor( typename RBtree<T, Alloc, Comp>::node_pointer pNode ) const
+	template<class T, class A, class C>
+	typename RBtree<T, A, C>::node_pointer
+	RBtree<T, A, C>::_getSuccessor( typename RBtree<T, A, C>::node_pointer pNode ) const
 	{
 		node_pointer successor;
 
@@ -353,8 +321,9 @@ namespace ft
 	}
 
 	// 트리에서 특정 노드를 빼내고, 트리는 이진트리 규칙을 유지하는 기능이다.
-	template<class T, class Alloc, class Comp>
-	void RBtree<T, Alloc, Comp>::_transplant(typename RBtree<T, Alloc, Comp>::node_pointer pNode, typename RBtree<T, Alloc, Comp>::node_pointer pSuccessor)
+	template<class T, class A, class C>
+	void
+	RBtree<T, A, C>::_transplant(typename RBtree<T, A, C>::node_pointer pNode, typename RBtree<T, A, C>::node_pointer pSuccessor)
 	{
 		if (_isRootNode(pNode) == true)
 			this->_pRoot = pSuccessor;
@@ -366,10 +335,11 @@ namespace ft
 			pSuccessor->_pParent = pNode->_pParent;
 	}
 
-	template<class T, class Alloc, class Comp>
-	void RBtree<T, Alloc, Comp>::_BStreeDelete( typename RBtree<T, Alloc, Comp>::node_pointer pNode , T value )
+	template<class T, class A, class C>
+	void
+	RBtree<T, A, C>::_BStreeDelete( typename RBtree<T, A, C>::node_pointer pNode , T value )
 	{
-		node_pointer pTargetNode = RBtree<T, Alloc, Comp>::_nilnode;
+		node_pointer pTargetNode = RBtree<T, A, C>::_nilnode;
 		node_pointer K = pNode;
 		// 1. find node to delete
 		while (!_isNilNode(K))
@@ -384,11 +354,11 @@ namespace ft
 			else
 				K = K->_pLeftChild;
 		}
-		// pTargetNode = this->search(value);
+		pTargetNode = this->search(value);
 		// 2. exception
 		if (_isNilNode(pTargetNode))
 		{
-			std::cerr << "Can not find value in the tree" << std::endl;
+			std::cerr << "DELETE : Can not find value in the tree" << std::endl;
 			throw (std::exception());
 		}
 		Color deleting_color;
@@ -433,6 +403,7 @@ namespace ft
 			successorNode->_color = pTargetNode->getColor();
 		}
 		delete pTargetNode;
+		this->_size--;
 		if (deleting_color == ft::BLACK)
 			_deleteRestructor(occupyingNode);
 	}
@@ -442,8 +413,9 @@ namespace ft
 		-> LN : left child of Sibling
 		-> RN : right child of Sibling
 	*/
-	template<class T, class Alloc, class Comp>
-	void RBtree<T, Alloc, Comp>::_deleteRestructor(typename RBtree<T, Alloc, Comp>::node_pointer pNode)
+	template<class T, class A, class C>
+	void
+	RBtree<T, A, C>::_deleteRestructor(typename RBtree<T, A, C>::node_pointer pNode)
 	{
 		node_pointer N = pNode;
 		node_pointer P; // parentNode
@@ -527,9 +499,98 @@ namespace ft
 			}
 		}
 	}
+	
+	// public methods
+	template <class T, class A, class C>
+	RBtree<T, A, C>::RBtree( void )
+	: _allocator_object(A()), _key_compare(C()), _size(0)
+	{
+		_nilnode = _allocator_object.allocate(1);
+		_allocator_object.construct(_nilnode, node_type());
+		_nilnode->_pParent = _pRoot;
+		_nilnode->_pRightChild = _nilnode;
+		_pRoot = _nilnode;
+	}
 
-	template<class T, class Alloc, class Comp>
-	void RBtree<T, Alloc, Comp>::deleteNode(T value)
+	template <class T, class A, class C>
+	RBtree<T, A, C>::RBtree (const RBtree & other)
+	: _allocator_object(A()), _key_compare(C()), _size(0)
+	{
+		_nilnode = _allocator_object.allocate(1);
+		_allocator_object.construct(_nilnode, node_type());
+		_nilnode->_pParent = _pRoot;
+		_nilnode->_pRightChild = _nilnode;
+		_pRoot = _nilnode;
+		_copyTreeHelper(other._pRoot);
+	}
+
+	template <class T, class A, class C>
+	RBtree<T, A, C>::~RBtree()
+	{
+		this->clearTree();
+		_allocator_object.destroy(this->_nilnode);
+		_allocator_object.deallocate(this->_nilnode, 1);
+	}
+
+	template <class T, class A, class C>
+	RBtree<T, A, C> & 
+	RBtree<T, A, C>::operator=( const RBtree & other )
+	{
+		if (this == &other)
+			return (*this);
+		this->_allocator_object = other._allocator_object;
+		this->_key_compare = other._key_compare;
+		this->clearTree();
+		std::cout << "HI" << std::endl;
+		this->printTree();
+		_copyTreeHelper(other._pRoot);
+		return (*this);
+	}
+
+	template <class T, class A, class C>
+	const typename RBtree<T,A,C>::node_pointer
+	RBtree<T,A,C>::getNilPtr() const
+	{
+		return (this->_nilnode);
+	}
+
+	template <class T, class A, class C>
+	const typename RBtree<T,A,C>::node_pointer
+	RBtree<T,A,C>::getRootPtr() const
+	{
+		return (this->_pRoot);
+	}
+
+	template <class T, class A, class C>
+	typename RBtree<T,A,C>::node_pointer
+	RBtree<T,A,C>::search( const T & value ) const
+	{
+		return (_searchHelper(this->_pRoot, value));
+	}
+
+	template <class T, class A, class C>
+	void
+	RBtree<T,A,C>::insertNode(T value)
+	{
+		if (_isNilNode(this->_pRoot) == true)
+		{
+			_pRoot = this->_allocator_object.allocate(1);
+			this->_allocator_object.construct(_pRoot, node_type(value, _nilnode, _nilnode, _nilnode, BLACK));
+			this->_size++;
+		}
+		else
+		{
+			_BStreeInsert(this->_pRoot, value);
+		}
+		this->_pRoot->setColor(BLACK);
+		this->_nilnode->_pRightChild = this->_pRoot->_maximum();
+		this->_nilnode->_pLeftChild = NULL;
+		this->_nilnode->_pParent = this->_pRoot;
+	}
+	
+	template <class T, class A, class C>
+	void
+	RBtree<T,A,C>::deleteNode(T value)
 	{
 		_BStreeDelete(this->_pRoot, value);
 		this->_pRoot->setColor(ft::BLACK);
@@ -538,5 +599,52 @@ namespace ft
 		this->_nilnode->_pParent = this->_pRoot;
 	}
 
-} // namespace ft
+	template <class T, class A, class C>
+	void
+	RBtree<T,A,C>::clearTree()
+	{
+		_deleteTreeHelper(this->_pRoot);
+		_pRoot = _nilnode;
+	}
+
+	template <class T, class A, class C>
+	void
+	RBtree<T,A,C>::printTree() const
+	{
+		if (_isNilNode(this->_pRoot))
+			std::cout << "Tree is empty" << std::endl;
+		else
+		{
+			std::cout << "Tree size : " << this->_size << std::endl;
+			std::cout << "Nilptr  is " << _nilnode << std::endl;
+			std::cout << *_nilnode << std::endl;
+			std::cout << "Root is " << std::endl;
+			std::cout << "\t" << _pRoot << std::endl;
+			std::cout << *_pRoot << std::endl;
+			_printTreeHelper(_pRoot);
+		}
+	}
+
+	template <class T, class A, class C>
+	bool
+	RBtree<T,A,C>::isEmpty( void ) const
+	{
+		return (_isNilNode(this->_pRoot));
+	}
+
+	template <class T, class A, class C>
+	typename RBtree<T,A,C>::node_pointer
+	RBtree<T,A,C>::begin() const
+	{
+		return (this->_pRoot->_minimum());
+	}
+	
+	template <class T, class A, class C>
+	typename RBtree<T,A,C>::node_pointer
+	RBtree<T,A,C>::end() const
+	{
+		return (this->_nilnode);
+	}
+}
+
 #endif

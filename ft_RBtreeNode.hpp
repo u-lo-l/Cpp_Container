@@ -41,12 +41,6 @@ namespace ft
 			return (*this);
 		}
 
-		bool _isNilNode() const
-		{
-			if (_isnil == true)
-				return (true);
-			return (false);
-		}
 
 		enum Color getColor() const { return (_color); }
 		
@@ -58,24 +52,30 @@ namespace ft
 
 
 	public :
-		
 		const T & getData() const { return (this->_data); }
 
+		bool isNilNode() const
+		{
+			if (_isnil == true)
+				return (true);
+			return (false);
+		}
+		
 		node_pointer _maximum()
 		{
 			node_pointer pResult = this;
-			if (pResult->_isNilNode() == true)
+			if (pResult->isNilNode() == true)
 				return (pResult);
-			while (pResult->_pRightChild->_isNilNode() == false)
+			while (pResult->_pRightChild->isNilNode() == false)
 				pResult = pResult->_pRightChild;
 			return (pResult);
 		}	
 		node_pointer _minimum()
 		{
 			node_pointer pResult = this;
-			if (pResult->_isNilNode() == true)
+			if (pResult->isNilNode() == true)
 				return (pResult);
-			while (pResult->_pLeftChild->_isNilNode() == false)
+			while (pResult->_pLeftChild->isNilNode() == false)
 				pResult = pResult->_pLeftChild;
 			return (pResult);
 		}
@@ -109,7 +109,7 @@ namespace ft
 				os << "\033[1;107;91m";
 			else
 				os << "\033[1;107;30m";
-			if (node._isNilNode() == true)
+			if (node.isNilNode() == true)
 				os << "\t 'nil_node'" << std::endl;
 			os << "\t data   : " << node.getData() << "\033[0m" << std::endl;
 			os << "\033[0m" << "\t parent : " << (node._pParent) << std::endl;
