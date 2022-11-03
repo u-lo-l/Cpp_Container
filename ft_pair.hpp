@@ -55,6 +55,7 @@ namespace ft
 	std::ostream & operator<< (std::ostream & os, const pair<T1, T2> & p)
 	{
 		std::cout << "<" << p.first << ", " << p.second << ">";
+		return (os);
 	}
 }
 #endif

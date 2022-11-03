@@ -29,11 +29,12 @@ namespace ft
 		typedef typename allocator_type::const_pointer		const_pointer;
 		typedef typename allocator_type::difference_type	difference_type;
 		typedef typename allocator_type::size_type			size_type;
+
 	private :
 		class value_compare;
-		typedef ft::RBtree<value_type, allocator_type, value_compare>	_tree_type;
-		typedef ft::RBtreeNode<value_type>								_node_type;
-		typedef ft::RBtreeNode<value_type> *							_node_pointer;
+		typedef ft::RBtree<value_type, value_compare>		_tree_type;
+		typedef ft::RBtreeNode<value_type>					_node_type;
+		typedef ft::RBtreeNode<value_type> *				_node_pointer;
 
 	public :
 		typedef ft::tree_iterator<value_type>			iterator;
@@ -97,7 +98,6 @@ namespace ft
 
 		iterator		lower_bound (const key_type& k);
 		const_iterator	lower_bound (const key_type& k) const;
-
 		iterator		upper_bound (const key_type& k);
 		const_iterator	upper_bound (const key_type& k) const;
 
@@ -105,6 +105,7 @@ namespace ft
 		ft::pair<const_iterator,const_iterator>	equal_range (const key_type& k) const;
 
 		allocator_type get_allocator() const;
+
 	}; //class map
 
 	/*
@@ -119,8 +120,8 @@ namespace ft
 		typedef C	key_compare;
 	protected :
 		key_compare comp;
-		value_compare (C C) : comp(c) {}
 	public :
+		value_compare (C c = C()) : comp(c) {}
 		bool operator() (const value_type& x, const value_type& y) const
 		{
 			return comp(x.first, y.first);
@@ -134,12 +135,11 @@ namespace ft
 
 	template<class K, class T, class C, class A>
 	template <class InputIterator>
-	map<K, T, C, A>::map(InputIterator firsit, InputIterator last,
-	 					const key_compare & comp = key_compare(),
-	 					const allocator_type & aloc = allocator_type())
+	map<K, T, C, A>::map(InputIterator first, InputIterator last,
+	 					const key_compare & comp, const allocator_type & alloc)
 	: _compare_functor(comp), _allocator_object(alloc), _rbtree()
 	{
-		for (InputIterator it = first; it != last ; i++)
+		for (InputIterator it = first; it != last ; it++)
 			this->_rbtree.insertNode(*it);
 	}
 
@@ -166,77 +166,77 @@ namespace ft
 	typename map<K, T, C, A>::iterator
 	map<K, T, C, A>::begin()
 	{
-		return (iterator(this->_rbtree->getRoot->_minimum()));
+		return (iterator(this->_rbtree.getRoot->_minimum()));
 	}
 
 	template<class K, class T, class C, class A>
 	typename map<K, T, C, A>::iterator
 	map<K, T, C, A>::end()
 	{
-		return (iterator(this->_rbtree->getNilPtr()));
+		return (iterator(this->_rbtree.getNilPtr()));
 	}
 
 	template<class K, class T, class C, class A>
 	typename map<K, T, C, A>::const_iterator
 	map<K, T, C, A>::begin() const
 	{
-		return (const_iterator(this->_rbtree->getRoot->_minimum()));
+		return (const_iterator(this->_rbtree.getRoot->_minimum()));
 	}
 
 	template<class K, class T, class C, class A>
 	typename map<K, T, C, A>::const_iterator
 	map<K, T, C, A>::end() const
 	{
-		return (const_iterator(this->_rbtree->getNilPtr()));
+		return (const_iterator(this->_rbtree.getNilPtr()));
 	}
 
 	template<class K, class T, class C, class A>
 	typename map<K, T, C, A>::reverse_iterator
 	map<K, T, C, A>::rbegin()
 	{
-		return (reverse_iterator(this->_rbtree->getNilPtr()));
+		return (reverse_iterator(this->_rbtree.getNilPtr()));
 	}
 
 	template<class K, class T, class C, class A>
 	typename map<K, T, C, A>::reverse_iterator
 	map<K, T, C, A>::rend()
 	{
-		return (reverse_iterator(this->_rbtree->getRoot->_minimum()));
+		return (reverse_iterator(this->_rbtree.getRoot->_minimum()));
 	}
 
 	template<class K, class T, class C, class A>
 	typename map<K, T, C, A>::const_reverse_iterator
 	map<K, T, C, A>::rbegin() const
 	{
-		return (const_reverse_iterator(this->_rbtree->getNilPtr()));
+		return (const_reverse_iterator(this->_rbtree.getNilPtr()));
 	}
 
 	template<class K, class T, class C, class A>
 	typename map<K, T, C, A>::const_reverse_iterator
 	map<K, T, C, A>::rend() const
 	{
-		return (const_reverse_iterator(this->_rbtree->getRoot->_minimum()));
+		return (const_reverse_iterator(this->_rbtree.getRoot->_minimum()));
 	}
 
 	template<class K, class T, class C, class A>
 	bool
 	map<K, T, C, A>::empty() const
 	{
-		return (this->_rbtree->isEmpty());
+		return (this->_rbtree.isEmpty());
 	}
 
 	template<class K, class T, class C, class A>
 	typename map<K, T, C, A>::size_type
 	map<K, T, C, A>::size() const
 	{
-
+		return (this->_rbtree.size());
 	}
 	
 	template<class K, class T, class C, class A>
 	typename map<K, T, C, A>::size_type
 	map<K, T, C, A>::max_size() const
 	{
-
+		return (this->_rbtree.max_size());
 	}
 
 	template<class K, class T, class C, class A>
@@ -246,22 +246,12 @@ namespace ft
 		return ((*((this->insert(make_pair(k,mapped_type()))).first)).second);
 	}
 
-	// TODO : RBtree의 insert 를 pointer 를 반환하도록 수정.
 	template<class K, class T, class C, class A>
 	ft::pair<typename map<K, T, C, A>::iterator, bool>
 	map<K, T, C, A>::insert (const value_type & val)
 	{
-		_node_pointer temp = this->_rbtree.search(val);
-		bool res = false;
-		ft::pair<iterator, bool> ret;
-		if (!temp)
-		{
-			res = true
-			temp = this->_rbtree.insertNode(val);
-			this->_size++:
-		}
-		ret = ft::make_pair(iterator(temp), res);
-		return (ret);
+		ft::pair<_node_pointer, bool> res = _rbtree.insertNode(val);
+		return (ft::make_pair(iterator(res.first), res.second));
 	}
 
 	template<class K, class T, class C, class A>
@@ -284,38 +274,42 @@ namespace ft
 	void
 	map<K, T, C, A>::erase(iterator position)
 	{
-		node_
 		this->_rbtree.deleteNode(*position);
-		if()
-
 	}
 	
 	template<class K, class T, class C, class A>
 	typename map<K, T, C, A>::size_type
 	map<K, T, C, A>::erase(const key_type & k)
 	{
-		t
+		if (this->_rbtree.deleteNode(ft::make_pair(k, mapped_type())) == true)
+			return (1);
+		return (0);
 	}
 	
 	template<class K, class T, class C, class A>
 	void
 	map<K, T, C, A>::erase(iterator first, iterator last)
 	{
-
+		while (first != last)
+			this->erase(*first++);
 	}
 
 	template<class K, class T, class C, class A>
 	void
 	map<K, T, C, A>::swap(map & other)
 	{
-
+		if (this == &other)
+			return ;
+		_tree_type temp_tree = other._rbtree;
+		other._rbtree = this->_rbtree;
+		this->_rbtree = temp_tree;
 	}
 
 	template<class K, class T, class C, class A>
 	void
 	map<K, T, C, A>::clear()
 	{
-		this->_rbtree->clearTree();
+		this->_rbtree.clearTree();
 	}
 
 	template<class K, class T, class C, class A>
@@ -336,63 +330,88 @@ namespace ft
 	typename map<K, T, C, A>::iterator
 	map<K, T, C, A>::find(const key_type & k)
 	{
-		return (iterator(this->_rbtree->search(ft::make_pair(k, mapped_type()))));
+		return (iterator(this->_rbtree.search(ft::make_pair(k, mapped_type()))));
 	}
 	
 	template<class K, class T, class C, class A>
 	typename map<K, T, C, A>::const_iterator
 	map<K, T, C, A>::find(const key_type & k) const
 	{
-		return (const_iterator(this->_rbtree->search(ft::make_pair(k, mapped_type()))));
+		return (const_iterator(this->_rbtree.search(ft::make_pair(k, mapped_type()))));
 	}
 
 	template<class K, class T, class C, class A>
 	typename map<K, T, C, A>::size_type
 	map<K, T, C, A>::count(const key_type & k) const
 	{
+		_node_pointer search_result;
 
+		search_result = _rbtree.search(ft::make_pair(k, mapped_type()));
+		if (iteartor(search_result) == this->end())
+			return (0);
+		return (1);
 	}
 
 	template<class K, class T, class C, class A>
 	typename map<K, T, C, A>::iterator
 	map<K, T, C, A>::lower_bound (const key_type& k)
 	{
-
+		for (iterator it = this->begin() ; it != this->end() ; it++)
+		{
+			if (key_comp((*it).first, key) == false)
+				break ;
+		}
+		return (it);
 	}
 	
 	template<class K, class T, class C, class A>
 	typename map<K, T, C, A>::const_iterator
 	map<K, T, C, A>::lower_bound (const key_type& k) const
 	{
-
+		for (iterator it = this->begin() ; it != this->end() ; it++)
+		{
+			if (key_comp((*it).first, key) == false)
+				break ;
+		}
+		return (const_iterator(it));
 	}
 
 	template<class K, class T, class C, class A>
 	typename map<K, T, C, A>::iterator
 	map<K, T, C, A>::upper_bound (const key_type& k)
 	{
-
+		for (iterator it = this->begin() ; it != this->end() ; it++)
+		{
+			if (key_comp(key, (*it).first) == true)
+				break ;
+		}
+		return (it);
 	}
 	
 	template<class K, class T, class C, class A>
 	typename map<K, T, C, A>::const_iterator
 	map<K, T, C, A>::upper_bound (const key_type& k) const
 	{
+		for (iterator it = this->begin() ; it != this->end() ; it++)
+		{
+			if (key_comp(key, (*it).first) == true)
+				break ;
+		}
+		return (const_iterator(it));
+	}
 
+	template<class K, class T, class C, class A>
+	ft::pair<typename map<K, T, C, A>::iterator, typename map<K, T, C, A>::iterator>
+	map<K, T, C, A>::equal_range (const key_type& k)
+	{
+		return (ft::make_pair(lower_bound(k), upper_bound(k)));
 	}
 
 	template<class K, class T, class C, class A>
 	ft::pair<typename map<K, T, C, A>::const_iterator, typename map<K, T, C, A>::const_iterator>
 	map<K, T, C, A>::equal_range (const key_type& k) const
 	{
-
-	}
-	
-	template<class K, class T, class C, class A>
-	ft::pair<typename map<K, T, C, A>::iterator, typename map<K, T, C, A>::iterator>
-	map<K, T, C, A>::equal_range (const key_type& k)
-	{
-
+		return (ft::make_pair(lower_bound(k), upper_bound(k)));
 	}
 
 	template<class K, class T, class C, class A>
