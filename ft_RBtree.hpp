@@ -6,6 +6,7 @@
 #include "ft_RBtreeNode.hpp"
 #include "ft_iterator.hpp"
 #include "ft_less.hpp"
+#include "ft_pair.hpp"
 
 namespace ft
 {
@@ -59,6 +60,7 @@ namespace ft
 		node_pointer search(const T & value) const;
 
 		ft::pair<node_pointer, bool> insertNode(const T & value);
+		node_pointer insertNode(node_pointer hint, const T & value);
 		bool deleteNode(const T & value);
 
 		void clearTree( void );
@@ -592,6 +594,47 @@ namespace ft
 		this->_nilnode->_pLeftChild = NULL;
 		this->_nilnode->_pParent = this->_pRoot;
 		return (res);
+	}
+
+
+	// TODO : 중간 노드일 때 어떻게 최적화 되는지 확인.
+	template <class T, class C, class A>
+	typename RBtree<T, C, A>::node_pointer
+	RBtree<T,C,A>::insertNode(node_pointer hint, const T & value)
+	{
+		if (this->isEmpty() == true)
+			return ((this->insertNode(val)).first);
+		else if(hint == this->begin())
+		{
+			if (_key_compare(value, hint->_data) == true)
+			{
+				hint->_pLeftChild = this->_allocator_object.allocate(1);
+				this->_allocator_object.construct(hint->_pLeftChild, node_type(value, _nilnode, _nilnode, hint));
+				this->_size++;
+				_insertRestructor(hint->_pLeftChild);
+				return (hint->_pLeftChild);
+			}
+			else
+				return ((this->insertNode(val)).first);
+		}
+		else if (hint == this->end())
+		{
+			hint = hint->_pParent;
+			if (_key_compare(hint->_data, value) == true)
+			{
+				hint->_pRightChild = this->_allocator_object.allocate(1);
+				this->_allocator_object.construct(hint->_pRightChild, node_type(value, _nilnode, _nilnode, hint));
+				this->_size++;
+				_insertRestructor(hint->_pRightChild);
+				return (ft::make_pair(hint->_pRightChild, true));
+			}
+			else
+				return ((this->insertNode(val)).first);
+		}
+		else
+		{
+
+		}
 	}
 	
 	template <class T, class C, class A>

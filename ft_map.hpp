@@ -258,7 +258,7 @@ namespace ft
 	typename map<K, T, C, A>::iterator
 	map<K, T, C, A>::insert (iterator position, const value_type & val)
 	{
-		// hint를 어떻게 사용해야 하지??
+		return (this->begin());
 	}
 	
 	template<class K, class T, class C, class A>
@@ -316,7 +316,7 @@ namespace ft
 	typename map<K, T, C, A>::key_compare
 	map<K, T, C, A>::key_comp() const
 	{
-		return (this->key_comp);
+		return (this->_compare_functor);
 	}
 	
 	template<class K, class T, class C, class A>
