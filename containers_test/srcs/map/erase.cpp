@@ -6,6 +6,7 @@
 typedef _pair<const T1, T2> T3;
 
 static int iter = 0;
+void pp(int n) { std::cout << "[[" << n << "]]" << std::endl; }
 
 template <typename MAP, typename U>
 void	ft_erase(MAP &mp, U param)
@@ -32,12 +33,17 @@ int		main(void)
 	TESTED_NAMESPACE::map<T1, T2> mp(lst.begin(), lst.end());
 	printSize(mp);
 
+	pp(1);
 	ft_erase(mp, ++mp.begin());
 
+	pp(2);
 	ft_erase(mp, mp.begin());
+	pp(3);
 	ft_erase(mp, --mp.end());
 
+	pp(4);
 	ft_erase(mp, mp.begin(), ++(++(++mp.begin())));
+	pp(5);
 	ft_erase(mp, --(--(--mp.end())), --mp.end());
 
 	mp[10] = "Hello";

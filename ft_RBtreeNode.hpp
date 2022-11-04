@@ -16,7 +16,7 @@ namespace ft
 
 		template<class U, class Alloc, class Comp>
 		friend class RBtree;
-		template<class U>
+		template<class U, class Ptr, class Ref>
 		friend class tree_iterator;
 
 		bool			_isnil;
@@ -52,7 +52,7 @@ namespace ft
 
 
 	public :
-		const T & getData() const { return (this->_data); }
+		T & getData() { return (this->_data); }
 
 		bool isNilNode() const
 		{
@@ -111,7 +111,7 @@ namespace ft
 				os << "\033[1;107;30m";
 			if (node.isNilNode() == true)
 				os << "\t 'nil_node'" << std::endl;
-			os << "\t data   : " << node.getData() << "\033[0m" << std::endl;
+			os << "\t data   : " << node._data << "\033[0m" << std::endl;
 			os << "\033[0m" << "\t parent : " << (node._pParent) << std::endl;
 			os << "\t left   : " << (node._pLeftChild) << std::endl;
 			os << "\t right  : " << (node._pRightChild) << std::endl;

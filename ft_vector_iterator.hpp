@@ -6,7 +6,7 @@
 /*   By: dkim2 <dkim2@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/07 01:08:38 by dkim2             #+#    #+#             */
-/*   Updated: 2022/10/25 12:40:58 by dkim2            ###   ########.fr       */
+/*   Updated: 2022/11/04 16:53:55 by dkim2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,9 @@ namespace ft
 		typedef typename ft::iterator<ft::random_access_iterator_tag, T> iterator_type;
 	public :
 		typedef typename iterator_type::difference_type		difference_type;
-		typedef typename iterator_type::value_type			value_type;
 		typedef typename iterator_type::pointer				pointer;
 		typedef typename iterator_type::reference			reference;
+		typedef typename iterator_type::value_type			value_type;
 		typedef typename iterator_type::iterator_category	iterator_category;
 	private:
 		pointer _base;
@@ -46,9 +46,9 @@ namespace ft
 
 		~vectorIterator() {}
 
-		operator vectorIterator<const T> () const
+		operator vectorIterator<const value_type> () const
 		{
-			return ( vectorIterator<const T>(this->_base) );
+			return ( vectorIterator<const value_type>(this->_base) );
 		}
 
 		const pointer & getBase() const { return this->_base; }

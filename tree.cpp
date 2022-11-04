@@ -12,13 +12,13 @@ int main()
 			std::cin >> i;
 			if (i == 0)
 			{
-				std::cout << "copy" << std::endl;
-				ft::RBtree<int> tree2(tree);
-				tree.insertNode(10);
+				// std::cout << "copy" << std::endl;
+				// ft::RBtree<int> tree2(tree);
+				// tree.insertNode(10);
 				tree.printTree();
-				tree2 = tree;
-				tree2.printTree();
-				break;
+				// tree2 = tree;
+				// tree2.printTree();
+				// break;
 			}
 			else if (i < 0)
 			{

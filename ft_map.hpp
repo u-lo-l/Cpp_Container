@@ -37,13 +37,13 @@ namespace ft
 		typedef ft::RBtreeNode<value_type> *				_node_pointer;
 
 	public :
-		typedef ft::tree_iterator<value_type>			iterator;
-		typedef ft::tree_iterator<const value_type>		const_iterator;
-		typedef ft::reverse_iterator<iterator>			reverse_iterator;
-		typedef ft::reverse_iterator<const_iterator>	const_reverse_iterator;
+		typedef ft::tree_iterator<value_type, value_type *, value_type &>				iterator;
+		typedef ft::tree_iterator<value_type, const value_type *, const value_type &>	const_iterator;
+		typedef ft::reverse_iterator<iterator>											reverse_iterator;
+		typedef ft::reverse_iterator<const_iterator>									const_reverse_iterator;
 
 	private :
-		key_compare		_compare_functor;
+		key_compare		_key_comp;
 		allocator_type	_allocator_object;
 		_tree_type		_rbtree;
 	public :
@@ -71,7 +71,7 @@ namespace ft
 
 		bool empty() const;
 		size_type size() const;
-		size_type max_size() const; // ???
+		size_type max_size() const;
 
 		mapped_type & operator[] (const key_type & k);
 
@@ -113,7 +113,7 @@ namespace ft
 		이 comp객체는 map::value_compare의 객체로 비교함수 클래스를 생성하는 내부 클래스이다.
 	*/
 	template <class K, class T, class C, class A>
-	class map<K, T, C, A>::value_compare : public binary_function<T, T, bool>
+	class map<K, T, C, A>::value_compare : public ft::binary_function<T, T, bool>
 	{
 	private :
 		friend class map;
@@ -122,6 +122,9 @@ namespace ft
 		key_compare comp;
 	public :
 		value_compare (C c = C()) : comp(c) {}
+		typedef bool result_type;
+		typedef value_type first_argument_type;
+		typedef value_type second_argument_type;
 		bool operator() (const value_type& x, const value_type& y) const
 		{
 			return comp(x.first, y.first);
@@ -130,14 +133,14 @@ namespace ft
 
 	template<class K, class T, class C, class A>
 	map<K, T, C, A>::map(const key_compare & comp, const allocator_type & alloc)
-	: _compare_functor(comp), _allocator_object(alloc), _rbtree()
+	: _key_comp(comp), _allocator_object(alloc), _rbtree()
 	{}
 
 	template<class K, class T, class C, class A>
 	template <class InputIterator>
 	map<K, T, C, A>::map(InputIterator first, InputIterator last,
 	 					const key_compare & comp, const allocator_type & alloc)
-	: _compare_functor(comp), _allocator_object(alloc), _rbtree()
+	: _key_comp(comp), _allocator_object(alloc), _rbtree()
 	{
 		for (InputIterator it = first; it != last ; it++)
 			this->_rbtree.insertNode(*it);
@@ -145,19 +148,18 @@ namespace ft
 
 	template<class K, class T, class C, class A>
 	map<K, T, C, A>::map(const map & other)
-	: _compare_functor(other.comp), _allocator_object(other.alloc), _rbtree(other._rbtree)
+	: _key_comp(other._key_comp), _allocator_object(other._allocator_object), _rbtree(other._rbtree)
 	{}
 
 	template<class K, class T, class C, class A>
 	map<K, T, C, A> &
 	map<K, T, C, A>::operator=(const map & other)
 	{
-		if (this != other)
+		if (this != &other)
 		{
 			this->_allocator_object = other._allocator_object;
-			this->_compare_functor = other._compare_functor;
+			this->_key_comp = other._key_comp;
 			this->_rbtree = other._rbtree;
-			this->_size = other._size;
 		}
 		return (*this);
 	}
@@ -166,7 +168,7 @@ namespace ft
 	typename map<K, T, C, A>::iterator
 	map<K, T, C, A>::begin()
 	{
-		return (iterator(this->_rbtree.getRoot->_minimum()));
+		return (iterator(this->_rbtree.getRootPtr()->_minimum()));
 	}
 
 	template<class K, class T, class C, class A>
@@ -180,7 +182,7 @@ namespace ft
 	typename map<K, T, C, A>::const_iterator
 	map<K, T, C, A>::begin() const
 	{
-		return (const_iterator(this->_rbtree.getRoot->_minimum()));
+		return (const_iterator(this->_rbtree.getRootPtr()->_minimum()));
 	}
 
 	template<class K, class T, class C, class A>
@@ -201,7 +203,7 @@ namespace ft
 	typename map<K, T, C, A>::reverse_iterator
 	map<K, T, C, A>::rend()
 	{
-		return (reverse_iterator(this->_rbtree.getRoot->_minimum()));
+		return (reverse_iterator(this->_rbtree.getRootPtr()->_minimum()));
 	}
 
 	template<class K, class T, class C, class A>
@@ -215,7 +217,7 @@ namespace ft
 	typename map<K, T, C, A>::const_reverse_iterator
 	map<K, T, C, A>::rend() const
 	{
-		return (const_reverse_iterator(this->_rbtree.getRoot->_minimum()));
+		return (const_reverse_iterator(this->_rbtree.getRootPtr()->_minimum()));
 	}
 
 	template<class K, class T, class C, class A>
@@ -243,7 +245,7 @@ namespace ft
 	typename map<K, T, C, A>::mapped_type &
 	map<K, T, C, A>::operator[] (const key_type & k)
 	{
-		return ((*((this->insert(make_pair(k,mapped_type()))).first)).second);
+		return ((*((this->insert(ft::make_pair(k,mapped_type()))).first)).second);
 	}
 
 	template<class K, class T, class C, class A>
@@ -258,7 +260,7 @@ namespace ft
 	typename map<K, T, C, A>::iterator
 	map<K, T, C, A>::insert (iterator position, const value_type & val)
 	{
-		return (this->begin());
+		return (_rbtree->insertNode(position.base(), val));
 	}
 	
 	template<class K, class T, class C, class A>
@@ -291,7 +293,7 @@ namespace ft
 	map<K, T, C, A>::erase(iterator first, iterator last)
 	{
 		while (first != last)
-			this->erase(*first++);
+			this->erase(first++);
 	}
 
 	template<class K, class T, class C, class A>
@@ -316,14 +318,15 @@ namespace ft
 	typename map<K, T, C, A>::key_compare
 	map<K, T, C, A>::key_comp() const
 	{
-		return (this->_compare_functor);
+		return (this->_key_comp);
 	}
 	
 	template<class K, class T, class C, class A>
 	typename map<K, T, C, A>::value_compare
 	map<K, T, C, A>::value_comp() const
 	{
-		return (this->value_comp);
+		// return (this->value_compare());
+		return (value_compare(key_compare()));
 	}
 
 	template<class K, class T, class C, class A>
@@ -356,9 +359,10 @@ namespace ft
 	typename map<K, T, C, A>::iterator
 	map<K, T, C, A>::lower_bound (const key_type& k)
 	{
-		for (iterator it = this->begin() ; it != this->end() ; it++)
+		iterator it = this->begin();
+		for ( ; it != this->end() ; it++)
 		{
-			if (key_comp((*it).first, key) == false)
+			if (_key_comp((*it).first, k) == false)
 				break ;
 		}
 		return (it);
@@ -368,9 +372,10 @@ namespace ft
 	typename map<K, T, C, A>::const_iterator
 	map<K, T, C, A>::lower_bound (const key_type& k) const
 	{
-		for (iterator it = this->begin() ; it != this->end() ; it++)
+		const_iterator it = this->begin();
+		for ( ; it != this->end() ; it++)
 		{
-			if (key_comp((*it).first, key) == false)
+			if (_key_comp((*it).first, k) == false)
 				break ;
 		}
 		return (const_iterator(it));
@@ -380,9 +385,10 @@ namespace ft
 	typename map<K, T, C, A>::iterator
 	map<K, T, C, A>::upper_bound (const key_type& k)
 	{
-		for (iterator it = this->begin() ; it != this->end() ; it++)
+		iterator it = this->begin();
+		for ( ; it != this->end() ; it++)
 		{
-			if (key_comp(key, (*it).first) == true)
+			if (_key_comp(k, (*it).first) == true)
 				break ;
 		}
 		return (it);
@@ -392,9 +398,10 @@ namespace ft
 	typename map<K, T, C, A>::const_iterator
 	map<K, T, C, A>::upper_bound (const key_type& k) const
 	{
-		for (iterator it = this->begin() ; it != this->end() ; it++)
+		const_iterator it = this->begin();
+		for ( ; it != this->end() ; it++)
 		{
-			if (key_comp(key, (*it).first) == true)
+			if (_key_comp(k, (*it).first) == true)
 				break ;
 		}
 		return (const_iterator(it));

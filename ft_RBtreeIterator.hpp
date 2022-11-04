@@ -7,19 +7,19 @@
 namespace ft
 {
 	// RBtreeIterator
-	template <class T>
+	template <class T, class Ptr = T*, class Ref = T&>
 	class tree_iterator
 	{
 	private :
-		typedef typename ft::iterator< ft::bidirectional_iterator_tag, RBtreeNode<T> > iterator_type;
+		// typedef typename ft::iterator< ft::bidirectional_iterator_tag, RBtreeNode<T> > iterator_type;
 
-		typedef typename iterator_type::difference_type		difference_type;
-		typedef typename iterator_type::iterator_category	iterator_category;
+		// typedef typename iterator_type::difference_type		difference_type;
+		// typedef typename iterator_type::iterator_category	iterator_category;
 		typedef typename RBtreeNode<T>::value_type			value_type;
 		typedef typename RBtreeNode<T>::node_pointer		node_pointer;
 		
-		typedef value_type*				pointer;
-		typedef value_type&				reference;
+		typedef Ptr											pointer;
+		typedef Ref											reference;
 
 	private :
 		node_pointer _pNode;
@@ -27,9 +27,8 @@ namespace ft
 		void _increment();
 		void _decrement();
 
-		tree_iterator() {}
 	public :
-		explicit tree_iterator(node_pointer pNode) : _pNode(pNode) {}
+		explicit tree_iterator(node_pointer pNode = NULL) : _pNode(pNode) {}
 		tree_iterator(const tree_iterator & it) : _pNode(it._pNode) {}
 		tree_iterator & operator=(const tree_iterator & other)
 		{
@@ -38,53 +37,51 @@ namespace ft
 			return (*this);
 		}
 
-		operator tree_iterator<const T> () const
+		operator tree_iterator<T, const T*, const T&> () const
 		{
-			return ( tree_iterator<const T>(this->_pNode) );
+			return ( tree_iterator<T, const T*, const T&>(this->_pNode) );
 		}
 
 		const node_pointer base() const {return _pNode;}
 
-		reference operator*()
+		reference operator*() const
 		{
-			return (this->_pNode->_data);
+			return (this->_pNode->getData());
 		}
 
-		pointer operator->()
+		pointer operator->() const
 		{
-			return (&(this->_pNode->_data));
+			return (&(operator*()));
 		}
 
-		tree_iterator<T> & operator++()
+		tree_iterator & operator++()
 		{
 			this->_increment();
 			return (*this);
 		}
-		tree_iterator<T> operator++(int)
+		tree_iterator operator++(int)
 		{
-			tree_iterator<T> temp(*this);
+			tree_iterator temp(*this);
 			this->_increment();
 			return (temp);
 		}
-		tree_iterator<T> & operator--()
+		tree_iterator & operator--()
 		{
 			this->_decrement();
 			return (*this);
 		}
-		tree_iterator<T> operator--(int)
+		tree_iterator operator--(int)
 		{
-			tree_iterator<T> temp(*this);
+			tree_iterator temp(*this);
 			this->_decrement();
 			return (temp);
 		}
 
-		template <class Iter>
-		friend bool operator==(const tree_iterator<T> & lhs, const tree_iterator<Iter> & rhs)
-		{ return (lhs._pNode == rhs._pNode);}
+		bool operator==(const tree_iterator & other)
+		{ return (this->_pNode == other._pNode);}
 
-		template <class Iter>
-		friend bool operator!=(const tree_iterator<T> & lhs, const tree_iterator<Iter> & rhs)
-		{ return (lhs._pNode != rhs._pNode);}
+		bool operator!=(const tree_iterator& other)
+		{ return (this->_pNode != other._pNode);}
 	};
 
 	/*
@@ -93,12 +90,12 @@ namespace ft
 		3. 현재 노드가 오른쪽 자식이라면, 부모노드의 상황에 따라 달라진다. 부모노드가 오른쪽 자식인 경우 계속 올라가고 부모노드가 왼쪽자식인 경우 멈춘다.
 			계속 따라 올라가다, nilNode를 만나면 
 	*/
-	template<class T>
-	void tree_iterator<T>::_increment()
+	template<class T, class P, class R>
+	void tree_iterator<T, P, R>::_increment()
 	{
-		if (_pNode->_isNilNode())
+		if (_pNode->isNilNode())
 			return ;
-		else if (_pNode->_pRightChild->_isNilNode() == false)
+		else if (_pNode->_pRightChild->isNilNode() == false)
 		{
 			_pNode = _pNode->_pRightChild->_minimum();
 		}
@@ -116,12 +113,12 @@ namespace ft
 		}
 	}
 
-	template<class T>
-	void tree_iterator<T>::_decrement()
+	template<class T, class P, class R>
+	void tree_iterator<T, P, R>::_decrement()
 	{
-		if (_pNode->_isNilNode())
+		if (_pNode->isNilNode())
 			_pNode = _pNode->_pRightChild;
-		else if (_pNode->_pLeftChild->_isNilNode() == false)
+		else if (_pNode->_pLeftChild->isNilNode() == false)
 		{
 			_pNode = _pNode->_pLeftChild->_maximum();
 		}

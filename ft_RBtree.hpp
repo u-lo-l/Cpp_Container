@@ -46,7 +46,7 @@ namespace ft
 		node_pointer _getSuccessor(node_pointer pNode) const;
 		// Transplant : change targetnode and successor for delete targetnode 
 		void	_transplant(node_pointer refNode, node_pointer refSuccessor);
-		bool	_BStreeDelete(node_pointer pNode, const T & value);
+		bool	_BStreeDelete(const T & value);
 		void	_deleteRestructor(node_pointer pPivot);
 	public :
 		RBtree( void );
@@ -75,28 +75,28 @@ namespace ft
 
 	template < class T, class C, class A>
 	bool
-	RBtree<T, C, A>::_isNilNode( typename RBtree<T, C, A>::node_pointer pNode) const
+	RBtree<T, C, A>::_isNilNode( node_pointer pNode) const
 	{
  		return (pNode->isNilNode());
 	}
 	
 	template < class T, class C, class A>
 	bool
-	RBtree<T, C, A>::_isRootNode( typename RBtree<T, C, A>::node_pointer pNode) const
+	RBtree<T, C, A>::_isRootNode( node_pointer pNode) const
 	{
  		return (_isNilNode(pNode->_pParent));
 	}
 
 	template < class T, class C, class A>
 	bool
-	RBtree<T, C, A>::_isLeafNode( typename RBtree<T, C, A>::node_pointer pNode) const
+	RBtree<T, C, A>::_isLeafNode( node_pointer pNode) const
 	{
  		return (!(_isNilNode(pNode->_pLeftChild)) || !(_isNilNode(pNode->_pRightChild)));
 	}
 
 	template <class T, class C, class A>
 	void
-	RBtree<T, C, A>::_printTreeHelper(typename RBtree<T, C, A>::node_pointer pNode) const
+	RBtree<T, C, A>::_printTreeHelper(node_pointer pNode) const
 	{
 		if (pNode == NULL || _isNilNode(pNode) == true)
 			return ;
@@ -121,7 +121,7 @@ namespace ft
 
 	template <class T, class C, class A>
 	void
-	RBtree<T, C, A>::_copyTreeHelper(typename RBtree<T, C, A>::node_pointer pNode)
+	RBtree<T, C, A>::_copyTreeHelper(node_pointer pNode)
 	{
 		if (pNode == NULL || _isNilNode(pNode) == true)
 			return ;
@@ -132,7 +132,7 @@ namespace ft
 
 	template <class T, class C, class A>
 	typename RBtree<T, C, A>::node_pointer
-	RBtree<T, C, A>::_searchHelper(typename RBtree<T, C, A>::node_pointer node, const T & value) const
+	RBtree<T, C, A>::_searchHelper(node_pointer node, const T & value) const
 	{
 		if (_isNilNode(node) == true)
 			return (node);
@@ -145,7 +145,7 @@ namespace ft
 
 	template <class T, class C, class A>
 	void
-	RBtree<T, C, A>::_rotateLeft( typename RBtree<T, C, A>::node_pointer pPivotNode )
+	RBtree<T, C, A>::_rotateLeft( node_pointer pPivotNode )
 	{
 		/*
 			1. move y's left_tree to x's right
@@ -178,7 +178,7 @@ namespace ft
 
 	template <class T, class C, class A>
 	void
-	RBtree<T, C, A>::_rotateRight( typename RBtree<T, C, A>::node_pointer pPivotNode )
+	RBtree<T, C, A>::_rotateRight( node_pointer pPivotNode )
 	{
 		node_pointer x = pPivotNode;
 		node_pointer y = x->_pLeftChild;
@@ -199,7 +199,7 @@ namespace ft
 
 	template <class T, class C, class A>
 	ft::pair<typename RBtree<T, C, A>::node_pointer, bool>
-	RBtree<T, C, A>::_BStreeInsert( typename RBtree<T, C, A>::node_pointer pNode, const T & value )
+	RBtree<T, C, A>::_BStreeInsert( node_pointer pNode, const T & value )
 	{
 		if (value == pNode->_data)
 			return (ft::make_pair(pNode, false));
@@ -233,7 +233,7 @@ namespace ft
 
 	template <class T, class C, class A>
 	void
-	RBtree<T, C, A>::_insertRestructor( typename RBtree<T, C, A>::node_pointer KeyNode )
+	RBtree<T, C, A>::_insertRestructor( node_pointer KeyNode )
 	{
 		/*
 		 *  K : target_node. P : parent_node. U : uncle_node.(sibling of P) G : grand_parenent_node. S : sibling
@@ -306,7 +306,7 @@ namespace ft
 
 	template <class T, class C, class A>
 	typename RBtree<T, C, A>::node_pointer
-	RBtree<T, C, A>::_getSuccessor( typename RBtree<T, C, A>::node_pointer pNode ) const
+	RBtree<T, C, A>::_getSuccessor( node_pointer pNode ) const
 	{
 		node_pointer successor;
 
@@ -326,7 +326,7 @@ namespace ft
 	// 트리에서 특정 노드를 빼내고, 트리는 이진트리 규칙을 유지하는 기능이다.
 	template <class T, class C, class A>
 	void
-	RBtree<T, C, A>::_transplant(typename RBtree<T, C, A>::node_pointer pNode, typename RBtree<T, C, A>::node_pointer pSuccessor)
+	RBtree<T, C, A>::_transplant(node_pointer pNode, typename RBtree<T, C, A>::node_pointer pSuccessor)
 	{
 		if (_isRootNode(pNode) == true)
 			this->_pRoot = pSuccessor;
@@ -340,23 +340,10 @@ namespace ft
 
 	template <class T, class C, class A>
 	bool
-	RBtree<T, C, A>::_BStreeDelete( typename RBtree<T, C, A>::node_pointer pNode , const T & value )
+	RBtree<T, C, A>::_BStreeDelete( const T & value )
 	{
 		node_pointer pTargetNode = RBtree<T, C, A>::_nilnode;
-		node_pointer K = pNode;
 		// 1. find node to delete
-		while (!_isNilNode(K))
-		{
-			if (value == K->getData()) 
-			{
-				pTargetNode = K;
-				break;
-			}
-			if (_key_compare(value, K->getData()))
-				K = K->_pRightChild;
-			else
-				K = K->_pLeftChild;
-		}
 		pTargetNode = this->search(value);
 		// 2. exception
 		if (_isNilNode(pTargetNode))
@@ -418,7 +405,7 @@ namespace ft
 	*/
 	template <class T, class C, class A>
 	void
-	RBtree<T, C, A>::_deleteRestructor(typename RBtree<T, C, A>::node_pointer pNode)
+	RBtree<T, C, A>::_deleteRestructor(node_pointer pNode)
 	{
 		node_pointer N = pNode;
 		node_pointer P; // parentNode
@@ -546,8 +533,6 @@ namespace ft
 		this->_allocator_object = other._allocator_object;
 		this->_key_compare = other._key_compare;
 		this->clearTree();
-		std::cout << "HI" << std::endl;
-		this->printTree();
 		_copyTreeHelper(other._pRoot);
 		return (*this);
 	}
@@ -597,13 +582,12 @@ namespace ft
 	}
 
 
-	// TODO : 중간 노드일 때 어떻게 최적화 되는지 확인.
 	template <class T, class C, class A>
 	typename RBtree<T, C, A>::node_pointer
 	RBtree<T,C,A>::insertNode(node_pointer hint, const T & value)
 	{
 		if (this->isEmpty() == true)
-			return ((this->insertNode(val)).first);
+			return ((this->insertNode(value)).first);
 		else if(hint == this->begin())
 		{
 			if (_key_compare(value, hint->_data) == true)
@@ -615,7 +599,7 @@ namespace ft
 				return (hint->_pLeftChild);
 			}
 			else
-				return ((this->insertNode(val)).first);
+				return ((this->insertNode(value)).first);
 		}
 		else if (hint == this->end())
 		{
@@ -629,11 +613,31 @@ namespace ft
 				return (ft::make_pair(hint->_pRightChild, true));
 			}
 			else
-				return ((this->insertNode(val)).first);
+				return ((this->insertNode(value)).first);
 		}
 		else
 		{
-
+			// node_pointer before;
+			// if (hint->_pLeftChild->isNilNode() == false)
+			// 	before = hint->_pLeftChild->_maximum();
+			// else if (hint == hint->_pParent->_pRightChild)
+			// 	before = hint->_pParent;
+			// else
+			// {
+			// 	return ((this->insertNode(val)).first);
+			// }
+			// if (_key_compare(before->_data, value) && _key_compare(value, hint->_data))
+			// {
+			// 	res = _BStreeInsert(before, value);
+			// 	this->_pRoot->setColor(BLACK);
+			// 	this->_nilnode->_pRightChild = this->_pRoot->_maximum();
+			// 	this->_nilnode->_pLeftChild = NULL;
+			// 	this->_nilnode->_pParent = this->_pRoot;
+			// 	return (res.first);
+			// }
+			// else
+			// 	return ((this->insertNode(val)).first);
+			return ((this->insertNode(value)).first);
 		}
 	}
 	
@@ -641,7 +645,7 @@ namespace ft
 	bool
 	RBtree<T,C,A>::deleteNode(const T & value)
 	{
-		if (_BStreeDelete(this->_pRoot, value) == false)
+		if (_BStreeDelete(value) == false)
 			return (false);
 		this->_pRoot->setColor(ft::BLACK);
 		this->_nilnode->_pRightChild = this->_pRoot->_maximum();

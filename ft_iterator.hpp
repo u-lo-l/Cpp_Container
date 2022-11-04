@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_iterator.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dkim2 <dkim2@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: dkim2 <dkim2@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/02 16:42:46 by dkim2             #+#    #+#             */
-/*   Updated: 2022/10/22 18:10:15 by dkim2            ###   ########.fr       */
+/*   Updated: 2022/11/04 15:30:46 by dkim2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,12 +47,13 @@ namespace ft
 	struct random_access_iterator_tag : public bidirectional_iterator_tag{};
 	
 	// 1. Iterator Class
-	template <class Category, 
-				class T,
-				class Distance = ptrdiff_t,
-				class Pointer = T*,
-				class Reference = T&>
-	struct iterator {
+	template <typename Category, 
+				typename T,
+				typename Distance = ptrdiff_t,
+				typename Pointer = T*,
+				typename Reference = T&>
+	struct iterator
+	{
 		typedef	T			value_type;
 		typedef	Distance	difference_type;
 		typedef	Pointer		pointer;
@@ -61,7 +62,7 @@ namespace ft
 	};
 
 	// 2. Iterator traits class and it's specialization
-	template<class Iterator>
+	template<typename Iterator>
 	struct iterator_traits
 	{
 		typedef typename Iterator::difference_type		difference_type;
@@ -72,7 +73,7 @@ namespace ft
 	};
 
 	// T* specialization
-	template<class T>
+	template<typename T>
 	struct iterator_traits<T*>
 	{
 		typedef ptrdiff_t					difference_type;
@@ -83,7 +84,7 @@ namespace ft
 	};
 
 	// const T* specialization : removed since C++20
-	template<class T>
+	template<typename T>
 	struct iterator_traits<const T*>
 	{
 		typedef ptrdiff_t					difference_type;
@@ -98,7 +99,7 @@ namespace ft
 			This class reverses the direction in which a bidirectional or randomaccess
 			iterator iterates throngh a range.
 	*/
-	template <class Iterator>
+	template <typename Iterator>
 	class reverse_iterator : public iterator<typename iterator_traits<Iterator>::iterator_category,
 											typename iterator_traits<Iterator>::value_type,
 											typename iterator_traits<Iterator>::difference_type,
