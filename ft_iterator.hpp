@@ -6,7 +6,7 @@
 /*   By: dkim2 <dkim2@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/02 16:42:46 by dkim2             #+#    #+#             */
-/*   Updated: 2022/11/04 15:30:46 by dkim2            ###   ########.fr       */
+/*   Updated: 2022/11/04 20:41:41 by dkim2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,7 +169,8 @@ namespace ft
 
 		reverse_iterator operator++ ()
 		{
-			this->current -= 1;
+			// this->current -= 1;
+			this->current--;
 			return (*this);
 		}
 
@@ -193,7 +194,8 @@ namespace ft
 
 		reverse_iterator operator-- ()
 		{
-			this->current += 1;
+			// this->current += 1;
+			this->current++;
 			return (*this);
 		}
 
@@ -222,7 +224,6 @@ namespace ft
 		{
 			return (base()[-n - 1]);
 		}
-
 
 		// non-member function
 		template <class Iter1, class Iter2>

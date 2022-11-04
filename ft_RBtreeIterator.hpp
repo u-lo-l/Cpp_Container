@@ -11,16 +11,15 @@ namespace ft
 	class tree_iterator
 	{
 	private :
-		// typedef typename ft::iterator< ft::bidirectional_iterator_tag, RBtreeNode<T> > iterator_type;
+		typedef typename ft::iterator< ft::bidirectional_iterator_tag, RBtreeNode<T> > iterator_type;
 
-		// typedef typename iterator_type::difference_type		difference_type;
-		// typedef typename iterator_type::iterator_category	iterator_category;
-		typedef typename RBtreeNode<T>::value_type			value_type;
 		typedef typename RBtreeNode<T>::node_pointer		node_pointer;
-		
+	public :
+		typedef typename RBtreeNode<T>::value_type			value_type;
 		typedef Ptr											pointer;
 		typedef Ref											reference;
-
+		typedef typename iterator_type::difference_type		difference_type;
+		typedef typename iterator_type::iterator_category	iterator_category;
 	private :
 		node_pointer _pNode;
 
@@ -28,7 +27,7 @@ namespace ft
 		void _decrement();
 
 	public :
-		explicit tree_iterator(node_pointer pNode = NULL) : _pNode(pNode) {}
+		tree_iterator(node_pointer pNode = NULL) : _pNode(pNode) {}
 		tree_iterator(const tree_iterator & it) : _pNode(it._pNode) {}
 		tree_iterator & operator=(const tree_iterator & other)
 		{
@@ -107,6 +106,8 @@ namespace ft
 		{
 			while (_pNode == _pNode->_pParent->_pRightChild)
 			{
+				if (_pNode->isNilNode() == true)
+					return ;
 				_pNode = _pNode->_pParent;
 			}
 			_pNode = _pNode->_pParent;

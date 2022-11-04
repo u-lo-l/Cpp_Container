@@ -7,6 +7,8 @@
 # include "ft_less.hpp"
 # include "ft_RBtreeIterator.hpp"
 # include "ft_RBtree.hpp"
+# include "ft_lexicographical_compare.hpp"
+# include "ft_equal.hpp"
 
 namespace ft
 {
@@ -106,6 +108,40 @@ namespace ft
 
 		allocator_type get_allocator() const;
 
+		friend bool operator==(const ft::map<Key, T, Compare, Alloc> & lhs, const ft::map<Key, T, Compare, Alloc> & rhs)
+		{
+			if (lhs.size() != rhs.size())
+				return (false);
+			return (ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
+		}
+		friend bool operator!=(const ft::map<Key, T, Compare, Alloc> & lhs, const ft::map<Key, T, Compare, Alloc> & rhs)
+		{
+			return ( !(lhs == rhs) );
+		}
+		friend bool operator<(const ft::map<Key, T, Compare, Alloc> & lhs, const ft::map<Key, T, Compare, Alloc> & rhs)
+		{
+			return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+		}
+		friend bool operator<=(const ft::map<Key, T, Compare, Alloc> & lhs, const ft::map<Key, T, Compare, Alloc> & rhs)
+		{
+			// return ( !(rhs < lhs) );
+			bool res = ( ( lhs < rhs ) || ( lhs == rhs ) );
+			return res;
+		}
+		friend bool operator>(const ft::map<Key, T, Compare, Alloc> & lhs, const ft::map<Key, T, Compare, Alloc> & rhs)
+		{
+			return ( rhs < lhs );
+		}
+		friend bool operator>=(const ft::map<Key, T, Compare, Alloc> & lhs, const ft::map<Key, T, Compare, Alloc> & rhs)
+		{
+			// return ( !(lhs < rhs) );
+			bool res = ( ( lhs > rhs ) || ( lhs == rhs ) );
+			return res;
+		}
+		friend void swap(const ft::map<Key, T, Compare, Alloc> & x, const ft::map<Key, T, Compare, Alloc> & y)
+		{
+			x.swap(y);
+		}
 	}; //class map
 
 	/*
@@ -260,7 +296,7 @@ namespace ft
 	typename map<K, T, C, A>::iterator
 	map<K, T, C, A>::insert (iterator position, const value_type & val)
 	{
-		return (_rbtree->insertNode(position.base(), val));
+		return (iterator(_rbtree.insertNode(position.base(), val)));
 	}
 	
 	template<class K, class T, class C, class A>
@@ -302,9 +338,7 @@ namespace ft
 	{
 		if (this == &other)
 			return ;
-		_tree_type temp_tree = other._rbtree;
-		other._rbtree = this->_rbtree;
-		this->_rbtree = temp_tree;
+		this->_rbtree.swap(other._rbtree);
 	}
 
 	template<class K, class T, class C, class A>
@@ -350,7 +384,7 @@ namespace ft
 		_node_pointer search_result;
 
 		search_result = _rbtree.search(ft::make_pair(k, mapped_type()));
-		if (iteartor(search_result) == this->end())
+		if (const_iterator(search_result) == this->end())
 			return (0);
 		return (1);
 	}

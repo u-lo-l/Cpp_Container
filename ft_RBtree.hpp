@@ -28,6 +28,7 @@ namespace ft
 		node_pointer	_pRoot;
 		size_type		_size;
 	private :
+		bool	_nodeEqual(node_pointer pNode, const T & val) const;
 		bool	_isNilNode(node_pointer pNode) const;
 		bool	_isRootNode(node_pointer pNode) const;
 		bool	_isLeafNode(node_pointer pNode) const;
@@ -71,7 +72,15 @@ namespace ft
 		size_type max_size() const;
 		node_pointer begin() const;
 		node_pointer end() const;
+		void swap(RBtree & other);
 	};
+
+	template < class T, class C, class A>
+	bool
+	RBtree<T, C, A>::_nodeEqual(node_pointer pNode, const T & val ) const
+	{
+ 		return ((!_key_compare(pNode->getData(), val)) && (!_key_compare(val, pNode->getData())));
+	}
 
 	template < class T, class C, class A>
 	bool
@@ -91,7 +100,7 @@ namespace ft
 	bool
 	RBtree<T, C, A>::_isLeafNode( node_pointer pNode) const
 	{
- 		return (!(_isNilNode(pNode->_pLeftChild)) || !(_isNilNode(pNode->_pRightChild)));
+ 		return (_isNilNode(pNode->_pLeftChild) && _isNilNode(pNode->_pRightChild));
 	}
 
 	template <class T, class C, class A>
@@ -130,13 +139,18 @@ namespace ft
 		_copyTreeHelper(pNode->_pRightChild);
 	}
 
+	/*
+		TODO : key를 이용하여 삭제하는 경우 make_pair(k, 0)으로 찾는다.
+		여기서 pair의 ==는 비교에 적절하지 않다. key로 바교하는 부분이 필요한데....
+		== 대신 비교 두번
+	*/
 	template <class T, class C, class A>
 	typename RBtree<T, C, A>::node_pointer
 	RBtree<T, C, A>::_searchHelper(node_pointer node, const T & value) const
 	{
 		if (_isNilNode(node) == true)
 			return (node);
-		else if (node->getData() == value)
+		else if (this->_nodeEqual(node, value))
 			return (node);
 		if (_key_compare(value, node->getData()))
 			return (_searchHelper(node->_pLeftChild, value));
@@ -201,7 +215,7 @@ namespace ft
 	ft::pair<typename RBtree<T, C, A>::node_pointer, bool>
 	RBtree<T, C, A>::_BStreeInsert( node_pointer pNode, const T & value )
 	{
-		if (value == pNode->_data)
+		if (this->_nodeEqual(pNode, value))
 			return (ft::make_pair(pNode, false));
 		if (this->_key_compare(value, pNode->_data))
 		{
@@ -354,24 +368,28 @@ namespace ft
 		node_pointer occupyingNode;
 		if (_isLeafNode(pTargetNode) == true) // no child
 		{
+			// std::cout << "no child" << std::endl;
 			occupyingNode = this->_nilnode;
 			deleting_color = pTargetNode->getColor();
 			_transplant(pTargetNode, occupyingNode);
 		}
 		else if (_isNilNode(pTargetNode->_pLeftChild) == true) // just rightchild
 		{
+			// std::cout << "only right child" << std::endl;
 			occupyingNode = pTargetNode->_pRightChild;
 			deleting_color = pTargetNode->getColor();
 			_transplant(pTargetNode, occupyingNode);
 		}
 		else if (_isNilNode(pTargetNode->_pRightChild) == true) // just leftchild
 		{
+			// std::cout << "only left child" << std::endl;
 			occupyingNode = pTargetNode->_pLeftChild;
 			deleting_color = pTargetNode->getColor();
 			_transplant(pTargetNode, occupyingNode);
 		}
 		else // both child
 		{
+			// std::cout << "both child" << std::endl;
 			node_pointer successorNode = this->_getSuccessor(pTargetNode);
 			deleting_color = successorNode->getColor();
 			occupyingNode = successorNode->_pRightChild;
@@ -586,59 +604,8 @@ namespace ft
 	typename RBtree<T, C, A>::node_pointer
 	RBtree<T,C,A>::insertNode(node_pointer hint, const T & value)
 	{
-		if (this->isEmpty() == true)
-			return ((this->insertNode(value)).first);
-		else if(hint == this->begin())
-		{
-			if (_key_compare(value, hint->_data) == true)
-			{
-				hint->_pLeftChild = this->_allocator_object.allocate(1);
-				this->_allocator_object.construct(hint->_pLeftChild, node_type(value, _nilnode, _nilnode, hint));
-				this->_size++;
-				_insertRestructor(hint->_pLeftChild);
-				return (hint->_pLeftChild);
-			}
-			else
-				return ((this->insertNode(value)).first);
-		}
-		else if (hint == this->end())
-		{
-			hint = hint->_pParent;
-			if (_key_compare(hint->_data, value) == true)
-			{
-				hint->_pRightChild = this->_allocator_object.allocate(1);
-				this->_allocator_object.construct(hint->_pRightChild, node_type(value, _nilnode, _nilnode, hint));
-				this->_size++;
-				_insertRestructor(hint->_pRightChild);
-				return (ft::make_pair(hint->_pRightChild, true));
-			}
-			else
-				return ((this->insertNode(value)).first);
-		}
-		else
-		{
-			// node_pointer before;
-			// if (hint->_pLeftChild->isNilNode() == false)
-			// 	before = hint->_pLeftChild->_maximum();
-			// else if (hint == hint->_pParent->_pRightChild)
-			// 	before = hint->_pParent;
-			// else
-			// {
-			// 	return ((this->insertNode(val)).first);
-			// }
-			// if (_key_compare(before->_data, value) && _key_compare(value, hint->_data))
-			// {
-			// 	res = _BStreeInsert(before, value);
-			// 	this->_pRoot->setColor(BLACK);
-			// 	this->_nilnode->_pRightChild = this->_pRoot->_maximum();
-			// 	this->_nilnode->_pLeftChild = NULL;
-			// 	this->_nilnode->_pParent = this->_pRoot;
-			// 	return (res.first);
-			// }
-			// else
-			// 	return ((this->insertNode(val)).first);
-			return ((this->insertNode(value)).first);
-		}
+		(void)hint;
+		return ((this->insertNode(value)).first);
 	}
 	
 	template <class T, class C, class A>
@@ -713,6 +680,28 @@ namespace ft
 	RBtree<T,C,A>::end() const
 	{
 		return (this->_nilnode);
+	}
+
+	template <class T, class C, class A>
+	void
+	RBtree<T,C,A>::swap(RBtree & other)
+	{
+		{
+			node_pointer temp_node_ptr;
+
+			temp_node_ptr = other._nilnode;
+			other._nilnode = this->_nilnode;
+			this->_nilnode = temp_node_ptr;
+
+			temp_node_ptr = other._pRoot;
+			other._pRoot = this->_pRoot;
+			this->_pRoot = temp_node_ptr;
+		}
+		{
+			size_type temp = other._size;
+			other._size = this->_size;
+			this->_size = temp;
+		}
 	}
 }
 

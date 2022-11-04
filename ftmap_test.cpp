@@ -7,6 +7,16 @@ void print(const ft::map<int, int> & m)
 	ft::map<int, int>::const_iterator eit = m.end();
 
 	std::cout << "size : " << m.size() << std::endl;
+	std::cout << "end : " << &*eit << std::endl;
+	std::cout << "end - 1: " << &*(--eit) << std::endl;
+	std::cout << "begin : " << &*it << std::endl;
+	std::cout << "begin + 1 : " << &*(++it) << std::endl;
+
+	it--;
+	std::cout << "??" << std::endl;
+	eit++;
+
+	std::cout << "??" << std::endl;
 	for (; it != eit ; it++)
 	{
 		std::cout << "key : " << it->first << std::endl;
@@ -18,21 +28,23 @@ void print(const ft::map<int, int> & m)
 int main()
 {
 	ft::map<int, int> a;
-	for (int i = 1 ; i < 10 ; i++)
-	{
-		a.insert(ft::make_pair(i,i));
-		// ft::pair<ft::map<int, int>::iterator, bool> temp;
-		// temp = a.insert(ft::make_pair(i,i));
-		// std::cout << (temp.first)->first << ", ";
-		// std::cout << (temp.first)->second << std::endl;
-		// std::cout << temp.second << std::endl;
-	}
+	// for (int i = 1 ; i < 10 ; i++)
+	// {
+	// 	a.insert(ft::make_pair(i,i));
+	// 	// ft::pair<ft::map<int, int>::iterator, bool> temp;
+	// 	// temp = a.insert(ft::make_pair(i,i));
+	// 	// std::cout << (temp.first)->first << ", ";
+	// 	// std::cout << (temp.first)->second << std::endl;
+	// 	// std::cout << temp.second << std::endl;
+	// }
+
+	a.insert(ft::make_pair(2,2));
 	std::cout << a.max_size() << std::endl;
 	print(a);
-	std::cout << std::endl;
-	std::cout << std::endl;
-	a.erase(a.begin());
-	a.erase(a.begin());
-	print(a);
+	// std::cout << std::endl;
+	// std::cout << std::endl;
+	// a.erase(a.begin());
+	// a.erase(a.begin());
+	// print(a);
 	std::system("leaks a.out");
 }
