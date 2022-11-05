@@ -43,6 +43,16 @@ namespace ft
 
 		const node_pointer base() const {return _pNode;}
 
+		reference operator*()
+		{
+			return (this->_pNode->getData());
+		}
+
+		pointer operator->()
+		{
+			return (&(operator*()));
+		}
+
 		reference operator*() const
 		{
 			return (this->_pNode->getData());

@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ft_vector.hpp                                      :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: dkim2 <dkim2@student.42.fr>                +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/09/06 16:16:00 by dkim2             #+#    #+#             */
-/*   Updated: 2022/11/04 15:44:34 by dkim2            ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #ifndef FT_VECTOR_HPP
 # define FT_VECTOR_HPP
 # include <iostream>
@@ -95,7 +83,7 @@ namespace ft
 		typedef typename allocator_type::pointer			pointer;
 		typedef typename allocator_type::const_pointer		const_pointer;
 		typedef ft::vectorIterator<value_type> 				iterator;
-		typedef ft::vectorIterator<const value_type>			const_iterator;
+		typedef ft::vectorIterator<const value_type>		const_iterator;
 		typedef typename allocator_type::size_type			size_type;
 		typedef typename allocator_type::difference_type	difference_type;
 		typedef ft::reverse_iterator<iterator> 				reverse_iterator;
@@ -172,7 +160,7 @@ namespace ft
 			this->_start = this->_allocator_object.allocate(this->_capacity);
 			this->_end = this->_start;
 			iterator	it = x._start;
-			while (this->_size < this->_capacity)
+			while (this->_size < x._size)
 			{
 				this->_allocator_object.construct((this->_end)++, *(it++));
 				this->_size++;
@@ -361,8 +349,10 @@ namespace ft
 		{
 			if ( this->_size == this->_capacity )
 				this->reserve(_doubleCapacity(this->_capacity + 1));
-			this->_allocator_object.construct(this->_end++, val);
+			this->_allocator_object.construct(this->_end, val);
+			this->_end++;
 			this->_size++;
+			// this->insert(this->end(), val);
 		}
 		
 		void pop_back()
