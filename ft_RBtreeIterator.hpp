@@ -41,17 +41,7 @@ namespace ft
 			return ( tree_iterator<T, const T*, const T&>(this->_pNode) );
 		}
 
-		const node_pointer base() const {return _pNode;}
-
-		reference operator*()
-		{
-			return (this->_pNode->getData());
-		}
-
-		pointer operator->()
-		{
-			return (&(operator*()));
-		}
+		node_pointer base() const {return _pNode;}
 
 		reference operator*() const
 		{

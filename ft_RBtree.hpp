@@ -42,7 +42,7 @@ namespace ft
 		node_pointer _searchHelper(node_pointer pNode, const T & value) const;
 		// insert_helpers
 		ft::pair<node_pointer, bool> _BStreeInsert(node_pointer pNode, const T & value);
-		void	_insertRestructor(node_pointer pPivot);
+		node_pointer	_insertRestructor(node_pointer pPivot);
 		// delete_helpers
 		node_pointer _getSuccessor(node_pointer pNode) const;
 		// Transplant : change targetnode and successor for delete targetnode 
@@ -224,8 +224,8 @@ namespace ft
 				pNode->_pLeftChild = this->_allocator_object.allocate(1);
 				this->_allocator_object.construct(pNode->_pLeftChild, node_type(value, _nilnode, _nilnode, pNode));
 				this->_size++;
-				_insertRestructor(pNode->_pLeftChild);
-				return (ft::make_pair(pNode->_pLeftChild, true));
+				node_pointer res =  _insertRestructor(pNode->_pLeftChild);
+				return (ft::make_pair(res, true));
 			}
 			else
 				return (_BStreeInsert(pNode->_pLeftChild, value));
@@ -237,8 +237,8 @@ namespace ft
 				pNode->_pRightChild = this->_allocator_object.allocate(1);
 				this->_allocator_object.construct(pNode->_pRightChild, node_type(value, _nilnode, _nilnode, pNode));
 				this->_size++;
-				_insertRestructor(pNode->_pRightChild);
-				return (ft::make_pair(pNode->_pRightChild, true));
+				node_pointer res = _insertRestructor(pNode->_pRightChild);
+				return (ft::make_pair(res, true));
 			}
 			else
 				return (_BStreeInsert(pNode->_pRightChild, value));
@@ -246,7 +246,7 @@ namespace ft
 	}
 
 	template <class T, class C, class A>
-	void
+	typename RBtree<T, C, A>::node_pointer
 	RBtree<T, C, A>::_insertRestructor( node_pointer KeyNode )
 	{
 		/*
@@ -264,7 +264,7 @@ namespace ft
 		node_pointer	K = KeyNode;
 		node_pointer	P = K->_pParent;
 		if (P->getColor() == BLACK)
-			return ;
+			return (KeyNode);
 		node_pointer	G = P->_pParent;
 		node_pointer	U;
 		while (K->getColor() == RED && P->getColor() == RED)
@@ -273,7 +273,7 @@ namespace ft
 			{
 				U = G->_pLeftChild;
 				if (!_isNilNode(U) && U->getColor() == RED) // 3.1
-				{
+				{	
 					P->setColor(BLACK);
 					U->setColor(BLACK);
 					G->setColor(RED);
@@ -316,6 +316,7 @@ namespace ft
 			P = K->_pParent;
 			G = P->_pParent;
 		}
+		return (KeyNode);
 	}
 
 	template <class T, class C, class A>
