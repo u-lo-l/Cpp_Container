@@ -27,61 +27,31 @@ namespace ft
 		void _decrement();
 
 	public :
-		tree_iterator(node_pointer pNode = NULL) : _pNode(pNode) {}
-		tree_iterator(const tree_iterator & it) : _pNode(it._pNode) {}
-		tree_iterator & operator=(const tree_iterator & other)
-		{
-			if (this != &other)
-				this->_pNode = other._pNode;
-			return (*this);
-		}
+		tree_iterator(node_pointer pNode = NULL);
+		tree_iterator(const tree_iterator & it);
+		tree_iterator & operator=(const tree_iterator & other);
 
-		operator tree_iterator<T, const T*, const T&> () const
-		{
-			return ( tree_iterator<T, const T*, const T&>(this->_pNode) );
-		}
+		~tree_iterator() {}
 
-		node_pointer base() const {return _pNode;}
+		operator tree_iterator<T, const T*, const T&> () const;
 
+		node_pointer base() const;
 
-		reference operator*() const
-		{
-			return (this->_pNode->getData());
-		}
+		reference operator*() const;
 
-		pointer operator->() const
-		{
-			return (&(operator*()));
-		}
+		pointer operator->() const;
 
-		tree_iterator & operator++()
-		{
-			this->_increment();
-			return (*this);
-		}
-		tree_iterator operator++(int)
-		{
-			tree_iterator temp(*this);
-			this->_increment();
-			return (temp);
-		}
-		tree_iterator & operator--()
-		{
-			this->_decrement();
-			return (*this);
-		}
-		tree_iterator operator--(int)
-		{
-			tree_iterator temp(*this);
-			this->_decrement();
-			return (temp);
-		}
+		tree_iterator & operator++();
 
-		bool operator==(const tree_iterator & other) const
-		{ return (this->_pNode == other._pNode);}
+		tree_iterator operator++(int);
 
-		bool operator!=(const tree_iterator& other) const
-		{ return (this->_pNode != other._pNode);}
+		tree_iterator & operator--();
+
+		tree_iterator operator--(int);
+
+		bool operator==(const tree_iterator & other) const;
+
+		bool operator!=(const tree_iterator& other) const;
 	};
 
 	/*
@@ -91,7 +61,8 @@ namespace ft
 			계속 따라 올라가다, nilNode를 만나면 
 	*/
 	template<class T, class P, class R>
-	void tree_iterator<T, P, R>::_increment()
+	void
+	tree_iterator<T, P, R>::_increment()
 	{
 		if (_pNode->isNilNode())
 			return ;
@@ -116,7 +87,8 @@ namespace ft
 	}
 
 	template<class T, class P, class R>
-	void tree_iterator<T, P, R>::_decrement()
+	void
+	tree_iterator<T, P, R>::_decrement()
 	{
 		if (_pNode->isNilNode())
 			_pNode = _pNode->_pRightChild;
@@ -134,6 +106,98 @@ namespace ft
 				_pNode = NULL;
 			_pNode = _pNode->_pParent;
 		}
+	}
+
+	template<class T, class P, class R>
+	tree_iterator<T,P,R>::tree_iterator(node_pointer pNode)
+	: _pNode(pNode) {}
+
+	template<class T, class P, class R>
+	tree_iterator<T,P,R>::tree_iterator(const tree_iterator & it)
+	: _pNode(it._pNode) {}
+
+	template<class T, class P, class R>
+	tree_iterator<T,P,R> &
+	tree_iterator<T,P,R>::operator=(const tree_iterator & other)
+	{
+		if (this != &other)
+			this->_pNode = other._pNode;
+		return (*this);
+	}
+
+	template<class T, class P, class R>
+	tree_iterator<T,P,R>::operator tree_iterator<T, const T*, const T&> () const
+	{
+		return ( tree_iterator<T, const T*, const T&>(this->_pNode) );
+	}
+
+	template<class T, class P, class R>
+	typename tree_iterator<T,P,R>::node_pointer
+	tree_iterator<T,P,R>::base() const
+	{
+		return _pNode;
+	}
+
+	template<class T, class P, class R>
+	typename tree_iterator<T,P,R>::reference
+	tree_iterator<T,P,R>::operator*() const
+	{
+		return (this->_pNode->getData());
+	}
+
+	template<class T, class P, class R>
+	typename tree_iterator<T,P,R>::pointer
+	tree_iterator<T,P,R>::operator->() const
+	{
+		return (&(operator*()));
+	}
+
+	template<class T, class P, class R>
+	tree_iterator<T,P,R> &
+	tree_iterator<T,P,R>::operator++()
+	{
+		this->_increment();
+		return (*this);
+	}
+	
+	template<class T, class P, class R>
+	tree_iterator<T,P,R>
+	tree_iterator<T,P,R>::operator++(int)
+	{
+		tree_iterator temp(*this);
+		this->_increment();
+		return (temp);
+	}
+	
+	template<class T, class P, class R>
+	tree_iterator<T,P,R> &
+	tree_iterator<T,P,R>::operator--()
+	{
+		this->_decrement();
+		return (*this);
+	}
+	
+	template<class T, class P, class R>
+	tree_iterator<T,P,R>
+	tree_iterator<T,P,R>::operator--(int)
+	{
+		tree_iterator temp(*this);
+		this->_decrement();
+		return (temp);
+	}
+
+	template<class T, class P, class R>
+	bool
+	tree_iterator<T,P,R>::operator==(const tree_iterator & other) const
+	{
+		return (this->_pNode == other._pNode);
+	}
+
+	template<class T, class P, class R>
+	bool
+	tree_iterator<T,P,R>::operator!=(const tree_iterator& other) const
+	{
+		return (this->_pNode != other._pNode);
 	}
 } // namespace ft
 

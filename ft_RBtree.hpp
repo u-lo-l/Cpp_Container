@@ -55,8 +55,8 @@ namespace ft
 		~RBtree( void );
 		RBtree & operator=( const RBtree & other );
 
-		const node_pointer getNilPtr( void ) const;
-		const node_pointer getRootPtr( void ) const;
+		node_pointer getNilPtr( void ) const;
+		node_pointer getRootPtr( void ) const;
 
 		node_pointer search(const T & value) const;
 
@@ -557,14 +557,14 @@ namespace ft
 	}
 
 	template <class T, class C, class A>
-	const typename RBtree<T,C,A>::node_pointer
+	typename RBtree<T,C,A>::node_pointer
 	RBtree<T,C,A>::getNilPtr() const
 	{
 		return (this->_nilnode);
 	}
 
 	template <class T, class C, class A>
-	const typename RBtree<T,C,A>::node_pointer
+	typename RBtree<T,C,A>::node_pointer
 	RBtree<T,C,A>::getRootPtr() const
 	{
 		return (this->_pRoot);
