@@ -358,7 +358,6 @@ namespace ft
 	typename map<K, T, C, A>::value_compare
 	map<K, T, C, A>::value_comp() const
 	{
-		// return (this->value_compare());
 		return (value_compare(key_compare()));
 	}
 

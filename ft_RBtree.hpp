@@ -410,10 +410,10 @@ namespace ft
 			successorNode->_pLeftChild->_pParent = successorNode;
 			successorNode->_color = pTargetNode->getColor();
 		}
-		delete pTargetNode;
 		this->_size--;
 		if (deleting_color == ft::BLACK)
 			_deleteRestructor(occupyingNode);
+		delete pTargetNode;
 		return (true);
 	}
 

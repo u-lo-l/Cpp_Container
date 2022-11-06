@@ -20,8 +20,6 @@ int		main(void)
 	printSize(vct);
 	printSize(vct2);
 
-	std::cout << "pop():\n" << std::endl;
-
 	vct.pop_back();
 	vct2.pop_back();
 

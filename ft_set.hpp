@@ -34,7 +34,7 @@ namespace ft
 		typedef ft::RBtreeNode<value_type> *				_node_pointer;
 
 	public :
-		typedef ft::tree_iterator<value_type, value_type *, value_type &>				iterator;
+		typedef ft::tree_iterator<value_type, const value_type *, const value_type &>	iterator;
 		typedef ft::tree_iterator<value_type, const value_type *, const value_type &>	const_iterator;
 		typedef ft::reverse_iterator<iterator>											reverse_iterator;
 		typedef ft::reverse_iterator<const_iterator>									const_reverse_iterator;
@@ -43,6 +43,7 @@ namespace ft
 		key_compare		_key_comp;
 		allocator_type	_allocator_object;
 		_tree_type		_rbtree;
+
 	public :
 		explicit set(const key_compare & comp = key_compare(),
 					const allocator_type & alloc = allocator_type());
@@ -56,15 +57,11 @@ namespace ft
 
 		set & operator=(const set& other);
 
-		iterator 		begin();
-		iterator 		end();
-		const_iterator	begin() const;
-		const_iterator	end() const;
+		iterator begin() const;
+		iterator end() const ;
 
-		reverse_iterator		rbegin();
-		reverse_iterator		rend();
-		const_reverse_iterator	rbegin() const;
-		const_reverse_iterator	rend() const;
+		reverse_iterator rbegin() const;
+		reverse_iterator rend() const ;
 
 		bool empty() const;
 		size_type size() const;
@@ -83,21 +80,17 @@ namespace ft
 
 		void clear();
 
-		key_compare		key_comp() const;
-		value_compare	value_comp() const;
+		key_compare key_comp() const;
+		value_compare value_comp() const;
 
-		iterator 		find(const key_type & k);
-		const_iterator	find(const key_type & k) const;
+		iterator find(const key_type & k) const;
 
-		size_type		count(const key_type & k) const;
+		size_type count(const key_type & k) const;
 
-		iterator		lower_bound (const key_type& k);
-		const_iterator	lower_bound (const key_type& k) const;
-		iterator		upper_bound (const key_type& k);
-		const_iterator	upper_bound (const key_type& k) const;
+		iterator lower_bound (const key_type& k) const;
+		iterator upper_bound (const key_type& k) const;
 
-		ft::pair<iterator,iterator>				equal_range (const key_type& k);
-		ft::pair<const_iterator,const_iterator>	equal_range (const key_type& k) const;
+		ft::pair<iterator,iterator>	equal_range (const key_type& k) const;
 
 		allocator_type get_allocator() const;
 
@@ -158,58 +151,30 @@ namespace ft
 
 	template<class K, class C, class A>
 	typename set<K, C, A>::iterator
-	set<K, C, A>::begin()
+	set<K, C, A>::begin() const
 	{
 		return (iterator(this->_rbtree.getRootPtr()->_minimum()));
 	}
 
 	template<class K, class C, class A>
 	typename set<K, C, A>::iterator
-	set<K, C, A>::end()
+	set<K, C, A>::end() const
 	{
 		return (iterator(this->_rbtree.getNilPtr()));
 	}
 
 	template<class K, class C, class A>
-	typename set<K, C, A>::const_iterator
-	set<K, C, A>::begin() const
-	{
-		return (const_iterator(this->_rbtree.getRootPtr()->_minimum()));
-	}
-
-	template<class K, class C, class A>
-	typename set<K, C, A>::const_iterator
-	set<K, C, A>::end() const
-	{
-		return (const_iterator(this->_rbtree.getNilPtr()));
-	}
-
-	template<class K, class C, class A>
 	typename set<K, C, A>::reverse_iterator
-	set<K, C, A>::rbegin()
+	set<K, C, A>::rbegin() const
 	{
 		return (reverse_iterator(this->_rbtree.getNilPtr()));
 	}
 
 	template<class K, class C, class A>
 	typename set<K, C, A>::reverse_iterator
-	set<K, C, A>::rend()
-	{
-		return (reverse_iterator(this->_rbtree.getRootPtr()->_minimum()));
-	}
-
-	template<class K, class C, class A>
-	typename set<K, C, A>::const_reverse_iterator
-	set<K, C, A>::rbegin() const
-	{
-		return (const_reverse_iterator(this->_rbtree.getNilPtr()));
-	}
-
-	template<class K, class C, class A>
-	typename set<K, C, A>::const_reverse_iterator
 	set<K, C, A>::rend() const
 	{
-		return (const_reverse_iterator(this->_rbtree.getRootPtr()->_minimum()));
+		return (reverse_iterator(this->_rbtree.getRootPtr()->_minimum()));
 	}
 
 	template<class K, class C, class A>
@@ -308,24 +273,16 @@ namespace ft
 	typename set<K, C, A>::value_compare
 	set<K, C, A>::value_comp() const
 	{
-		// return (this->value_compare());
 		return (value_compare(key_compare()));
 	}
 
 	template<class K, class C, class A>
 	typename set<K, C, A>::iterator
-	set<K, C, A>::find(const key_type & k)
+	set<K, C, A>::find(const key_type & k) const
 	{
 		return (iterator(this->_rbtree.search(k)));
 	}
 	
-	template<class K, class C, class A>
-	typename set<K, C, A>::const_iterator
-	set<K, C, A>::find(const key_type & k) const
-	{
-		return (const_iterator(this->_rbtree.search(k)));
-	}
-
 	template<class K, class C, class A>
 	typename set<K, C, A>::size_type
 	set<K, C, A>::count(const key_type & k) const
@@ -340,33 +297,20 @@ namespace ft
 
 	template<class K, class C, class A>
 	typename set<K, C, A>::iterator
-	set<K, C, A>::lower_bound (const key_type& k)
-	{
-		iterator it = this->begin();
-		for ( ; it != this->end() ; it++)
-		{
-			if (_key_comp(*it, k) == false)
-				break ;
-		}
-		return (it);
-	}
-	
-	template<class K, class C, class A>
-	typename set<K, C, A>::const_iterator
 	set<K, C, A>::lower_bound (const key_type& k) const
 	{
-		const_iterator it = this->begin();
+		iterator it = this->begin();
 		for ( ; it != this->end() ; it++)
 		{
 			if (_key_comp(*it, k) == false)
 				break ;
 		}
-		return (const_iterator(it));
+		return (it);
 	}
-
+	
 	template<class K, class C, class A>
 	typename set<K, C, A>::iterator
-	set<K, C, A>::upper_bound (const key_type& k)
+	set<K, C, A>::upper_bound (const key_type& k) const
 	{
 		iterator it = this->begin();
 		for ( ; it != this->end() ; it++)
@@ -378,27 +322,7 @@ namespace ft
 	}
 	
 	template<class K, class C, class A>
-	typename set<K, C, A>::const_iterator
-	set<K, C, A>::upper_bound (const key_type& k) const
-	{
-		const_iterator it = this->begin();
-		for ( ; it != this->end() ; it++)
-		{
-			if (_key_comp(k, *it) == true)
-				break ;
-		}
-		return (const_iterator(it));
-	}
-
-	template<class K, class C, class A>
 	ft::pair<typename set<K, C, A>::iterator, typename set<K, C, A>::iterator>
-	set<K, C, A>::equal_range (const key_type& k)
-	{
-		return (ft::make_pair(lower_bound(k), upper_bound(k)));
-	}
-
-	template<class K, class C, class A>
-	ft::pair<typename set<K, C, A>::const_iterator, typename set<K, C, A>::const_iterator>
 	set<K, C, A>::equal_range (const key_type& k) const
 	{
 		return (ft::make_pair(lower_bound(k), upper_bound(k)));

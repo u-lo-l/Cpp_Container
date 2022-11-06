@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ft_lexicographical_compare.hpp                     :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: dkim2 <dkim2@student.42.fr>                +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/09/18 17:42:16 by dkim2             #+#    #+#             */
-/*   Updated: 2022/09/18 17:42:50 by dkim2            ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #ifndef FT_LEXICOGRAPHICAL_COMPARE_HPP
 # define FT_LEXICOGRAPHICAL_COMPARE_HPP
 
@@ -42,6 +30,6 @@ namespace ft
 		}
 		return (first1 == last1) && (first2 != last2);
 	}
-};
+}
 
 #endif // FT_LEXICOGRAPHICAL_COMPARE_HPP

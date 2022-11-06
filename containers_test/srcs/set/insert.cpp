@@ -12,8 +12,7 @@ void	ft_insert(SET &st, U param)
 
 	std::cout << "\t-- [" << iter++ << "] --" << std::endl;
 	tmp = st.insert(param);
-	iterator it = tmp.first;
-	std::cout << "insert return: " << printPair(it);
+	std::cout << "insert return: " << printPair(tmp.first);
 	std::cout << "Created new node: " << tmp.second << std::endl;
 	printSize(st);
 }

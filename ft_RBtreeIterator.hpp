@@ -43,6 +43,7 @@ namespace ft
 
 		node_pointer base() const {return _pNode;}
 
+
 		reference operator*() const
 		{
 			return (this->_pNode->getData());
@@ -76,10 +77,10 @@ namespace ft
 			return (temp);
 		}
 
-		bool operator==(const tree_iterator & other)
+		bool operator==(const tree_iterator & other) const
 		{ return (this->_pNode == other._pNode);}
 
-		bool operator!=(const tree_iterator& other)
+		bool operator!=(const tree_iterator& other) const
 		{ return (this->_pNode != other._pNode);}
 	};
 

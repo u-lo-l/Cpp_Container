@@ -10,7 +10,7 @@
 template <typename T>
 std::string	printPair(const T &iterator, bool nl = true, std::ostream &o = std::cout)
 {
-	o << "value: <" << *iterator << ">";
+	o << "value: " << *iterator;
 	if (nl)
 		o << std::endl;
 	return ("");
