@@ -11,6 +11,19 @@
 
 namespace ft
 {
+	template <class _Pair>
+	struct _Select1st
+	{
+		typename _Pair::first_type& operator()(_Pair& __x) const
+		{
+			return __x.first;
+		}
+		const typename _Pair::first_type& operator()(const _Pair& __x) const
+		{
+			return __x.first;
+		}
+	};
+
 	template <	class Key,
 				class T,
 				class Compare = less<Key>,
@@ -30,12 +43,12 @@ namespace ft
 		typedef typename allocator_type::const_pointer		const_pointer;
 		typedef typename allocator_type::difference_type	difference_type;
 		typedef typename allocator_type::size_type			size_type;
+		class value_compare;
 
 	private :
-		class value_compare;
-		typedef ft::RBtree<value_type, value_compare>		_tree_type;
-		typedef ft::RBtreeNode<value_type>					_node_type;
-		typedef ft::RBtreeNode<value_type> *				_node_pointer;
+		typedef ft::RBtree<value_type, _Select1st<value_type>, key_compare>		_tree_type;
+		typedef ft::RBtreeNode<value_type>							_node_type;
+		typedef ft::RBtreeNode<value_type> *						_node_pointer;
 
 	public :
 		typedef ft::tree_iterator<value_type, value_type *, value_type &>				iterator;
@@ -142,8 +155,8 @@ namespace ft
 		typedef C	key_compare;
 	protected :
 		key_compare comp;
+		value_compare (C c) : comp(c) {}
 	public :
-		value_compare (C c = C()) : comp(c) {}
 		typedef bool result_type;
 		typedef value_type first_argument_type;
 		typedef value_type second_argument_type;

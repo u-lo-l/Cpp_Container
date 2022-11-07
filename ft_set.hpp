@@ -11,6 +11,20 @@
 
 namespace ft
 {
+
+	template <class _Tp>
+	struct _Identity
+	{
+		_Tp& operator()(_Tp& __x) const
+		{
+			return __x;
+		}
+		const _Tp& operator()(const _Tp& __x) const
+		{
+			return __x;
+		}
+	};
+
 	template < class T, class Compare = ft::less<T>, class Alloc = std::allocator<T> >
 	class set
 	{
@@ -29,9 +43,9 @@ namespace ft
 		typedef typename allocator_type::size_type			size_type;
 
 	private :
-		typedef ft::RBtree<value_type, value_compare>		_tree_type;
-		typedef ft::RBtreeNode<value_type>					_node_type;
-		typedef ft::RBtreeNode<value_type> *				_node_pointer;
+		typedef ft::RBtree<value_type, _Identity<value_type>, key_compare>	_tree_type;
+		typedef ft::RBtreeNode<value_type>										_node_type;
+		typedef ft::RBtreeNode<value_type> *									_node_pointer;
 
 	public :
 		typedef ft::tree_iterator<value_type, const value_type *, const value_type &>	iterator;

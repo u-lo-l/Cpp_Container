@@ -14,7 +14,7 @@ namespace ft
 		typedef	RBtreeNode<T>	node_type;
 		typedef	RBtreeNode<T> *	node_pointer;
 
-		template<class U, class Alloc, class Comp>
+		template<class U, class SK, class Alloc, class Comp>
 		friend class RBtree;
 		template<class U, class Ptr, class Ref>
 		friend class tree_iterator;
