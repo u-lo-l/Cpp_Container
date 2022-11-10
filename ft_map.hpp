@@ -24,6 +24,9 @@ namespace ft
 		}
 	};
 
+	/***************
+	 *    class    *
+	 ***************/
 	template <	class Key,
 				class T,
 				class Compare = less<Key>,
@@ -47,8 +50,7 @@ namespace ft
 
 	private :
 		typedef ft::RBtree<value_type, _Select1st<value_type>, key_compare>		_tree_type;
-		typedef ft::RBtreeNode<value_type>							_node_type;
-		typedef ft::RBtreeNode<value_type> *						_node_pointer;
+		typedef typename _tree_type::node_pointer								_node_pointer;
 
 	public :
 		typedef ft::tree_iterator<value_type, value_type *, value_type &>				iterator;
@@ -122,27 +124,24 @@ namespace ft
 
 		template <class K, class M, class C, class A>
 		friend bool operator==(const ft::map<K, M, C, A> & lhs, const ft::map<K, M, C, A> & rhs);
-		
 		template <class K, class M, class C, class A>
 		friend bool operator!=(const ft::map<K, M, C, A> & lhs, const ft::map<K, M, C, A> & rhs);
-		
 		template <class K, class M, class C, class A>
 		friend bool operator<(const ft::map<K, M, C, A> & lhs, const ft::map<K, M, C, A> & rhs);
-		
 		template <class K, class M, class C, class A>
 		friend bool operator<=(const ft::map<K, M, C, A> & lhs, const ft::map<K, M, C, A> & rhs);
-		
 		template <class K, class M, class C, class A>
 		friend bool operator>(const ft::map<K, M, C, A> & lhs, const ft::map<K, M, C, A> & rhs);
-		
 		template <class K, class M, class C, class A>
 		friend bool operator>=(const ft::map<K, M, C, A> & lhs, const ft::map<K, M, C, A> & rhs);
-		
 		template <class K, class M, class C, class A>
 		friend void swap(const ft::map<K, M, C, A> & x, const ft::map<K, M, C, A> & y);
-		
 	}; //class map
 
+	
+	/***************
+	 *   public    *
+	 ***************/
 	/*
 		두 개의 요소를 비교하여 첫 요소가 더 작은지를 판단하는 객체(함수객체)이다.
 		이 comp객체는 map::value_compare의 객체로 비교함수 클래스를 생성하는 내부 클래스이다.
@@ -459,6 +458,10 @@ namespace ft
 	{
 		return (this->_allocator_object);
 	}
+	
+	/***************
+	 *   friend    *
+	 ***************/
 
 	template<class K, class T, class C, class A>
 	bool

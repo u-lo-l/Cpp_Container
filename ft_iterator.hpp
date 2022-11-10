@@ -186,11 +186,6 @@ namespace ft
 		return (this->current);
 	}
 
-	// operator reverse_iterator<const Iterator> () const
-	// {
-	// 	return (reverse_iterator<const Iterator>(this->current));
-	// }
-
 	/* 
 		operator* :
 			returns a reference to the pointed by iterator.
@@ -222,7 +217,6 @@ namespace ft
 	reverse_iterator<T>
 	reverse_iterator<T>::operator++ ()
 	{
-		// this->current -= 1;
 		this->current--;
 		return (*this);
 	}
@@ -255,7 +249,6 @@ namespace ft
 	reverse_iterator<T>
 	reverse_iterator<T>::operator-- ()
 	{
-		// this->current += 1;
 		this->current++;
 		return (*this);
 	}

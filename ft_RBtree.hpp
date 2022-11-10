@@ -10,15 +10,19 @@
 
 namespace ft
 {
+	/***************
+	 *    class    *
+	 ***************/
 	template <	class T,
 				class SelectKey,
 				class Comp = ft::less<T>,
 				class Alloc = std::allocator< RBtreeNode<T> > >
 	class RBtree
 	{
-	private :
+	public :
 		typedef RBtreeNode<T>						node_type;
 		typedef RBtreeNode<T>*						node_pointer;
+	private :
 		typedef Alloc								allocator_type;
 		typedef Comp								key_compare;
 		typedef typename allocator_type::size_type	size_type;
@@ -80,6 +84,9 @@ namespace ft
 		void swap(RBtree & other);
 	};
 
+	/***************
+	 *   private   *
+	 ***************/
 
 	template < class T, class SK, class C, class A>
 	bool
@@ -382,28 +389,24 @@ namespace ft
 		node_pointer occupyingNode;
 		if (_isLeafNode(pTargetNode) == true) // no child
 		{
-			// std::cout << "no child" << std::endl;
 			occupyingNode = this->_nilnode;
 			deleting_color = pTargetNode->getColor();
 			_transplant(pTargetNode, occupyingNode);
 		}
 		else if (_isNilNode(pTargetNode->_pLeftChild) == true) // just rightchild
 		{
-			// std::cout << "only right child" << std::endl;
 			occupyingNode = pTargetNode->_pRightChild;
 			deleting_color = pTargetNode->getColor();
 			_transplant(pTargetNode, occupyingNode);
 		}
 		else if (_isNilNode(pTargetNode->_pRightChild) == true) // just leftchild
 		{
-			// std::cout << "only left child" << std::endl;
 			occupyingNode = pTargetNode->_pLeftChild;
 			deleting_color = pTargetNode->getColor();
 			_transplant(pTargetNode, occupyingNode);
 		}
 		else // both child
 		{
-			// std::cout << "both child" << std::endl;
 			node_pointer successorNode = this->_getSuccessor(pTargetNode);
 			deleting_color = successorNode->getColor();
 			occupyingNode = successorNode->_pRightChild;
@@ -522,7 +525,10 @@ namespace ft
 		}
 	}
 	
-	// public methods
+	/***************
+	 *   public    *
+	 ***************/
+
 	template < class T, class SK, class C, class A>
 	RBtree<T, SK, C, A>::RBtree( void )
 	: _allocator_object(A()),

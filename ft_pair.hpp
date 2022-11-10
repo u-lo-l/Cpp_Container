@@ -4,6 +4,9 @@
 # include <iostream>
 namespace ft
 {
+	/***************
+	 *    class    *
+	 ***************/
 	template <class T1, class T2>
 	struct pair
 	{
@@ -44,18 +47,21 @@ namespace ft
 		{ return !(lhs<rhs); }
 	};
 
-	// make_pair
-	template <class T1,class T2>
-	pair<T1,T2> make_pair (T1 x, T2 y)
-	{
-		return ( pair<T1,T2>(x, y) );
-	}
 
 	template <class T1, class T2>
 	std::ostream & operator<< (std::ostream & os, const pair<T1, T2> & p)
 	{
 		std::cout << "<" << p.first << ", " << p.second << ">";
 		return (os);
+	}
+
+	/***************
+	 *  non-member *
+	 ***************/
+	template <class T1,class T2>
+	pair<T1,T2> make_pair (T1 x, T2 y)
+	{
+		return ( pair<T1,T2>(x, y) );
 	}
 }
 #endif

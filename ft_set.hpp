@@ -11,6 +11,9 @@
 
 namespace ft
 {
+	/***************
+	 *    class    *
+	 ***************/
 
 	template <class _Tp>
 	struct _Identity
@@ -44,8 +47,7 @@ namespace ft
 
 	private :
 		typedef ft::RBtree<value_type, _Identity<value_type>, key_compare>	_tree_type;
-		typedef ft::RBtreeNode<value_type>										_node_type;
-		typedef ft::RBtreeNode<value_type> *									_node_pointer;
+		typedef typename _tree_type::_tree_type								_node_pointer;
 
 	public :
 		typedef ft::tree_iterator<value_type, const value_type *, const value_type &>	iterator;
@@ -110,26 +112,24 @@ namespace ft
 
 		template < class K, class C, class A>
 		friend bool operator==(const ft::set<K, C, A> & lhs, const ft::set<K, C, A> & rhs);
-		
 		template < class K, class C, class A>
 		friend bool operator!=(const ft::set<K, C, A> & lhs, const ft::set<K, C, A> & rhs);
-		
 		template < class K, class C, class A>
 		friend bool operator<(const ft::set<K, C, A> & lhs, const ft::set<K, C, A> & rhs);
-		
 		template < class K, class C, class A>
 		friend bool operator<=(const ft::set<K, C, A> & lhs, const ft::set<K, C, A> & rhs);
-		
 		template < class K, class C, class A>
 		friend bool operator>(const ft::set<K, C, A> & lhs, const ft::set<K, C, A> & rhs);
-		
 		template < class K, class C, class A>
 		friend bool operator>=(const ft::set<K, C, A> & lhs, const ft::set<K, C, A> & rhs);
-		
 		template < class K, class C, class A>
 		friend void swap(const ft::set<K, C, A> & x, const ft::set<K, C, A> & y);
 	}; // class set
 
+	/***************
+	 *   public    *
+	 ***************/
+	
 	template<class K, class C, class A>
 	set<K, C, A>::set(const key_compare & comp, const allocator_type & alloc)
 	: _key_comp(comp), _allocator_object(alloc), _rbtree()
@@ -348,6 +348,10 @@ namespace ft
 	{
 		return (this->_allocator_object);
 	}
+	
+	/***************
+	 *   friend    *
+	 ***************/
 
 	template < class K, class C, class A>
 	bool operator==(const ft::set<K, C, A> & lhs, const ft::set<K, C, A> & rhs)

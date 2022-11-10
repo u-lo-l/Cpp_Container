@@ -1,31 +1,36 @@
 #ifndef FT_RBTREEITERATOR_HPP
 # define FT_RBTREEITERATOR_HPP
 # include <memory>
+# include <cstddef> // for ptrdiff_t
 # include "ft_iterator.hpp"
 # include "ft_RBtreeNode.hpp"
 
 namespace ft
 {
-	// RBtreeIterator
+	/***************
+	 *    class    *
+	 ***************/
+
 	template <class T, class Ptr = T*, class Ref = T&>
-	class tree_iterator
+	class tree_iterator : public ft::iterator<ft::bidirectional_iterator_tag, T, ptrdiff_t, Ptr, Ref>
 	{
 	private :
-		typedef typename ft::iterator< ft::bidirectional_iterator_tag, RBtreeNode<T> > iterator_type;
+		typedef ft::iterator< ft::bidirectional_iterator_tag, T, ptrdiff_t, Ptr, Ref >	iterator_type;
+		typedef ft::iterator_traits<iterator_type>										iterator_traits;
+		typedef typename RBtreeNode<T>::node_type										node_type;
+		typedef typename RBtreeNode<T>::node_pointer									node_pointer;
 
-		typedef typename RBtreeNode<T>::node_pointer		node_pointer;
 	public :
-		typedef typename RBtreeNode<T>::value_type			value_type;
-		typedef Ptr											pointer;
-		typedef Ref											reference;
-		typedef typename iterator_type::difference_type		difference_type;
-		typedef typename iterator_type::iterator_category	iterator_category;
+		typedef typename iterator_traits::difference_type	difference_type;
+		typedef typename iterator_traits::value_type		value_type;
+		typedef typename iterator_traits::pointer			pointer;
+		typedef typename iterator_traits::reference			reference;
+		typedef typename iterator_traits::iterator_category	iterator_category;
 	private :
 		node_pointer _pNode;
 
 		void _increment();
 		void _decrement();
-
 	public :
 		tree_iterator(node_pointer pNode = NULL);
 		tree_iterator(const tree_iterator & it);
@@ -54,6 +59,9 @@ namespace ft
 		bool operator!=(const tree_iterator& other) const;
 	};
 
+	/***************
+	 *   private   *
+	 ***************/
 	/*
 		1. 오른쪽 자식이 nilnode가 아니면 (오른쪽 자식이 있으면) 오른쪽 서브트리에서 가장 작은 값을 찾는다.
 		2. 현재 노드가 왼쪽 자식이라면, 부모노드의 오른쪽 서브트리는 항상 부모 노드보다 크기 때문에 부모노드로 이동한다.

@@ -5,21 +5,26 @@
 
 namespace ft
 {
-	template < class T, class Alloc >
-	class vector;
+	/***************
+	 *    class    *
+	 ***************/
 
 	template<class T>
-	class vectorIterator
+	class vectorIterator : public ft::iterator<	ft::random_access_iterator_tag,
+												typename ft::iterator_traits<T>::value_type,
+												typename ft::iterator_traits<T>::difference_type,
+												typename ft::iterator_traits<T>::pointer,
+												typename ft::iterator_traits<T>::reference>
 	{
 	private:
-		// template <class U, class Alloc> friend class vector;
-		typedef typename ft::iterator<ft::random_access_iterator_tag, T> iterator_type;
+		typedef typename ft::iterator<ft::random_access_iterator_tag, T>	iterator_type;
+		typedef ft::iterator_traits<T>										iterator_traits;
 	public :
-		typedef typename iterator_type::difference_type		difference_type;
-		typedef typename iterator_type::pointer				pointer;
-		typedef typename iterator_type::reference			reference;
-		typedef typename iterator_type::value_type			value_type;
-		typedef typename iterator_type::iterator_category	iterator_category;
+		typedef typename iterator_traits::difference_type		difference_type;
+		typedef typename iterator_traits::pointer				pointer;
+		typedef typename iterator_traits::reference				reference;
+		typedef typename iterator_traits::value_type			value_type;
+		typedef typename iterator_traits::iterator_category		iterator_category;
 	private:
 		pointer _base;
 	public:
@@ -29,7 +34,7 @@ namespace ft
 
 		~vectorIterator();
 
-		operator vectorIterator<const value_type> () const;
+		operator vectorIterator<const value_type *> () const;
 
 		const pointer & getBase() const;
 		
@@ -79,6 +84,10 @@ namespace ft
 
 	}; // class vectorIterator
 
+	/***************
+	 *   public    *
+	 ***************/
+
 	template<class T>
 	vectorIterator<T>::vectorIterator(pointer ptr)
 	: _base(ptr) {}
@@ -100,9 +109,9 @@ namespace ft
 	vectorIterator<T>::~vectorIterator() {}
 
 	template<class T>
-	vectorIterator<T>::operator vectorIterator<const value_type> () const
+	vectorIterator<T>::operator vectorIterator<const value_type *> () const
 	{
-		return ( vectorIterator<const value_type>(this->_base) );
+		return ( vectorIterator<const value_type *>(this->_base) );
 	}
 
 	template<class T>
@@ -142,7 +151,10 @@ namespace ft
 
 	template<class T>
 	vectorIterator<T> &
-	vectorIterator<T>::operator--() { --_base; return (*this); }
+	vectorIterator<T>::operator--()
+	{
+		--_base; return (*this);
+	}
 
 	template<class T>
 	vectorIterator<T>
@@ -203,7 +215,10 @@ namespace ft
 		return (*(_base + n));
 	}
 
-	// friend functions
+	/***************
+	 *   friend    *
+	 ***************/
+
 	template <class T>
 	vectorIterator<T>
 	operator+(typename vectorIterator<T>::difference_type n, const vectorIterator<T> & rhs)

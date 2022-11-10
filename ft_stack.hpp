@@ -4,6 +4,10 @@
 
 namespace ft
 {
+	/***************
+	 *    class    *
+	 ***************/
+
 	template <class T, class Container = ft::vector<T> >
 	class stack
 	{
@@ -41,6 +45,10 @@ namespace ft
 		friend bool operator>=( const ft::stack<U, D> & lhs, const ft::stack<U, D> & rhs);
 	};
 
+	/***************
+	 *   public    *
+	 ***************/
+	
 	template <class T, class C>
 	stack<T, C>::stack(const container_type & c)
 	: _cont(c)
@@ -88,6 +96,10 @@ namespace ft
 	{
 		this->_cont.pop_back();
 	}
+
+	/***************
+	 *   friend    *
+	 ***************/
 
 	template <class T, class C>
 	bool operator== (const stack<T,C>& lhs, const stack<T,C>& rhs)
