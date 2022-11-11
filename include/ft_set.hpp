@@ -123,7 +123,7 @@ namespace ft
 		template < class K, class C, class A>
 		friend bool operator>=(const ft::set<K, C, A> & lhs, const ft::set<K, C, A> & rhs);
 		template < class K, class C, class A>
-		friend void swap(const ft::set<K, C, A> & x, const ft::set<K, C, A> & y);
+		friend void swap(ft::set<K, C, A> & x, ft::set<K, C, A> & y);
 	}; // class set
 
 	/***************

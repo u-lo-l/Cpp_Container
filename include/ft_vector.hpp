@@ -140,7 +140,7 @@ namespace ft
 		template<class U, class B>
 		friend bool operator>=(const ft::vector<U, B> & lhs, const ft::vector<U, B> & rhs);
 		template<class U, class B>
-		friend void swap(const ft::vector<U, B> & x, const ft::vector<U, B> & y);
+		friend void swap(ft::vector<U, B> & x, ft::vector<U, B> & y);
 	}; // class vector
 
 	/***************
@@ -714,7 +714,7 @@ namespace ft
 	}
 	
 	template<class T, class A>
-	void swap(const ft::vector<T, A> & x, const ft::vector<T, A> & y)
+	void swap(ft::vector<T, A> & x, ft::vector<T, A> & y)
 	{
 		x.swap(y);
 	}

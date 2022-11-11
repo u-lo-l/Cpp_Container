@@ -135,7 +135,7 @@ namespace ft
 		template <class K, class M, class C, class A>
 		friend bool operator>=(const ft::map<K, M, C, A> & lhs, const ft::map<K, M, C, A> & rhs);
 		template <class K, class M, class C, class A>
-		friend void swap(const ft::map<K, M, C, A> & x, const ft::map<K, M, C, A> & y);
+		friend void swap(ft::map<K, M, C, A> & x, ft::map<K, M, C, A> & y);
 	}; //class map
 
 	
