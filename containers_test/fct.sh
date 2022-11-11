@@ -14,9 +14,7 @@ include_path="../"
 srcs="srcs"
 
 CC="c++"
-# CFLAGS="-Wall -Wextra -Werror -std=c++98"
 CFLAGS="-Wall -Werror -Wextra -std=c++98 -pedantic -fsanitize=address"
-
 
 ft_compile_output="/dev/null"
 std_compile_output="/dev/null"
@@ -24,15 +22,9 @@ std_compile_output="/dev/null"
 function pheader () {
 printf "${EOC}${BOLD}${DBLUE}\
 # ****************************************************************************** #
-#                                                                                #
-#                                :::   :::   :::                                 #
-#                              :+:+: :+:+:  :+: :+:                              #
-#                            +:+ +:+:+ +:+ +:+                                   #
-#                           +#+  +:+  +#+ +#+ +#+                                #
-#                          +#+       +#+ +#+ #+#                                 #
-#                         #+#       #+# #+# #+#                                  #
-#                        ###       ### ### ###  containers_test                  #
-#                                                                                #
+# ****************************************************************************** #
+# *************************[ *FT_CONTAINER TESTER* ]**************************** #
+# ****************************************************************************** #
 # ****************************************************************************** #
 ${EOC}"
 }
@@ -74,9 +66,9 @@ timeSafe () {
 	res='';
 	res=$( echo "$2 * 20" | bc -l );
 	if [[ $1 < $res ]]; then
-		printf "✅"
+		printf "${GREEN}OK${EOC}"
 	else
-		printf "KO"
+		printf "${RED}KO${EOC}"
 	fi
 }
 
