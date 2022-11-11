@@ -570,22 +570,33 @@ namespace ft
 		InputIterator last
 	)
 	{
+		// const difference_type offset = ft::distance(this->begin(), position);
+		// const difference_type n = ft::distance(first, last);
+		// if ( this->_size + n > this->_capacity )
+		// 	this->reserve(_doubleCapacity(this->_size + n));
+		// pointer construct_ptr = this->_end + n;
+		// pointer destroy_ptr = this->_end;
+		// position = this->begin() + offset;
+		// while ( destroy_ptr != &*position )
+		// {
+		// 	this->_allocator_object.construct(--construct_ptr, *(--destroy_ptr));
+		// 	this->_allocator_object.destroy(destroy_ptr);
+		// }
+		// while ( construct_ptr != &*position )
+		// 	this->_allocator_object.construct(--construct_ptr, *(--last));
+		// this->_size += n;
+		// this->_end += n;
+
 		const difference_type offset = ft::distance(this->begin(), position);
 		const difference_type n = ft::distance(first, last);
-		if ( this->_size + n > this->_capacity )
-			this->reserve(_doubleCapacity(this->_size + n));
-		pointer construct_ptr = this->_end + n;
-		pointer destroy_ptr = this->_end;
-		position = this->begin() + offset;
-		while ( destroy_ptr != &*position )
-		{
-			this->_allocator_object.construct(--construct_ptr, *(--destroy_ptr));
-			this->_allocator_object.destroy(destroy_ptr);
-		}
-		while ( construct_ptr != &*position )
-			this->_allocator_object.construct(--construct_ptr, *(--last));
-		this->_size += n;
-		this->_end += n;
+		size_type new_capacity = this->_capacity;
+		if ( this->_size + n > this->_capacity)
+			new_capacity = this->_size + n;
+		pointer temp_start = _allocator_object.allocate(new_capacity);
+		pointer temp_end = temp_start;
+		size_type temp_size = 0;
+
+		
 	}
 	
 	template <class T, class A>
