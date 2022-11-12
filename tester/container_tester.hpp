@@ -16,6 +16,7 @@
 # ifndef TYPE
 #  define TYPE	int
 # endif
+
 # define T_SIZE_TYPE	size_t
 
 template < class _Tp >
