@@ -81,6 +81,8 @@ namespace ft
 		size_type max_size() const;
 		node_pointer begin() const;
 		node_pointer end() const;
+		node_pointer lower_bound(const T & value) const;
+		node_pointer upper_bound(const T & value) const;
 		void swap(RBtree & other);
 	};
 
@@ -704,6 +706,44 @@ namespace ft
 	RBtree<T, SK, C, A>::end() const
 	{
 		return (this->_nilnode);
+	}
+
+	template < class T, class SK, class C, class A>
+	typename RBtree<T, SK, C, A>::node_pointer
+	RBtree<T, SK, C, A>::lower_bound(const T & val) const
+	{
+		node_pointer target = this->_pRoot->_maximum();
+		node_pointer pNode = this->_pRoot;
+		while (pNode->isNilNode() == false)
+		{
+			if (this->_nodeCompare(pNode->getData(), val) == false)
+			{
+				target = pNode;
+				pNode = pNode->_pLeftChild;
+			}
+			else
+				pNode = pNode->_pRightChild;
+		}
+		return (target);
+	}
+	
+	template < class T, class SK, class C, class A>
+	typename RBtree<T, SK, C, A>::node_pointer
+	RBtree<T, SK, C, A>::upper_bound(const T & val) const
+	{
+		node_pointer target = this->_pRoot->_minimum();
+		node_pointer pNode = this->_pRoot;
+		while (pNode->isNilNode() == false)
+		{
+			if (this->_nodeCompare(val, pNode->getData()) == true)
+			{
+				target = pNode;
+				pNode = pNode->_pLeftChild;
+			}
+			else
+				pNode = pNode->_pRightChild;
+		}
+		return (target);
 	}
 
 	template < class T, class SK, class C, class A>

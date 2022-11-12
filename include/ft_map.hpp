@@ -390,52 +390,28 @@ namespace ft
 	typename map<K, T, C, A>::iterator
 	map<K, T, C, A>::lower_bound (const key_type& k)
 	{
-		iterator it = this->begin();
-		for ( ; it != this->end() ; it++)
-		{
-			if (_key_comp((*it).first, k) == false)
-				break ;
-		}
-		return (it);
+		return (iterator(this->_rbtree.lower_bound(ft::make_pair(k,mapped_type()))));
 	}
 	
 	template<class K, class T, class C, class A>
 	typename map<K, T, C, A>::const_iterator
 	map<K, T, C, A>::lower_bound (const key_type& k) const
 	{
-		const_iterator it = this->begin();
-		for ( ; it != this->end() ; it++)
-		{
-			if (_key_comp((*it).first, k) == false)
-				break ;
-		}
-		return (const_iterator(it));
+		return (const_iterator(this->_rbtree.lower_bound(ft::make_pair(k,mapped_type()))));
 	}
 
 	template<class K, class T, class C, class A>
 	typename map<K, T, C, A>::iterator
 	map<K, T, C, A>::upper_bound (const key_type& k)
 	{
-		iterator it = this->begin();
-		for ( ; it != this->end() ; it++)
-		{
-			if (_key_comp(k, (*it).first) == true)
-				break ;
-		}
-		return (it);
+		return (iterator(this->_rbtree.upper_bound(ft::make_pair(k,mapped_type()))));
 	}
 	
 	template<class K, class T, class C, class A>
 	typename map<K, T, C, A>::const_iterator
 	map<K, T, C, A>::upper_bound (const key_type& k) const
 	{
-		const_iterator it = this->begin();
-		for ( ; it != this->end() ; it++)
-		{
-			if (_key_comp(k, (*it).first) == true)
-				break ;
-		}
-		return (const_iterator(it));
+		return (const_iterator(this->_rbtree.upper_bound(ft::make_pair(k,mapped_type()))));
 	}
 
 	template<class K, class T, class C, class A>
@@ -513,7 +489,7 @@ namespace ft
 	
 	template<class K, class T, class C, class A>
 	void
-	swap(const ft::map<K, T, C, A> & x, const ft::map<K, T, C, A> & y)
+	swap(ft::map<K, T, C, A> & x, ft::map<K, T, C, A> & y)
 	{
 		x.swap(y);
 	}

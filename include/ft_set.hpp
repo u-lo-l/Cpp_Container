@@ -47,7 +47,7 @@ namespace ft
 
 	private :
 		typedef ft::RBtree<value_type, _Identity<value_type>, key_compare>	_tree_type;
-		typedef typename _tree_type::_tree_type								_node_pointer;
+		typedef typename _tree_type::node_pointer							_node_pointer;
 
 	public :
 		typedef ft::tree_iterator<value_type, const value_type *, const value_type &>	iterator;
@@ -392,7 +392,7 @@ namespace ft
 	}
 		
 	template < class K, class C, class A>
-	void swap(const ft::set<K, C, A> & x, const ft::set<K, C, A> & y)
+	void swap(ft::set<K, C, A> & x, ft::set<K, C, A> & y)
 	{
 		x.swap(y);
 	}
