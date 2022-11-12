@@ -117,13 +117,13 @@ void MapTestFunctor<M, T>::_insert()
 template<class M ,class T>
 void MapTestFunctor<M, T>::_erase()
 {
-	std::cout << "\t<case1>" << std::endl;
-	std::cout << "before";
-	this->_print_info();
-	for (int i = 0 ; i < 500 ; i++)
-		this->_map.erase(_map.begin());
-	std::cout << "\nafter";
-	this->_print_info();
+	// std::cout << "\t<case1>" << std::endl;
+	// std::cout << "before";
+	// this->_print_info();
+	// for (int i = 0 ; i < 500 ; i++)
+	// 	this->_map.erase(_map.begin());
+	// std::cout << "\nafter";
+	// this->_print_info();
 
 	std::cout << "\t<case2>" << std::endl;
 	std::cout << "before";
