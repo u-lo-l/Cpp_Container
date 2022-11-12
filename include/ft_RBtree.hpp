@@ -721,13 +721,15 @@ namespace ft
 			{
 				pNode = pNode->_pLeftChild;
 			}
-			else
+			else if (this->_nodeCompare(pNode->getData(), val) == true) // val > node->data -> go right
 			{
-				target = pNode;
 				if (pNode == this->_nilnode->_pRightChild)
 					return (this->_nilnode);
+				target = pNode;
 				pNode = pNode->_pRightChild;
 			}
+			else // val == node->data;
+				return (pNode);
 		}
 		return (target);
 	}
@@ -740,7 +742,7 @@ namespace ft
 		node_pointer pNode = this->_pRoot;
 		while (pNode->isNilNode() == false)
 		{
-			if (this->_nodeCompare(val, pNode->getData()) == false) // val <= node->data -> go->right
+			if (this->_nodeCompare(val, pNode->getData()) == false) // val >= node->data -> go->right
 			{
 				if (pNode == this->_nilnode->_pRightChild)
 					return (this->_nilnode);
