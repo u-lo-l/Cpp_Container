@@ -712,17 +712,22 @@ namespace ft
 	typename RBtree<T, SK, C, A>::node_pointer
 	RBtree<T, SK, C, A>::lower_bound(const T & val) const
 	{
-		node_pointer target = this->_pRoot->_maximum();
+		node_pointer begin = this->_pRoot->_minimum();
+		node_pointer target = begin;
 		node_pointer pNode = this->_pRoot;
 		while (pNode->isNilNode() == false)
 		{
-			if (this->_nodeCompare(pNode->getData(), val) == false)
+			if (this->_nodeCompare(val, pNode->getData()) == true) // val < node->data -> go left
 			{
-				target = pNode;
 				pNode = pNode->_pLeftChild;
 			}
 			else
+			{
+				target = pNode;
+				if (pNode == this->_nilnode->_pRightChild)
+					return (this->_nilnode);
 				pNode = pNode->_pRightChild;
+			}
 		}
 		return (target);
 	}
@@ -731,17 +736,21 @@ namespace ft
 	typename RBtree<T, SK, C, A>::node_pointer
 	RBtree<T, SK, C, A>::upper_bound(const T & val) const
 	{
-		node_pointer target = this->_pRoot->_minimum();
+		node_pointer target = this->_nilnode->_pRightChild;
 		node_pointer pNode = this->_pRoot;
 		while (pNode->isNilNode() == false)
 		{
-			if (this->_nodeCompare(val, pNode->getData()) == true)
+			if (this->_nodeCompare(val, pNode->getData()) == false) // val <= node->data -> go->right
+			{
+				if (pNode == this->_nilnode->_pRightChild)
+					return (this->_nilnode);
+				pNode = pNode->_pRightChild;
+			}
+			else
 			{
 				target = pNode;
 				pNode = pNode->_pLeftChild;
 			}
-			else
-				pNode = pNode->_pRightChild;
 		}
 		return (target);
 	}
