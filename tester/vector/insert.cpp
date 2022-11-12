@@ -30,33 +30,35 @@ int main(void)
 	printContainer("vct2_resize", vct2);
 
 	vct2.insert(vct2.begin() + 2, vct.begin(), vct.end());
-	vct.clear();
-	printContainer("vct2_insert", vct2);
+	printContainer("vct2_insert4", vct2);
 
+	vct.clear();
 	printContainer("vct1_clear", vct);
 
 	for (int i = 0; i < 5; ++i)
 		vct3.insert(vct3.end(), val_creator(i));
 	vct3.insert(vct3.begin() + 1, 2, val_creator(111));
-	printContainer("1", vct3);
+	printContainer("vec3 insert", vct3);
 
 	/* insert2 */
 
-	vct.reserve(5);
+	vct.reserve(15);
  	vct2.reserve(0);
-	printContainer("vct1_reserve", vct);
-	printContainer("vct2_reserve", vct2);
-	const int cut = 3;
+	printContainer("vct1_reserve over capcity", vct);
+	printContainer("vct2_reserve less capcity", vct2);
+	const int offset = 3;
 
-	for (unsigned long int i = 0; i < vct.size(); ++i)
-		vct[i] = val_creator((vct.size() - i) * 7);
-	printContainer("2", vct);
+	for (unsigned long int i = 0; i < offset; ++i)
+		vct.insert(vct.end(), val_creator((offset - i) * 7));
+	printContainer("vct1_update", vct);
 
-	vct2.insert(vct2.begin(), vct.begin(), vct.begin() + cut);
+	vct2.insert(vct2.begin(), vct.begin(), vct.begin() + offset);
 	printContainer("3", vct2);
-	vct2.insert(vct2.begin(), vct.begin() + cut, vct.end());
+
+	vct2.insert(vct2.begin(), vct.begin() + offset, vct.end());
 	printContainer("4", vct2);
-	vct2.insert(vct2.end(), vct.begin(), vct.begin() + cut);
+
+	vct2.insert(vct2.end(), vct.begin(), vct.begin() + offset);
 	printContainer("5", vct2);
 
 	std::cout << "insert return:" << std::endl;
