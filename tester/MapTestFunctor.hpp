@@ -39,7 +39,7 @@ private :
     void _equal_range();
 public :
 	MapTestFunctor()
-	: _num(10000), _map(Map()), _val(value_creator<_Tp>()), _list(std::list<_pair_type>())
+	: _num(1000), _map(Map()), _val(value_creator<_Tp>()), _list(std::list<_pair_type>())
 	{
 		for (int i = 0 ; i < _num ; i++)
 		{
@@ -112,27 +112,58 @@ void MapTestFunctor<M, T>::_insert()
 	this->_print_info();
 	typename M::iterator it = this->_map.begin();
 	std::cout << std::endl;
+
+	// this->_map.print_map_info();
 }
 
 template<class M ,class T>
 void MapTestFunctor<M, T>::_erase()
 {
-	// std::cout << "\t<case1>" << std::endl;
-	// std::cout << "before";
-	// this->_print_info();
-	// for (int i = 0 ; i < 500 ; i++)
-	// 	this->_map.erase(_map.begin());
-	// std::cout << "\nafter";
-	// this->_print_info();
+	std::cout << "\t<case1>" << std::endl;
+	std::cout << "before";
+	this->_print_info();
+	for (int i = 0 ; i < _num / 5 ; i++)
+		this->_map.erase(_map.begin());
+	std::cout << "\nafter";
+	this->_print_info();
+	// this->_map.print_map_info();
 
 	std::cout << "\t<case2>" << std::endl;
+	std::cout << "before";
+	this->_print_info();
+	for (int i = 0 ; i < _num / 5 ; i++)
+		this->_map.erase(--_map.end());
+	std::cout << "\nafter";
+	this->_print_info();
+	// this->_map.print_map_info();
+
+	std::cout << "\t<case3>" << std::endl;
+	std::cout << "before";
+	this->_print_info();
+	for (int i = 0 ; i < _num / 10 ; i++)
+		this->_map.erase(_map.begin());
+	std::cout << "\nafter";
+	this->_print_info();
+	// this->_map.print_map_info();
+
+	// std::cout << "\t<case4>" << std::endl;
+	// std::cout << "before";
+	// this->_print_info();
+	// for (int i = 0 ; i < _num / 10 ; i++)
+	// 	this->_map.erase(--_map.end());
+	// std::cout << "\nafter";
+	// this->_print_info();
+	// this->_map.print_map_info();
+
+	std::cout << "\t<case5>" << std::endl;
 	std::cout << "before";
 	this->_print_info();
 	this->_map.erase(_map.begin(), _map.end());
 	std::cout << "\nafter";
 	this->_print_info();
+	// this->_map.print_map_info();
 }
-
+	
 template<class M ,class T>
 void MapTestFunctor<M, T>::_swap()
 {

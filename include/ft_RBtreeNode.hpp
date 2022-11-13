@@ -208,8 +208,9 @@ namespace ft
 		else
 			os << "\033[1;107;30m";
 		if (node.isNilNode() == true)
-			os << "\t 'nil_node'" << std::endl;
-		os << "\t data   : " << node._data << "\033[0m" << std::endl;
+			os << "\t 'nil_node'\033[0m" << std::endl;
+		else
+			os << "\t data   : " << node._data << "\033[0m" << std::endl;
 		os << "\033[0m" << "\t parent : " << (node._pParent) << std::endl;
 		os << "\t left   : " << (node._pLeftChild) << std::endl;
 		os << "\t right  : " << (node._pRightChild) << std::endl;

@@ -12,6 +12,7 @@
 # include <sstream>
 # include <utility>
 # include <vector>
+# include "../include/ft_pair.hpp"
 
 # ifndef TYPE
 #  define TYPE	int
@@ -57,7 +58,7 @@ public:
 	std::string operator() (unsigned int seed)
 	{
 		std::ostringstream oss;
-		oss << "sample_str#_" << std::setw(3) << std::setfill('0')<< seed;
+		oss << "sample_str#_" << std::setw(6) << std::setfill('0')<< seed;
 		return (oss.str());
 	}
 };
@@ -76,11 +77,19 @@ public:
 };
 
 template <class K, class V>
+std::ostream & operator<< (std::ostream & os, const ft::pair<K, V> & p)
+{
+	os << "<" << p.first << ", " << p.second << ">";
+	return (os);
+}
+
+template <class K, class V>
 std::ostream & operator<<(std::ostream & os, const std::pair<K, V> & p)
 {
 	os << "<" << p.first << ", " << p.second << ">";
-	return os;
+	return (os);
 }
+
 
 
 template <class _Tp>

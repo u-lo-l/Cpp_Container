@@ -84,6 +84,29 @@ namespace ft
 		node_pointer lower_bound(const T & value) const;
 		node_pointer upper_bound(const T & value) const;
 		void swap(RBtree & other);
+
+		void print_tree_info() const
+		{
+			std::cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << std::endl;
+
+			std::cout << "tree size : " << this->_size << std::endl;
+
+			std::cout << "@nilnode info : " << std::endl;
+			std::cout << "\t curr : " << _nilnode << " | " << *_nilnode << std::endl;
+
+			std::cout << "@rootnode info : " << std::endl;
+			std::cout << "\t curr : " << _pRoot << " | " << *_pRoot << std::endl;
+
+			std::cout << "@ begin" << std::endl;
+			node_pointer __begin = _pRoot->_minimum();
+			std::cout << "\t curr : " << __begin << " | " << *__begin << std::endl;
+
+			std::cout << "@ end" << std::endl;
+			node_pointer __end = _nilnode->_pRightChild;
+			std::cout << "\t curr : " << __end << " | " << *__end << std::endl;
+
+			std::cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << std::endl;
+		}
 	};
 
 	/***************
@@ -108,6 +131,8 @@ namespace ft
 	bool
 	RBtree<T, SK, C, A>::_isNilNode( node_pointer pNode) const
 	{
+		if (pNode == NULL)
+			return (true);
  		return (pNode->isNilNode());
 	}
 	
@@ -197,7 +222,9 @@ namespace ft
 		x->_pRightChild = y->_pLeftChild;
 		
 		if (_isNilNode(y->_pLeftChild) == false)
+		{
 			y->_pLeftChild->_pParent = x;
+		}
 		
 		y->_pParent = x->_pParent;
 		
@@ -207,7 +234,6 @@ namespace ft
 			x->_pParent->_pLeftChild = y;
 		else 
 			x->_pParent->_pRightChild = y;
-		
 		y->_pLeftChild = x;
 		x->_pParent = y;
 	}
@@ -221,7 +247,9 @@ namespace ft
 
 		x->_pLeftChild = y->_pRightChild;
 		if (_isNilNode(y->_pRightChild) == false)
+		{
 			y->_pRightChild->_pParent = x;
+		}
 		y->_pParent = x->_pParent;
 		if (_isRootNode(x) == true)
 			this->_pRoot = y;
@@ -387,6 +415,9 @@ namespace ft
 		{
 			return (false);
 		}
+		// std::cout << "# NIL  NODE       " << _nilnode << std::endl;
+		// std::cout << "# ROOt NODE       " << _pRoot << std::endl;
+		// std::cout << "# DELETING TARGET " << pTargetNode << " | " << *pTargetNode << std::endl;
 		Color deleting_color;
 		node_pointer occupyingNode;
 		if (_isLeafNode(pTargetNode) == true) // no child
@@ -444,47 +475,72 @@ namespace ft
 	void
 	RBtree<T, SK, C, A>::_deleteRestructor(node_pointer pNode)
 	{
+		// std::cout << "## FIXING " << std::endl;
 		node_pointer N = pNode;
 		node_pointer P; // parentNode
 		node_pointer S; // siblingNode
 		node_pointer LN; // left nephew
 		node_pointer RN; // right nephew
+		// int i = 1;	
 		while (N->getColor() == ft::BLACK && !_isRootNode(N) && !_isNilNode(N))
 		{
+			// std::cout << "^^^ loop count : " << i++ << std::endl;
+			// std::cout << "Pivot : " << P << " | " << *P << std::endl;
 			P = N->_pParent;
+			// std::cout << "N?" << (N) << std::endl;
+			// std::cout << "*N?" << *(N) << std::endl;
+			// std::cout << "P?" << (P) << std::endl;
+			// std::cout << "*P?" << *(P) << std::endl;
 			if (N == P->_pLeftChild)
 			{
 				S = P->_pRightChild;
 				// case 3.1
 				if (S->getColor() == ft::RED)
 				{
+					// std::cout << "***** l_case1" << std::endl;
 					P->setColor(ft::RED);
 					S->setColor(ft::BLACK);
+					N = P;
 					_rotateLeft(P);
+				// std::cout << "N?" << (N) << std::endl;
+				// std::cout << "*N?" << *(N) << std::endl;
+				// std::cout << "N->_pParent?" << (N->_pParent) << std::endl;
+				// std::cout << "*N->_pParent?" << *(N->_pParent) << std::endl;
 					S = N->_pParent->_pRightChild;
 				}
+				// std::cout << "s?" << S << std::endl;
+				// std::cout << "*s?" << *S << std::endl;
 				LN = S->_pLeftChild;
+				// std::cout << "***** l_case1.5" << std::endl;
+				if (LN == NULL) LN = this->_nilnode;
 				RN = S->_pRightChild;
 				// case 3.2
 				if (S->getColor() == ft::BLACK && RN->getColor() == ft::BLACK)
 				{
+					// std::cout << "***** l_case2" << std::endl;
 					S->setColor(ft::RED);
 					N = N->_pParent;
+					// std::cout << "***** l_case2.5" << std::endl;
 				}
 				else {
 					// case 3.3
 					if (RN->getColor() == ft::BLACK)
 					{
+					// std::cout << "***** l_case3" << std::endl;
 						LN->setColor(ft::BLACK);
 						S->setColor(ft::RED);
+						N = P;
 						_rotateRight(S);
 						S = N->_pParent->_pRightChild;
+					// std::cout << "***** l_case3.5" << std::endl;
 					} 
 					// case 3.4
+					// std::cout << "***** l_case4" << std::endl;
 					S->setColor(P->getColor());
 					P->setColor(ft::BLACK);
 					RN->setColor(ft::BLACK);
 					_rotateLeft(P);
+					// std::cout << "***** l_case4.5" << std::endl;
 					N = _pRoot;
 				}
 			}
@@ -494,16 +550,19 @@ namespace ft
 				// case 3.1
 				if (S->getColor() == ft::RED)
 				{
+					// std::cout << "***** r_case1" << std::endl;
 					P->setColor(ft::RED);
 					S->setColor(ft::BLACK);
 					_rotateRight(P);
 					S = N->_pParent->_pLeftChild;
 				}
 				LN = S->_pLeftChild;
+				if (LN == NULL) LN = this->_nilnode;
 				RN = S->_pRightChild;
 				// case 3.2
 				if (S->getColor() == ft::BLACK && LN->getColor() == ft::BLACK)
 				{
+					// std::cout << "***** r_case2" << std::endl;
 					S->setColor(ft::RED);
 					N = N->_pParent;
 				}
@@ -511,12 +570,14 @@ namespace ft
 					// case 3.3
 					if (LN->getColor() == ft::BLACK)
 					{
+					// std::cout << "***** r_case3" << std::endl;
 						RN->setColor(ft::BLACK);
 						S->setColor(ft::RED);
 						_rotateLeft(S);
 						S = N->_pParent->_pLeftChild;
 					} 
 					// case 3.4
+					// std::cout << "***** r_case4" << std::endl;
 					S->setColor(P->getColor());
 					P->setColor(ft::BLACK);
 					LN->setColor(ft::BLACK);
@@ -525,6 +586,7 @@ namespace ft
 				}
 			}
 		}
+		// std::cout << "## FIXING DONE" << std::endl;
 	}
 	
 	/***************
