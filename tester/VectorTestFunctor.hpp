@@ -3,6 +3,7 @@
 # include <iostream>
 # include <vector>
 # include "../include/ft_vector.hpp"
+# include "../include/ft_pair.hpp"
 # include "container_tester.hpp"
 
 template<class Vec, class _Tp>
@@ -66,7 +67,8 @@ void VectorTestFunctor<V, T>::_time_check(int index)
 	start = clock();
 	(this->*_tester[index])();
 	finish = clock();
-	std::cout << "\t||time     : "<<std::setw(8) << std::setfill('_') <<(double)(finish - start) << "ms" << std::endl;
+	// std::cout.precision(3);
+	std::cout << "\t||time     : "<<std::setw(9) << std::setfill('_') << ((double)(finish - start) / CLOCKS_PER_SEC * 1000) << "ms" << std::endl;
 }
 
 template<class V ,class T>

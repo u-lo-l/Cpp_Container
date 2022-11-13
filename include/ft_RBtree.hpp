@@ -772,48 +772,67 @@ namespace ft
 
 	template < class T, class SK, class C, class A>
 	typename RBtree<T, SK, C, A>::node_pointer
-	RBtree<T, SK, C, A>::lower_bound(const T & val) const
+	RBtree<T, SK, C, A>::lower_bound(const T & val) const // 이상인 것 중 가장 작은 것
 	{
-		node_pointer begin = this->_pRoot->_minimum();
-		node_pointer target = begin;
+		// node_pointer begin = this->_pRoot->_minimum();
+		// node_pointer target = begin;
+		// node_pointer pNode = this->_pRoot;
+		// while (pNode->isNilNode() == false)
+		// {
+		// 	if (this->_nodeCompare(val, pNode->getData()) == true) // val < node->data -> go left
+		// 	{
+		// 		pNode = pNode->_pLeftChild;
+		// 	}
+		// 	else if (this->_nodeCompare(pNode->getData(), val) == true) // val > node->data -> go right
+		// 	{
+		// 		if (pNode == this->_nilnode->_pRightChild)
+		// 			return (this->_nilnode);
+		// 		target = pNode;
+		// 		pNode = pNode->_pRightChild;
+		// 	}
+		// 	else // val == node->data;
+		// 		return (pNode);
+		// }
+		// return (target);
+		node_pointer target = this->_nilnode->_pRightChild;
 		node_pointer pNode = this->_pRoot;
 		while (pNode->isNilNode() == false)
 		{
-			if (this->_nodeCompare(val, pNode->getData()) == true) // val < node->data -> go left
+			// if (this->_nodeCompare(val, pNode->getData()) == false) // val >= node->data -> go->right
+			if (this->_nodeCompare(pNode->getData(), val) == false) // val >= node->data -> go->right
 			{
+				target = pNode;
 				pNode = pNode->_pLeftChild;
 			}
-			else if (this->_nodeCompare(pNode->getData(), val) == true) // val > node->data -> go right
+			else
 			{
 				if (pNode == this->_nilnode->_pRightChild)
 					return (this->_nilnode);
-				target = pNode;
 				pNode = pNode->_pRightChild;
 			}
-			else // val == node->data;
-				return (pNode);
 		}
 		return (target);
+
 	}
 	
 	template < class T, class SK, class C, class A>
 	typename RBtree<T, SK, C, A>::node_pointer
-	RBtree<T, SK, C, A>::upper_bound(const T & val) const
+	RBtree<T, SK, C, A>::upper_bound(const T & val) const // 초과하는 것 중 가장 작은 것
 	{
 		node_pointer target = this->_nilnode->_pRightChild;
 		node_pointer pNode = this->_pRoot;
 		while (pNode->isNilNode() == false)
 		{
-			if (this->_nodeCompare(val, pNode->getData()) == false) // val >= node->data -> go->right
+			if (this->_nodeCompare(val, pNode->getData()) == true) // val >= node->data -> go->right
+			{
+				target = pNode;
+				pNode = pNode->_pLeftChild;
+			}
+			else
 			{
 				if (pNode == this->_nilnode->_pRightChild)
 					return (this->_nilnode);
 				pNode = pNode->_pRightChild;
-			}
-			else
-			{
-				target = pNode;
-				pNode = pNode->_pLeftChild;
 			}
 		}
 		return (target);

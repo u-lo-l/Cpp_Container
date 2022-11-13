@@ -64,15 +64,15 @@ public:
 };
 
 template <class K , class V >
-class value_creator<std::pair<K, V> >
+class value_creator<ft::pair<K, V> >
 {
 public:
 	explicit value_creator() {};
-	std::pair<K, V> operator() (unsigned int seed)
+	ft::pair<K, V> operator() (unsigned int seed)
 	{
 		value_creator<K> K_creator;
 		value_creator<V> V_creator;
-		return std::make_pair(K_creator(seed), V_creator(seed));
+		return ft::make_pair(K_creator(seed), V_creator(seed));
 	}
 };
 
@@ -82,49 +82,6 @@ std::ostream & operator<<(std::ostream & os, const std::pair<K, V> & p)
 	os << "<" << p.first << ", " << p.second << ">";
 	return (os);
 }
-
-template <class _Tp>
-class Foo
-{
-private :
-	std::vector<_Tp> _vector;
-public :
-	Foo(unsigned int seed) : _vector(std::vector<_Tp>())
-	{
-		unsigned _seed = 10 * seed;
-		value_creator<_Tp> __creator;
-		for (int i = 0 ; i < 10 ; i++, _seed++)
-		{
-			_vector.push_back(__creator(_seed));
-		}
-	};
-	typename std::vector<_Tp>::size_type size() const {return _vector.size();}
-	_Tp at(int index) const { return _vector[index]; }
-	~Foo() {};
-
-	template< class U >
-	friend std::ostream & operator<<(std::ostream & os, const Foo<U> & f)
-	{
-		int __size = f.size();
-		os << "size : " << __size;
-		for (int i = 0 ; i < __size ; i++)
-		{
-			os << ", " << f.at(i);
-		}
-		return os;
-	}
-};
-
-template <class U>
-class value_creator< Foo<U> >
-{
-public:
-	value_creator() {};
-	Foo<U> operator() (unsigned int seed)
-	{
-		return Foo<U>(seed);
-	}
-};
 
 template <class Cont >
 void

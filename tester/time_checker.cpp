@@ -18,17 +18,31 @@
 # include "VectorTestFunctor.hpp"
 # include "StackTestFunctor.hpp"
 # include "MapTestFunctor.hpp"
+# include "SetTestFunctor.hpp"
 
 void vector_time();
 void stack_time();
 void map_time();
-// void set_time();
+void set_time();
 
-int main()
+int main(int ac, char **av)
 {
-	// vector_time();
-	// stack_time();
-	map_time();
+	if (ac != 2)
+	{
+		std::cerr << "usage [./prog_name] [container_type]" << std::endl;
+		return (1);
+	}
+	if ((std::string)av[1] == "vector")
+		vector_time();
+	else if ((std::string)av[1] == "stack")
+		stack_time();
+	else if ((std::string)av[1] == "map")
+		map_time();
+	else if ((std::string)av[1] == "set")
+		set_time();
+	else
+		return (1);
+	return (0); 
 }
 
 
@@ -69,5 +83,15 @@ void map_time()
 	std::cout << "============================================" << std::endl;
 	MapTestFunctor<TESTING_NAMESPACE::map<TYPE, int>, TYPE> map_test;
 	map_test();
+	std::cout << "====           ===============           ===" << std::endl;
+}
+
+void set_time()
+{
+	std::cout << "============================================" << std::endl;
+	std::cout << "====--------------[ set  ]--------------====" << std::endl;
+	std::cout << "============================================" << std::endl;
+	SetTestFunctor<TESTING_NAMESPACE::set<TYPE>, TYPE> set_test;
+	set_test();
 	std::cout << "====           ===============           ===" << std::endl;
 }

@@ -6,6 +6,7 @@
 # include <deque>
 # include <list>
 # include "../include/ft_stack.hpp"
+# include "../include/ft_pair.hpp"
 # include "container_tester.hpp"
 
 template<class Stck, class _Tp>
@@ -54,7 +55,8 @@ void StackTestFunctor<S, T>::_time_check(int index)
 	start = clock();
 	(this->*_tester[index])();
 	finish = clock();
-	std::cout << "\t||time     : "<<std::setw(8) << std::setfill('_') <<(double)(finish - start) << "ms" << std::endl;
+	// std::cout.precision(3);
+	std::cout << "\t||time     : "<<std::setw(9) << std::setfill('_') << ((double)(finish - start) / CLOCKS_PER_SEC * 1000) << "ms" << std::endl;
 }
 
 template<class S ,class T>

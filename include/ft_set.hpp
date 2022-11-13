@@ -313,26 +313,16 @@ namespace ft
 	typename set<K, C, A>::iterator
 	set<K, C, A>::lower_bound (const key_type& k) const
 	{
-		iterator it = this->begin();
-		for ( ; it != this->end() ; it++)
-		{
-			if (_key_comp(*it, k) == false)
-				break ;
-		}
-		return (it);
+		_node_pointer res = this->_rbtree.lower_bound(k);
+		return (iterator(res));
 	}
 	
 	template<class K, class C, class A>
 	typename set<K, C, A>::iterator
 	set<K, C, A>::upper_bound (const key_type& k) const
 	{
-		iterator it = this->begin();
-		for ( ; it != this->end() ; it++)
-		{
-			if (_key_comp(k, *it) == true)
-				break ;
-		}
-		return (it);
+		_node_pointer res = this->_rbtree.upper_bound(k);
+		return (iterator(res));
 	}
 	
 	template<class K, class C, class A>

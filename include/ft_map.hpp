@@ -122,11 +122,6 @@ namespace ft
 
 		allocator_type get_allocator() const;
 
-		void print_map_info() const
-		{
-			this->_rbtree.print_tree_info();
-		}
-
 		template <class K, class M, class C, class A>
 		friend bool operator==(const ft::map<K, M, C, A> & lhs, const ft::map<K, M, C, A> & rhs);
 		template <class K, class M, class C, class A>
