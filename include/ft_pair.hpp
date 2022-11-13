@@ -47,6 +47,12 @@ namespace ft
 		{ return !(lhs<rhs); }
 	};
 
+	template <class K, class V>
+	std::ostream & operator<< (std::ostream & os, const ft::pair<K, V> & p)
+	{
+		os << "<" << p.first << ", " << p.second << ">";
+		return (os);
+	}
 	/***************
 	 *  non-member *
 	 ***************/

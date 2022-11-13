@@ -77,20 +77,11 @@ public:
 };
 
 template <class K, class V>
-std::ostream & operator<< (std::ostream & os, const ft::pair<K, V> & p)
-{
-	os << "<" << p.first << ", " << p.second << ">";
-	return (os);
-}
-
-template <class K, class V>
 std::ostream & operator<<(std::ostream & os, const std::pair<K, V> & p)
 {
 	os << "<" << p.first << ", " << p.second << ">";
 	return (os);
 }
-
-
 
 template <class _Tp>
 class Foo

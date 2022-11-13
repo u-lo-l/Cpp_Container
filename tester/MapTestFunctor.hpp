@@ -195,8 +195,16 @@ template<class M ,class T>
 void MapTestFunctor<M, T>::_find()
 {
 	this->_map.insert(_list.begin(), _list.end());
-	std::cout << "\tres : " << *(this->_map.find(_val(_num/2))) << std::endl;
-	std::cout << "\tres : " << *(this->_map.find(_val(-_num))) << std::endl;
+	typename M::iterator res = (this->_map.find(_val(_num/2)));
+	if (res == _map.end())
+		std::cout << "\tres : " << "end()" << std::endl;
+	else
+		std::cout << "\tres : " << *res << std::endl;
+	res = (this->_map.find(_val(-_num)));
+	if (res == _map.end())
+		std::cout << "\tres : " << "end()" << std::endl;
+	else
+		std::cout << "\tres : " << *res << std::endl;
 }
 
 template<class M ,class T>

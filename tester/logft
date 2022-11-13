@@ -9,7 +9,7 @@ before	||size     : 0
 after	||size     : 1000
 	||max_size : 230584300921369395
 
-	||time     : ____1742ms
+	||time     : ____2130ms
 
 	[erase     tester]     
 	<case1>
@@ -36,7 +36,7 @@ before	||size     : 500
 
 after	||size     : 0
 	||max_size : 230584300921369395
-	||time     : ____1010ms
+	||time     : ____1159ms
 
 	[swap      tester]     
 before	||size     : 0
@@ -48,7 +48,7 @@ after	||size     : 998
 	||max_size : 230584300921369395
 temp	||size     : 0
 	||max_size : 230584300921369395
-	||time     : ____1521ms
+	||time     : ____1142ms
 
 	[clear     tester]     
 before	||size     : 998
@@ -56,28 +56,28 @@ before	||size     : 998
 
 after	||size     : 0
 	||max_size : 230584300921369395
-	||time     : _____121ms
+	||time     : ______58ms
 
 	[find      tester]     
 	res : <500, 500>
-	res : <0, 0>
-	||time     : ____1448ms
+	res : end()
+	||time     : ____1111ms
 
 	[count     tester]     
 	res : 1
 	res : 0
-	||time     : ______18ms
+	||time     : ______14ms
 
 	[l_bound   tester]     
 	lower bound<500, 500>
-	||time     : _______9ms
+	||time     : _______8ms
 
 	[u_bound   tester]     
 	upper bound<501, 501>
-	||time     : _______8ms
+	||time     : _______7ms
 
 	[range     tester]     
 	lower bound<500, 500>
 	upper bound<501, 501>
-	||time     : ______15ms
+	||time     : ______14ms
 ====           ===============           ===

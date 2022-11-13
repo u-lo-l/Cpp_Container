@@ -369,7 +369,8 @@ namespace ft
 	typename map<K, T, C, A>::iterator
 	map<K, T, C, A>::find(const key_type & k)
 	{
-		return (iterator(this->_rbtree.search(ft::make_pair(k, mapped_type()))));
+		_node_pointer res = this->_rbtree.search(ft::make_pair(k, mapped_type()));
+		return (iterator(res));
 	}
 	
 	template<class K, class T, class C, class A>
