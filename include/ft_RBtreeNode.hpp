@@ -11,17 +11,11 @@ namespace ft
 	 ***************/
 
 	template < class T >
-	class RBtreeNode
+	struct RBtreeNode
 	{
-	private:
 		typedef	T				value_type;
 		typedef	RBtreeNode<T>	node_type;
 		typedef	RBtreeNode<T> *	node_pointer;
-
-		template<class U, class SK, class Alloc, class Comp>
-		friend class RBtree;
-		template<class U, class Ptr, class Ref>
-		friend class tree_iterator;
 
 		node_pointer	_pLeftChild;
 		node_pointer	_pRightChild;
@@ -32,6 +26,19 @@ namespace ft
 		bool			_isnil;
 
 		RBtreeNode();
+
+		RBtreeNode
+		( 
+			T data , 
+			RBtreeNode * pleft = NULL,
+			RBtreeNode * pright = NULL,
+			RBtreeNode * pparent = NULL,
+			Color color = RED
+		);
+
+		RBtreeNode ( const RBtreeNode & other );
+		
+		~RBtreeNode();
 
 		RBtreeNode<T> & operator= (const RBtreeNode<T> & other);
 
@@ -46,21 +53,6 @@ namespace ft
 		T & getData();
 
 		bool isNilNode() const;
-		
-	public :
-	
-		RBtreeNode
-		( 
-			T data , 
-			RBtreeNode * pleft = NULL,
-			RBtreeNode * pright = NULL,
-			RBtreeNode * pparent = NULL,
-			Color color = RED
-		);
-
-		RBtreeNode ( const RBtreeNode & other );
-		
-		~RBtreeNode();
 
 		node_pointer _maximum();
 
@@ -70,9 +62,6 @@ namespace ft
 		friend std::ostream & operator<< ( std::ostream & os, const RBtreeNode<U> & node);
 	}; // class RBtreeNode
 
-	/***************
-	 *   private   *
-	 ***************/
 
 	template <class T>
 	RBtreeNode<T>::RBtreeNode()
@@ -136,10 +125,6 @@ namespace ft
 			return (true);
 		return (false);
 	}
-
-	/***************
-	 *   public    *
-	 ***************/
 
 	template <class T>
 	RBtreeNode<T>::RBtreeNode
