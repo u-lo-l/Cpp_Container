@@ -49,8 +49,8 @@ namespace ft
 		class value_compare;
 
 	private :
-		typedef ft::RBtree<value_type, _Select1st<value_type>, key_compare>		_tree_type;
-		typedef typename _tree_type::node_pointer								_node_pointer;
+		typedef ft::RBtree<value_type, _Select1st<value_type>, key_compare, allocator_type>	_tree_type;
+		typedef typename _tree_type::node_pointer											_node_pointer;
 
 	public :
 		typedef ft::tree_iterator<value_type, value_type *, value_type &>				iterator;

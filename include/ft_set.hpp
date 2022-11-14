@@ -46,8 +46,8 @@ namespace ft
 		typedef typename allocator_type::size_type			size_type;
 
 	private :
-		typedef ft::RBtree<value_type, _Identity<value_type>, key_compare>	_tree_type;
-		typedef typename _tree_type::node_pointer							_node_pointer;
+		typedef ft::RBtree<value_type, _Identity<value_type>, key_compare, allocator_type>	_tree_type;
+		typedef typename _tree_type::node_pointer											_node_pointer;
 
 	public :
 		typedef ft::tree_iterator<value_type, const value_type *, const value_type &>	iterator;
@@ -73,11 +73,15 @@ namespace ft
 
 		set & operator=(const set& other);
 
-		iterator begin() const;
-		iterator end() const ;
+		iterator begin() ;
+		const_iterator begin() const;
+		iterator end()  ;
+		const_iterator end() const ;
 
-		reverse_iterator rbegin() const;
-		reverse_iterator rend() const ;
+		reverse_iterator rbegin() ;
+		const_reverse_iterator rbegin() const;
+		reverse_iterator rend()  ;
+		const_reverse_iterator rend() const ;
 
 		bool empty() const;
 		size_type size() const;
@@ -165,30 +169,59 @@ namespace ft
 
 	template<class K, class C, class A>
 	typename set<K, C, A>::iterator
-	set<K, C, A>::begin() const
+	set<K, C, A>::begin()
 	{
 		return (iterator(this->_rbtree.getRootPtr()->_minimum()));
 	}
 
 	template<class K, class C, class A>
+	typename set<K, C, A>::const_iterator
+	set<K, C, A>::begin() const
+	{
+		return (const_iterator(this->_rbtree.getRootPtr()->_minimum()));
+	}
+
+	template<class K, class C, class A>
 	typename set<K, C, A>::iterator
-	set<K, C, A>::end() const
+	set<K, C, A>::end() 
 	{
 		return (iterator(this->_rbtree.getNilPtr()));
 	}
 
 	template<class K, class C, class A>
+	typename set<K, C, A>::const_iterator
+	set<K, C, A>::end() const
+	{
+		return (const_iterator(this->_rbtree.getNilPtr()));
+	}
+
+	template<class K, class C, class A>
 	typename set<K, C, A>::reverse_iterator
-	set<K, C, A>::rbegin() const
+	set<K, C, A>::rbegin()
 	{
 		return (reverse_iterator(this->_rbtree.getNilPtr()));
 	}
 
 	template<class K, class C, class A>
+	typename set<K, C, A>::const_reverse_iterator
+	set<K, C, A>::rbegin() const
+	{
+		return (const_reverse_iterator(this->_rbtree.getNilPtr()));
+	}
+
+	template<class K, class C, class A>
 	typename set<K, C, A>::reverse_iterator
-	set<K, C, A>::rend() const
+	set<K, C, A>::rend()
 	{
 		return (reverse_iterator(this->_rbtree.getRootPtr()->_minimum()));
+	}
+
+
+	template<class K, class C, class A>
+	typename set<K, C, A>::const_reverse_iterator
+	set<K, C, A>::rend() const
+	{
+		return (const_reverse_iterator(this->_rbtree.getRootPtr()->_minimum()));
 	}
 
 	template<class K, class C, class A>

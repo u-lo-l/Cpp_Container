@@ -16,16 +16,16 @@ namespace ft
 	template <	class T,
 				class SelectKey,
 				class Comp = ft::less<T>,
-				class Alloc = std::allocator< RBtreeNode<T> > >
+				class Alloc = std::allocator<T> >
 	class RBtree
 	{
 	public :
 		typedef RBtreeNode<T>						node_type;
 		typedef RBtreeNode<T>*						node_pointer;
 	private :
-		typedef Alloc								allocator_type;
-		typedef Comp								key_compare;
-		typedef typename allocator_type::size_type	size_type;
+		typedef typename Alloc::template rebind<node_type>::other	allocator_type;
+		typedef Comp												key_compare;
+		typedef typename allocator_type::size_type					size_type;
 
 	private :
 		allocator_type	_allocator_object;
@@ -295,22 +295,22 @@ namespace ft
 		}
 	}
 
+	/*
+	*  K : target_node. P : parent_node. U : uncle_node.(sibling of P) G : grand_parenent_node. S : sibling
+	*	1. tree is empty
+	*	2. K's parent( = P ) is black (this case doesnt violate rbtree properties)
+	*	3. (!) P is red_node
+	*		3.1 : U is red (U : Uncle node)
+	*		3.2 : U is black or nilNode
+	*			3.2.1: P is rightchild of G and K is right child of P => leftRotate->recolor
+	*			3.2.2: P is rightchild of G and K is left child of P => rightRotate-> case 3.2.1
+	*			3.2.3: P is leftchild of G and K is left child of P => mirror of case 3.2.1 : RightRotate->recolor
+	*			3.2.4: P is leftchild of G and K is left child of P => mirror of case 3.2.2 : leftRotate -> 3.2.3
+	*/
 	template < class T, class SK, class C, class A>
 	typename RBtree<T, SK, C, A>::node_pointer
 	RBtree<T, SK, C, A>::_insertRestructor( node_pointer KeyNode )
 	{
-		/*
-		 *  K : target_node. P : parent_node. U : uncle_node.(sibling of P) G : grand_parenent_node. S : sibling
-		 *	1. tree is empty
-		 *	2. K's parent( = P ) is black (this case doesnt violate rbtree properties)
-		 *	3. (!) P is red_node
-		 *		3.1 : U is red (U : Uncle node)
-		 *		3.2 : U is black or nilNode
-		 *			3.2.1: P is rightchild of G and K is right child of P => leftRotate->recolor
-		 *			3.2.2: P is rightchild of G and K is left child of P => rightRotate-> case 3.2.1
-		 *			3.2.3: P is leftchild of G and K is left child of P => mirror of case 3.2.1 : RightRotate->recolor
-		 *			3.2.4: P is leftchild of G and K is left child of P => mirror of case 3.2.2 : leftRotate -> 3.2.3
-		*/
 		node_pointer	K = KeyNode;
 		node_pointer	P = K->_pParent;
 		if (P->getColor() == BLACK)

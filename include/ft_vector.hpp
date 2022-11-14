@@ -589,45 +589,6 @@ namespace ft
 			this->_allocator_object.construct(--construct_ptr, *(--last));
 		this->_size += n;
 		this->_end += n;
-
-		// const difference_type offset = ft::distance(this->begin(), position);
-		// if ((size_type)offset > this->_size)
-		// 	return ;
-		// const difference_type inserting_size = ft::distance(first, last);
-		// size_type new_capatiy = this->_capacity;
-		// if ( this->_size + inserting_size > this->_capacity )
-		// 	new_capatiy = this->_doubleCapacity(this->_size + inserting_size);
-
-		// // 일단 새거 할당
-		// pointer new_start = this->_allocator_object.allocate(new_capatiy);
-		// pointer new_end = new_start;
-		// size_type new_size = 0;
-		// for( iterator it = this->_start ; it < position ; it++)
-		// {
-		// 	this->_allocator_object.construct(new_end, *it);
-		// 	new_end++;
-		// 	new_size++;
-		// }
-		// for (iterator it = first ; it < last ; it++)
-		// {
-		// 	this->_allocator_object.construct(new_end, *it);
-		// 	new_end++;
-		// 	new_size++;
-		// }
-		// new_end = new_start + this->_size + inserting_size;
-		// for (iterator it = this->_end ; it > position ;)
-		// {
-		// 	new_end--;
-		// 	it--;
-		// 	this->_allocator_object.construct(new_end, *it);
-		// 	new_size++;
-		// }
-		// this->clear();
-		// this->_allocator_object.deallocate(this->_start, this->_capacity);
-		// this->_start = new_start;
-		// this->_size = new_size;
-		// this->_end = this->_start + this->_size;
-		// this->_capacity = new_capatiy;
 	}
 	
 	template <class T, class A>
